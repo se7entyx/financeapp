@@ -1,0 +1,47 @@
+/* Ensure no horizontal overflow */
+html, body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Sidebar styles for mobile view */
+@media (max-width: 767px) {
+    .ml-64 {
+        margin-left: 0 !important;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 100vh; /* Ensure sidebar takes full height */
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #333; /* Example background color */
+        padding: 10px;
+        overflow-y: auto; /* Allow vertical scrolling */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    /* Sidebar toggle button adjustments */
+    .sidebar-toggle {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000; /* Ensure button is above the sidebar */
+    }
+
+    .header {
+        padding-left: 10px; /* Adjust padding to move the header closer to the left */
+    }
+    
+    .content {
+        padding: 10px; /* Ensure content padding is consistent */
+    }
+}
