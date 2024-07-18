@@ -20,7 +20,7 @@
             <li>
                 <a href="/profile" class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700 group">
                     <i class="fa-solid fa-user"></i>
-                    <span class="ml-3">Profile</span>
+                    <span class="ml-3">{{Auth::user()->name}} </span>
                 </a>
             </li>
         </ul>
