@@ -9,6 +9,7 @@ Route::get('/login', [AuthenticationController::class, 'showLoginForm'])->name('
 Route::post('/login', [AuthenticationController::class, 'authenticate']);
 Route::post('/logout', [AuthenticationController::class, 'logout']);
 
+Route::post('/profile', [AuthenticationController::class, 'updatePassword'])->middleware('auth');
 // Redirect root to login
 Route::get('/', function() {
     return redirect()->route('login');

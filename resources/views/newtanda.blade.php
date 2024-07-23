@@ -7,7 +7,7 @@
                     <div class="sm:col-span-2 md:col-span-1">
                         <label for="supplier" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier</label>
                         <select id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select supplier</option>
+                            <option value="" disabled selected>Select supplier</option>
                             <option value="a">Master Supplier A</option>
                             <option value="b">Master Supplier B</option>
                             <option value="c">Master Supplier C</option>
@@ -22,7 +22,7 @@
                         <ul class="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <li class="border-b border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center px-3 py-2">
-                                    <input id="faktur-checkbox" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <input id="faktur-checkbox" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" >
                                     <label for="faktur-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Faktur Pajak</label>
                                 </div>
                             </li>
@@ -63,7 +63,7 @@
                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 1 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
                                                 </svg>
                                             </div>
-                                            <input type="number" id="currency-input" class="block w-full p-2.5 pl-10 text-sm text-gray-900 bg-gray-50 rounded-l-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="" min="0" required />
+                                            <input type="number" id="currency-input" class="block w-full p-2.5 pl-10 text-sm text-gray-900 bg-gray-50 rounded-l-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="" min="0"/>
                                         </div>
                                         <button id="dropdown-currency-button" data-dropdown-toggle="dropdown-currency" class="inline-flex items-center py-2.5 px-4 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 rounded-r-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
                                             IDR
@@ -162,7 +162,7 @@
                         <div class="grid gap-4 mb-4 grid-cols-1">
                             <div>
                                 <label for="editnotextfield" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No Invoice</label>
-                                <input type="text" name="editnoinvoice" id="editnotextfield" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="" required>
+                                <input type="text" name="editnoinvoice" id="editnotextfield" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="">
                             </div>
                             <div>
                                 <label for="currency-input2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal</label>
@@ -173,7 +173,7 @@
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 1 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
                                             </svg>
                                         </div>
-                                        <input type="number" id="currency-input2" class="block w-full p-2.5 pl-10 text-sm text-gray-900 bg-gray-50 rounded-l-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="" min="0" required>
+                                        <input type="number" id="currency-input2" class="block w-full p-2.5 pl-10 text-sm text-gray-900 bg-gray-50 rounded-l-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="" min="0">
                                     </div>
                                     <button id="dropdown-currency-button2" data-dropdown-toggle="dropdown-currency2" class="inline-flex items-center py-2.5 px-4 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 rounded-r-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
                                         IDR
@@ -374,7 +374,7 @@
 
                 const cellAction = newRow.insertCell(3);
                 cellAction.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
-                cellAction.innerHTML = '<button class="font-medium text-blue-600 dark:text-blue-500 hover:underline editButton" data-modal-target="edit-modal" data-modal-toggle="edit-modal">Edit</button> <button class="font-medium text-blue-600 dark:text-blue-500 hover:underline deleteButton">Delete</button>';
+                cellAction.innerHTML = '<button class="font-medium text-blue-600 dark:text-blue-500 hover:underline editButton" data-modal-target="edit-modal" data-modal-toggle="edit-modal">Edit</button> <button class="font-medium text-red-600 dark:text-red-500 hover:underline deleteButton">Delete</button>';
 
                 // Store the invoice data in the array
                 invoices.push({
