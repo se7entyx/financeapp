@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Supplier extends Model
 {
     use HasFactory;
-
+    protected $fillable = ['name'];
     public function tanda_terima(): HasMany{
-        return $this->hasMany(TandaTerima::class,foreignKey:'supplier_id');
+        return $this->hasMany(TandaTerima::class,'supplier_id');
     }
 }
