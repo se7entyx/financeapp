@@ -20,9 +20,13 @@ Route::get('/', function () {
     }
 });
 
+Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
 // Dashboard routes
 Route::middleware('auth')->group(function() {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Route::view('dashboard/new', 'new', ['title' => 'New Docs']);
     Route::view('dashboard/all', 'alldoc', ['title' => 'All Docs']);
     Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
     Route::view('profile', 'profile', ['title' => 'Profile']);

@@ -10,7 +10,11 @@
     <div class="flex flex-col overflow-y-auto py-5 px-3 h-full bg-gray-800 border-gray-700">
         <ul class="space-y-2">
             <li>
+<<<<<<< HEAD
                 <a href="dashboard" class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700 group">
+=======
+                <a href="/dashboard" class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700 group">
+>>>>>>> 958e50da413e5fcc8fa30db8276bed4875416180
                     <i class="fa-solid fa-home"></i>
                     <span class="ml-3">Dashboard</span>
                 </a>
@@ -42,13 +46,30 @@
                     </li>
                 </ul>
             </li>
+            <li>
+                <button type="button" class="flex items-center p-2 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700" aria-controls="dropdown-pages" data-collapse-toggle="dropdown-pages">
+                    <i class="fa-solid fa-file"></i>
+                    <span class="flex-1 ml-3 text-left whitespace-nowrap">Docs</span>
+                    <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 0 01-1.414 0l-4-4a1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <ul id="dropdown-pages" class="hidden py-2 space-y-2">
+                    <li>
+                        <a href="/dashboard/all" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">All Documents</a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/my" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">My Documents</a>
+                    </li>
+                </ul>
+            </li>
             @if (Auth::check() && Auth::user()->role == 'admin')
             <li>
                 <button type="button" class="flex items-center p-2 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700" aria-controls="dropdown-pages2" data-collapse-toggle="dropdown-pages2">
                     <i class="fa-solid fa-user-tie"></i>
                     <span class="flex-1 ml-3 text-left whitespace-nowrap">Admin</span>
                     <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 0 01-1.414 0l-4-4a1 0 010-1.414z" clip-rule="evenodd"></path>
                     </svg>
                 </button>
                 <ul id="dropdown-pages2" class="hidden py-2 space-y-2">
