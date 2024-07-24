@@ -11,7 +11,9 @@ class TandaTerima extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'tanggal',
+        'supplier_id',
         'pajak',
         'po',
         'bpb',
@@ -26,6 +28,11 @@ class TandaTerima extends Model
 
     public function user(): BelongsTo{
         return $this->belongsTo(User::class);
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 
     public function bukti_kas(): BelongsTo{
