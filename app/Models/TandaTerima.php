@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class TandaTerima extends Model
 {
     use HasFactory;
+    protected $table = 'tanda_terima';
     protected $fillable = [
-        'user_id',
+        // 'user_id',
         'tanggal',
         'supplier_id',
         'pajak',

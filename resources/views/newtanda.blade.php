@@ -16,7 +16,7 @@
                     </div>
                     <div class="sm:col-span-2 md:col-span-1">
                         <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
-                        <input type="text" id="tanggal" name="tanggal" aria-label="disabled date input" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" disabled>
+                        <input type="text" id="tanggal" datepicker-format="dd-mm-yyyy" datepicker  name="tanggal" aria-label="disabled date input" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     </div>
                     <div class="sm:col-span-2 md:col-span-1 lg:col-span-2">
                         <label for="Lampiran" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lampiran</label>
@@ -38,13 +38,13 @@
                             <li class="border-b border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center px-3 py-2">
                                     <input type="hidden" name="bpb" value="false">
-                                    <input id="bpb-checkbox" name="bpb"  value="true" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <input id="bpb-checkbox" name="bpb" value="true" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                     <label for="bpb-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">BPB</label>
                                 </div>
                             </li>
                             <li class="border-b border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center px-3 py-2">
-                                <input type="hidden" name="sjalan" value="false">
+                                    <input type="hidden" name="sjalan" value="false">
                                     <input id="sjalan-checkbox" name="sjalan" value="true" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                     <label for="sjalan-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Surat Jalan</label>
                                 </div>
@@ -213,22 +213,21 @@
                 </div>
             </div>
         </div>
-
-        </form>
-        </div>
-        </div>
     </section>
 </x-layout>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Get the current date and time
         const now = new Date();
-        const formattedDate = now.toLocaleString('en-US', {
+        const formattedDate = now.toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',
             year: 'numeric'
         });
         document.getElementById('tanggal').value = formattedDate;
+        console.log("1",formattedDate);
+        console.log(document.getElementById('tanggal').value);
 
         const dropdownButton = document.getElementById('dropdown-currency-button');
         const dropdownMenu = document.getElementById('dropdown-currency');

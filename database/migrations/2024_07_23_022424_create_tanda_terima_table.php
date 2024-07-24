@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('tanda_terima', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->date('tanggal');
+            $table->string('tanggal');
             $table->unsignedBigInteger('supplier_id');
-            $table->boolean('pajak');
-            $table->boolean('po');
-            $table->boolean('bpb');
-            $table->boolean('surat_jalan');
-            $table->date('tanggal_jatuh_tempo');
+            $table->string('pajak');
+            $table->string('po');
+            $table->string('bpb');
+            $table->string('surat_jalan');
+            $table->string('tanggal_jatuh_tempo');
             $table->text('keterangan');
             $table->timestamps();
 

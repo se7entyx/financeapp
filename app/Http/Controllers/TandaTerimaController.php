@@ -8,35 +8,40 @@ use Illuminate\Http\Request;
 class TandaTerimaController extends Controller
 {
     public function store(Request $request){
-        dd($request);   
+        // dd('Function is called');
         $userId = auth()->id();
         $validated = $request->validate([
-            'user_id' => $userId,
-            'tanggal' => 'required|date',
+            // 'user_id' => $userId,
+            'tanggal' => 'required|string',
             'supplier_id' => 'required|exists:suppliers,id',
-            'pajak' => 'boolean',
-            'po' => 'boolean',
-            'bpb' => 'boolean',
-            'surat_jalan' => 'boolean',
-            'tanggal_jatuh_tempo' => 'required|date',
-            'notes' => 'text',
+            'faktur' => 'nullable|string',
+            'po' => 'nullable|string',
+            'bpb' => 'nullable|string',
+            'sjalan' => 'nullable|string',
+            'jatuh_tempo' => 'required|string',
+            'notes' => 'nullable|string',
         ]);
 
         $tandaterima = new TandaTerima();
-        $tandaterima->supplier_id = $validated['supplier_id'];
+        // TandaTerima::create();
+        $tandaterima->user_id = $userId;
         $tandaterima->tanggal = $validated['tanggal'];
-        $tandaterima->notes = $validated['notes'];  
-        $tandaterima->pajak = $validated['pajak'];
+        $tandaterima->supplier_id = $validated['supplier_id'];
+        $tandaterima->pajak = $validated['faktur'];
         $tandaterima->po = $validated['po'];
         $tandaterima->bpb = $validated['bpb'];
-        $tandaterima->surat_jalan = $validated['surat_jalan'];
-        $tandaterima->tanggal_jatuh_tempo = $validated['tanggal_jatuh_tempo'];
+        $tandaterima->surat_jalan = $validated['sjalan'];
+        $tandaterima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
+        $tandaterima->keterangan = $validated['notes'];
         // $tandaterima->no_invoice = $validated['noinvoiceinput'];
         // $tandaterima->nominal = $validated['nominal'];
-        $tandaterima->user_id = $userId; // Set the user ID if needed
+        // $tandaterima->user_id = $userId;
+        // Set the user ID if needed
+        // dd($validated, $tandaterima);
+
         $tandaterima->save();
         // TandaTerima::create($validated);
 
-        return redirect('/dashboard');  
+        return redirect()->route('newtanda')->with('success', 'Tanda Terima created successfully!');
     }
 }

@@ -22,8 +22,9 @@ Route::get('/', function () {
     }
 });
 
-Route::get('/dashboard/new/tanda-terima', [SupplierController::class, 'showForm'])->name('new.tanda-terima');// Route::post('dashboard/new/tanda-terima')
-Route::post('/dashboard/new/tanda-terima', [TandaTerimaController::class, 'store']);
+Route::get('/dashboard/new/tanda-terima', [SupplierController::class, 'showForm'])->name('new.tanda-terima');
+// Route::post('dashboard/new/tanda-terima')
+Route::post('/dashboard/new/tanda-terima', [TandaTerimaController::class, 'store'])->name('newtanda');
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 // Dashboard routes
