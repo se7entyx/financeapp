@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 class SupplierController extends Controller
 {
     public function showForm(){
-        $suppliers = Supplier::all(); // Fetch all suppliers
-        // dd($suppliers);
+        $suppliers = Supplier::all();
         return view('newtanda', ['suppliers' => $suppliers, 'title'=>'New Tanda Terima']);
     }
 }

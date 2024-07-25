@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TandaTerimaController;
+use App\Models\TandaTerima;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,8 +42,7 @@ Route::get('/get-supplier-info', [BuktiKasController::class, 'getSupplierInfo'])
 // Dashboard routes
 Route::middleware('auth')->group(function() {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    Route::view('dashboard/all', 'alldoc', ['title' => 'All Docs']);
+    Route::get('/dashboard/all', [TandaTerimaController::class, 'showAll'])->name('all.tanda-terima');
     Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
     Route::view('profile', 'profile', ['title' => 'Profile']);
     // Route::view('dashboard/new/tanda-terima', 'newtanda', ['title' => 'New Tanda Terima']);

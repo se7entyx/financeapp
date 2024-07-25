@@ -47,17 +47,7 @@ class TandaTerimaController extends Controller
         $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
         $tandaTerima->keterangan = $validated['notes'];
         $tandaTerima->save();
-        // $tandaTerima = TandaTerima::create([
-        //     'user_id' => $userId,
-        //     'tanggal' => $validated['tanggal'],
-        //     'supplier_id' => $validated['supplier_id'],
-        //     'pajak' => $validated['faktur'],
-        //     'po' => $validated['po'],
-        //     'bpb' => $validated['bpb'],
-        //     'surat_jalan' => $validated['sjalan'],
-        //     'tanggal_jatuh_tempo' => $validated['jatuh_tempo'],
-        //     'keterangan' => $validated['notes'],
-        // ]);
+
 
         // Create Invoices records
         foreach ($validated['invoice'] as $index => $invoiceNo) {
@@ -71,9 +61,10 @@ class TandaTerimaController extends Controller
 
         return redirect()->route('new.tanda-terima')->with('success', 'Tanda Terima created successfully.');
 
-        // return response()->json([
-        //     'message' => 'Tanda Terima created successfully!',
-        //     'data' => $tandaTerima,
-        // ], 201);
+    }
+    public function showAll(){
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->get();
+
+        return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => 'All Documents']);
     }
 }
