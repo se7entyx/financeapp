@@ -16,12 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('tanda_terima_id');
             $table->string('nomer');
-            $table->date('tanggal');
+            $table->string('tanggal')->nullable();
             $table->string('kas');
             $table->integer('jumlah');
             $table->string('no_cek');
             // $table->date('tanggal_jatuh_tempo');
-            $table->integer('total_jumlah');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -7,18 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Notifications\Notifiable;
 
 class BuktiKas extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
+    protected $table = 'bukti_kas';
     protected $fillable = [
+        // 'user_id',
+        'tanda_terima_id',
         'nomer',
         'tanggal',
         'kas',
         'jumlah',
         'no_cek',
         // 'tanggal_jatuh_tempo',
-        'total_jumlah'
     ];
 
     public function keterangan_bukti_kas():HasMany {

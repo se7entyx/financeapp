@@ -10,11 +10,7 @@
     <div class="flex flex-col overflow-y-auto py-5 px-3 h-full bg-gray-800 border-gray-700">
         <ul class="space-y-2">
             <li>
-<<<<<<< HEAD
-                <a href="dashboard" class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700 group">
-=======
                 <a href="/dashboard" class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700 group">
->>>>>>> 958e50da413e5fcc8fa30db8276bed4875416180
                     <i class="fa-solid fa-home"></i>
                     <span class="ml-3">Dashboard</span>
                 </a>

@@ -10,6 +10,7 @@ class KeteranganBuktiKas extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'bukti_kas_id',
         'keterangan',
         'dk',
         'jumlah',

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('keterangan');
             $table->text('dk');
             $table->integer('jumlah');
-            $table->string('currency');
             $table->timestamps();
 
 

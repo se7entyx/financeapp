@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\BuktiKasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TandaTerimaController;
@@ -25,6 +26,10 @@ Route::get('/', function () {
 Route::get('/dashboard/new/tanda-terima', [SupplierController::class, 'showForm'])->name('new.tanda-terima');
 // Route::post('dashboard/new/tanda-terima')
 Route::post('/dashboard/new/tanda-terima', [TandaTerimaController::class, 'store'])->name('newtanda');
+Route::get('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'index'])->name('buktikas.index');
+Route::post('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'store'])->name('buktikas.store');
+Route::post('/post-bukti-info', [BuktiKasController::class, 'saveKeterangan'])->name('buktikas.saveKeterangan');
+Route::get('/get-supplier-info', [BuktiKasController::class, 'getSupplierInfo']);
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 // Dashboard routes
@@ -36,5 +41,5 @@ Route::middleware('auth')->group(function() {
     Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
     Route::view('profile', 'profile', ['title' => 'Profile']);
     // Route::view('dashboard/new/tanda-terima', 'newtanda', ['title' => 'New Tanda Terima']);
-    Route::view('dashboard/new/bukti-pengeluaran', 'newbukti', ['title' => 'New Bukti Pengeluaran Kas / Bank']);
+    // Route::view('/dashboard/new/bukti-pengeluaran', 'newbukti', ['title' => 'New Bukti Pengeluaran Kas / Bank']);
 });

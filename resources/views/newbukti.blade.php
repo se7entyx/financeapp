@@ -2,13 +2,12 @@
   <x-slot:title>{{$title}}</x-slot:title>
   <section class="bg-white dark:bg-gray-900 w-full">
     <div class="py-4 px-8 mx-auto max-w-7xl">
-      <form action="#">
+      <form id="my-form" action="/dashboard/new/bukti-pengeluaran" method="post">
+        @csrf
         <div class="grid gap-x-8 gap-y-4 mb-6 lg:grid-cols-4 md:grid-cols-1 sm:grid-cols-1">
           <div class="col-span-1">
-            <form class="max-w-sm mx-auto">
-              <label for="nomer-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomer</label>
-              <input type="text" id="nomer-input" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" required />
-            </form>
+            <label for="nomer-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomer</label>
+            <input type="text" id="nomer" name="nomer" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" required />
           </div>
           <div class="col-span-1">
             <label for="input-part2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
@@ -18,79 +17,40 @@
                   <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                 </svg>
               </div>
-              <input id="datepicker-autohide" datepicker datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal">
+              <input name="tanggal" id="datepicker-autohide" datepicker datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal">
             </div>
           </div>
           <div class="col-span-1">
             <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada</label>
-            <input type="text" id="input-no-tanda-terima" placeholder="Masukan nomor tanda terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <input type="text" name="tanda_terima_id" id="input-no-tanda-terima" placeholder="Masukan nomor tanda terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" data-original-value="">
+            <input type="hidden" name="tanda_terima_id_hidden" id="input-no-tanda-terima-hidden">
           </div>
           <div class="col-start-1">
             <label for="input-part4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kas/Cheque/Bilyet Giro Bank</label>
-            <input type="text" id="input-bank" value="Mandiri" class=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" disabled readonly>
+            <input type="text" id="input-bank" name="kas" value="Mandiri" class=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" readonly>
           </div>
           <div class="col-span-1">
-            <label for="jumlah-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah USD / Rp</label>
-            <div class="flex w-3/2">
-              <form class="max-w-[18rem] flex">
-                <div class="relative w-full">
-                  <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
-                    </svg>
-                  </div>
-                  <input type="number" id="currency-input" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" min="0" placeholder="Masukkan jumlah" required />
-                </div>
-                <button id="dropdown-currency-button" data-dropdown-toggle="dropdown-currency" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
-                  IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                  </svg>
-                </button>
-                <div id="dropdown-currency" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
-                  <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button">
-                    <li>
-                      <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem" data-currency="IDR">
-                        <div class="inline-flex items-center">
-                          IDR
-                        </div>
-                      </button>
-                    </li>
-                    <li>
-                      <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem" data-currency="USD">
-                        <div class="inline-flex items-center">
-                          USD
-                        </div>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </form>
+            <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. cek</label>
+            <input type="number" id="number-input" name="no_cek" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" />
+          </div>
+          <div class="col-span-1">
+            <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal jatuh tempo</label>
+            <div class="relative max-w-sm">
+              <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                </svg>
+              </div>
+              <input id="datepicker-autohide-x" datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 cursor-not-allowed focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic input" readonly>
             </div>
           </div>
-          <div class="col-span-1">
-            <form class="max-w-sm">
-              <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. cek</label>
-              <input type="number" id="number-input" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" required />
-            </form>
-          </div>
-          <div class="col-start-1">
-            <form class="max-w-sm">
-              <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal jatuh tempo</label>
-              <div class="relative max-w-sm">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                  <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                  </svg>
-                </div>
-                <input id="datepicker-autohide" datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 cursor-not-allowed focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic input" readonly disabled>
-              </div>
-            </form>
-          </div>
-          <div class="col-start-1 col-span-2">
+          <input type="hidden" name="jumlah" id="total-amount">
+          <input type="hidden" id="hiddenBuktiField" name="hiddenBuktiField" value=''>
+          <div class="lg:col-start-1 lg:col-span-2 md:col-span-1 sm:col-span-1">
             <label for="notes-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan</label>
             <textarea id="notes-input" rows="1" class="bg-gray-50 block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keterangan"></textarea>
           </div>
-          <div class="col-span-2 flex">
+          <div class="lg:col-span-2 flex md:col-span-1 sm:col-span-1">
             <div class="mr-8">
               <label for="dk-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">D/K</label>
               <select id="dk-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -102,39 +62,37 @@
             <div class="mr-8">
               <label for="jumlah-input-2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah</label>
               <div class="flex w-3/2">
-                <form class="max-w-[18rem] flex">
-                  <div class="relative w-full">
-                    <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
-                      <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
-                      </svg>
-                    </div>
-                    <input type="number" id="currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" required />
-                  </div>
-                  <button id="dropdown-currency-button-2" data-dropdown-toggle="dropdown-currency-2" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
-                    IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                <div class="relative w-full">
+                  <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
                     </svg>
-                  </button>
-                  <div id="dropdown-currency-2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button-2">
-                      <li>
-                        <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-2" data-currency-2="IDR">
-                          <div class="inline-flex items-center">
-                            IDR
-                          </div>
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-2" data-currency-2="USD">
-                          <div class="inline-flex items-center">
-                            USD
-                          </div>
-                        </button>
-                      </li>
-                    </ul>
                   </div>
-                </form>
+                  <input type="number" id="currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" />
+                </div>
+                <button id="dropdown-currency-button-2" data-dropdown-toggle="dropdown-currency-2" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
+                  IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                  </svg>
+                </button>
+                <div id="dropdown-currency-2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
+                  <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button-2">
+                    <li>
+                      <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-2" data-currency-2="IDR">
+                        <div class="inline-flex items-center">
+                          IDR
+                        </div>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-2" data-currency-2="USD">
+                        <div class="inline-flex items-center">
+                          USD
+                        </div>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
             <div>
@@ -177,96 +135,141 @@
               </table>
             </div>
           </div>
-          <div id="edit-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative p-4 w-full max-w-md max-h-full">
-              <!-- Modal content -->
-              <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 border border-gray-300 dark:border-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Ubah
-                  </h3>
-                  <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="edit-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                  </button>
-                </div>
-                <!-- Modal body -->
-                <form class="p-4 md:p-5" id="edit-form">
-                  <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
-                      <label for="edit-notes-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan</label>
-                      <textarea id="edit-notes-input" rows="1" class="bg-gray-50 block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keterangan"></textarea>
-                    </div>
-                    <div class="col-span-2 sm:col-span-2">
-                      <label for="edit-dk-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">D/K</label>
-                      <select id="edit-dk-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected value="" disabled>D/K</option>
-                        <option value="D">D</option>
-                        <option value="K">K</option>
-                      </select>
-                    </div>
-                    <div class="col-span-2 sm:col-span-2">
-                      <label for="jumlah-input-2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah</label>
-                      <div class="flex w-3/2">
-                        <form class="max-w-[18rem] flex">
-                          <div class="relative w-full">
-                            <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
-                              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
-                              </svg>
-                            </div>
-                            <input type="number" id="edit-currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" required />
-                          </div>
-                          <button id="dropdown-currency-button-3" data-dropdown-toggle="dropdown-currency-3" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
-                            IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                            </svg>
-                          </button>
-                          <div id="dropdown-currency-3" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
-                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button-2">
-                              <li>
-                                <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-3" data-currency-3="IDR">
-                                  <div class="inline-flex items-center">
-                                    IDR
-                                  </div>
-                                </button>
-                              </li>
-                              <li>
-                                <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-3" data-currency-3="USD">
-                                  <div class="inline-flex items-center">
-                                    USD
-                                  </div>
-                                </button>
-                              </li>
-                            </ul>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                    <div class="col-start-2 flex justify-end pt-4">
-                      <button type="submit" class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-3/4" id="save-edit-button">
-                        Simpan
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
+          <div class="col-start-4 flex justify-evenly pt-4">
+            <button id="prev-btn" type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Preview</button>
+            <button id="submit-btn" type="submit" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Submit</button>
           </div>
         </div>
-    </div>
-    </form>
+      </form>
+      <div id="edit-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+          <!-- Modal content -->
+          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 border border-gray-300 dark:border-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Ubah
+              </h3>
+              <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="edit-modal">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <!-- Modal body -->
+            <form class="p-4 md:p-5" id="edit-form">
+              <div class="grid gap-4 mb-4 grid-cols-2">
+                <div class="col-span-2">
+                  <label for="edit-notes-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan</label>
+                  <textarea id="edit-notes-input" rows="1" class="bg-gray-50 block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keterangan"></textarea>
+                </div>
+                <div class="col-span-2 sm:col-span-2">
+                  <label for="edit-dk-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">D/K</label>
+                  <select id="edit-dk-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option selected value="" disabled>D/K</option>
+                    <option value="D">D</option>
+                    <option value="K">K</option>
+                  </select>
+                </div>
+                <div class="col-span-2 sm:col-span-2">
+                  <label for="jumlah-input-2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah</label>
+                  <div class="flex w-3/2">
+                    <div class="relative w-full">
+                      <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+                        </svg>
+                      </div>
+                      <input type="number" id="edit-currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" />
+                    </div>
+                    <button id="dropdown-currency-button-3" data-dropdown-toggle="dropdown-currency-3" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
+                      IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                      </svg>
+                    </button>
+                    <div id="dropdown-currency-3" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
+                      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button-2">
+                        <li>
+                          <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-3" data-currency-3="IDR">
+                            <div class="inline-flex items-center">
+                              IDR
+                            </div>
+                          </button>
+                        </li>
+                        <li>
+                          <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-3" data-currency-3="USD">
+                            <div class="inline-flex items-center">
+                              USD
+                            </div>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-start-2 flex justify-end pt-4">
+                  <button type="submit" class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-3/4" id="save-edit-button">
+                    Simpan
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const dropdownButton = document.getElementById('dropdown-currency-button');
-      const dropdownMenu = document.getElementById('dropdown-currency');
-      const menuItems = dropdownMenu.querySelectorAll('button[data-currency]');
+      const tandaTerimaInput = document.getElementById('input-no-tanda-terima');
+      const tandaTerimaHiddenInput = document.getElementById('input-no-tanda-terima-hidden');
+
+      function updateSupplierInfo() {
+        const tandaTerimaId = tandaTerimaInput.value;
+
+        fetch(`/get-supplier-info?tanda_terima_id=${tandaTerimaId}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.supplier_name) {
+              // Update the visible input with supplier name
+              tandaTerimaInput.value = data.supplier_name;
+
+              // Update the hidden input with the original tanda_terima_id
+              tandaTerimaHiddenInput.value = tandaTerimaId;
+
+              // Update the datepicker field
+              document.getElementById('datepicker-autohide-x').value = data.tanggal_jatuh_tempo;
+            } else {
+              alert('Tanda Terima not found');
+            }
+          });
+      }
+
+      function restoreOriginalValue() {
+        const originalValue = tandaTerimaInput.getAttribute('data-original-value');
+        if (originalValue) {
+          tandaTerimaInput.value = originalValue;
+        }
+      }
+
+      // Set the original value in data attribute on focus
+      tandaTerimaInput.addEventListener('focus', () => {
+        tandaTerimaInput.setAttribute('data-original-value', tandaTerimaInput.value);
+      });
+
+      // Restore the original value and update the hidden input on focus out
+      tandaTerimaInput.addEventListener('focusout', updateSupplierInfo);
+
+      function updateHiddenBuktiField(buktiArray) {
+        // Convert the array to a JSON string
+        var jsonString = JSON.stringify(buktiArray);
+
+        // Update the hidden input field with the JSON string
+        document.getElementById('hiddenBuktiField').value = jsonString;
+      }
+
       const dropdownButton2 = document.getElementById('dropdown-currency-button-2');
       const dropdownMenu2 = document.getElementById('dropdown-currency-2');
       const menuItems2 = dropdownMenu2.querySelectorAll('button[data-currency-2]');
@@ -292,6 +295,7 @@
 
         if (storedBukti) {
           bukti = JSON.parse(storedBukti);
+          updateHiddenBuktiField(bukti);
           renderTable();
           console.log('Stored bukti:', bukti);
         }
@@ -307,7 +311,6 @@
         return `${currency} ${new Intl.NumberFormat('id-ID').format(value)}`;
       }
 
-      // Function to update total
       function updateTotal() {
         const rows = buktiTable.getElementsByTagName('tr');
         let total = 0;
@@ -329,20 +332,11 @@
         // Ensure the currency is consistent
         const totalCell = document.querySelector('#buktiTable tfoot tr td:last-child');
         totalCell.textContent = formatCurrency(total, currency);
+        document.getElementById('total-amount').value = total;
       }
 
       // Set default value
-      dropdownButton.innerHTML = 'IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>';
       dropdownButton2.innerHTML = 'IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>';
-
-      // Event listeners for the menu items
-      menuItems.forEach(item => {
-        item.addEventListener('click', function() {
-          const selectedCurrency = this.getAttribute('data-currency');
-          dropdownButton.innerHTML = `${selectedCurrency} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
-          toggleDropdown(dropdownMenu);
-        });
-      });
 
       menuItems2.forEach(item => {
         item.addEventListener('click', function() {
@@ -399,7 +393,7 @@
         const editeddk = document.getElementById('edit-dk-input').value;
         const editedNominalValue = document.getElementById('edit-currency-input-2').value;
         const editedCurrency = dropdownButton3.textContent.trim();
-        
+
 
         if (editedCurrency !== bukti[0].selectedCurrency) {
           if (!confirm(`You are about to change the currency to ${editedCurrency}. This will update all rows to use the new currency. Continue?`)) {
@@ -526,6 +520,7 @@
             bukti.splice(rowIndex, 1); // Remove the corresponding bukti from the array
             updateTotal(); // Update the total amount
             saveToLocalStorage();
+            updateHiddenBuktiField(bukti);
           });
 
           // Add event listener for the edit button
@@ -565,6 +560,7 @@
 
           // Re-render the table
           saveToLocalStorage();
+          updateHiddenBuktiField(bukti);
         }
       }
 
@@ -587,6 +583,11 @@
 
       document.getElementById('save-edit-button').addEventListener('click', function() {
         saveEdit();
+        updateHiddenBuktiField(bukti);
+      });
+
+      document.getElementById('submit-btn').addEventListener('submit', function() {
+        localStorage.clear()
       });
 
       loadFromLocalStorage();
