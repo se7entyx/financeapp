@@ -10,6 +10,7 @@ class Invoices extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'tanda_terima_id',
         'nomor',
         'nomonial',
         'currency'

@@ -35,6 +35,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -48,11 +53,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function tanda_terima(): HasMany{
-        return $this->hasMany(TandaTerima::class,foreignKey:'user_id');
+    public function tanda_terima(): HasMany
+    {
+        return $this->hasMany(TandaTerima::class, foreignKey: 'user_id');
     }
 
-    public function bukti_kas(): HasMany{
-        return $this->hasMany(BuktiKas::class,foreignKey:'user_id');
+    public function bukti_kas(): HasMany
+    {
+        return $this->hasMany(BuktiKas::class, foreignKey: 'user_id');
     }
 }

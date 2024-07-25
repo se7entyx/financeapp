@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoices;
 use App\Models\TandaTerima;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TandaTerimaController extends Controller
 {
-    public function store(Request $request){
-        // dd('Function is called');
+    public function store(Request $request)
+    {
         $userId = auth()->id();
+
+        // dd($userId);
+
+        // Validate Tanda Terima data
         $validated = $request->validate([
-            // 'user_id' => $userId,
             'tanggal' => 'required|string',
             'supplier_id' => 'required|exists:suppliers,id',
             'faktur' => 'nullable|string',
@@ -20,28 +25,55 @@ class TandaTerimaController extends Controller
             'sjalan' => 'nullable|string',
             'jatuh_tempo' => 'required|string',
             'notes' => 'nullable|string',
+            'invoice' => 'required|array',
+            'invoice.*' => 'required|string',
+            'nominal' => 'required|array',
+            'nominal.*' => 'required|numeric',
+            'currency' => 'required|array',
+            'currency.*' => 'required|string|in:IDR,USD',
         ]);
 
-        $tandaterima = new TandaTerima();
-        // TandaTerima::create();
-        $tandaterima->user_id = $userId;
-        $tandaterima->tanggal = $validated['tanggal'];
-        $tandaterima->supplier_id = $validated['supplier_id'];
-        $tandaterima->pajak = $validated['faktur'];
-        $tandaterima->po = $validated['po'];
-        $tandaterima->bpb = $validated['bpb'];
-        $tandaterima->surat_jalan = $validated['sjalan'];
-        $tandaterima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
-        $tandaterima->keterangan = $validated['notes'];
-        // $tandaterima->no_invoice = $validated['noinvoiceinput'];
-        // $tandaterima->nominal = $validated['nominal'];
-        // $tandaterima->user_id = $userId;
-        // Set the user ID if needed
-        // dd($validated, $tandaterima);
+        // dd($validated);
 
-        $tandaterima->save();
-        // TandaTerima::create($validated);
+        // Create Tanda Terima record
+        $tandaTerima = new TandaTerima();
+        $tandaTerima->user_id = $userId;
+        $tandaTerima->tanggal = $validated['tanggal'];
+        $tandaTerima->supplier_id = $validated['supplier_id'];
+        $tandaTerima->pajak = $validated['faktur'];
+        $tandaTerima->po = $validated['po'];
+        $tandaTerima->bpb = $validated['bpb'];
+        $tandaTerima->surat_jalan = $validated['sjalan'];
+        $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
+        $tandaTerima->keterangan = $validated['notes'];
+        $tandaTerima->save();
+        // $tandaTerima = TandaTerima::create([
+        //     'user_id' => $userId,
+        //     'tanggal' => $validated['tanggal'],
+        //     'supplier_id' => $validated['supplier_id'],
+        //     'pajak' => $validated['faktur'],
+        //     'po' => $validated['po'],
+        //     'bpb' => $validated['bpb'],
+        //     'surat_jalan' => $validated['sjalan'],
+        //     'tanggal_jatuh_tempo' => $validated['jatuh_tempo'],
+        //     'keterangan' => $validated['notes'],
+        // ]);
 
-        return redirect()->route('newtanda')->with('success', 'Tanda Terima created successfully!');
+        // Create Invoices records
+        foreach ($validated['invoice'] as $index => $invoiceNo) {
+            $invoice = new Invoices();
+            $invoice->tanda_terima_id = $tandaTerima->id;
+            $invoice->nomor = $validated['invoice'][$index];
+            $invoice->nominal = $validated['nominal'][$index];
+            $invoice->currency = $validated['currency'][$index];
+            $invoice->save();
+        }
+
+        return redirect()->route('new.tanda-terima')->with('success', 'Tanda Terima created successfully.');
+
+        // return response()->json([
+        //     'message' => 'Tanda Terima created successfully!',
+        //     'data' => $tandaTerima,
+        // ], 201);
     }
 }

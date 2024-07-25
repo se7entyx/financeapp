@@ -3,16 +3,23 @@
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BuktiKasController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TandaTerimaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 // Authentication routes
-Route::get('/login', [AuthenticationController::class, 'showLoginForm'])->name('login')->middleware('guest');
-Route::post('/login', [AuthenticationController::class, 'authenticate']);
-Route::post('/logout', [AuthenticationController::class, 'logout']);
+Route::middleware('guest')->group(function() {
+    Route::get('/login', [AuthenticationController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthenticationController::class, 'authenticate']);
+});
 
+Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware('auth');
+
+Route::post('/profile', [AuthenticationController::class, 'updatePassword'])->middleware('auth');
+
+// Redirect root to login
 Route::get('/', function () {
     if (Auth::check()) {
         // User is authenticated
@@ -22,24 +29,25 @@ Route::get('/', function () {
         return redirect('/login');
     }
 });
-
+// Tanda Terima Routes
 Route::get('/dashboard/new/tanda-terima', [SupplierController::class, 'showForm'])->name('new.tanda-terima');
-// Route::post('dashboard/new/tanda-terima')
-Route::post('/dashboard/new/tanda-terima', [TandaTerimaController::class, 'store'])->name('newtanda');
+Route::post('/dashboard/new/tanda-terima2', [TandaTerimaController::class, 'store'])->name('newtanda');
 Route::get('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'index'])->name('buktikas.index');
 Route::post('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'store'])->name('buktikas.store');
 Route::post('/post-bukti-info', [BuktiKasController::class, 'saveKeterangan'])->name('buktikas.saveKeterangan');
 Route::get('/get-supplier-info', [BuktiKasController::class, 'getSupplierInfo']);
-Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
 
 // Dashboard routes
 Route::middleware('auth')->group(function() {
-    // Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Route::view('dashboard/new', 'new', ['title' => 'New Docs']);
     Route::view('dashboard/all', 'alldoc', ['title' => 'All Docs']);
     Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
     Route::view('profile', 'profile', ['title' => 'Profile']);
     // Route::view('dashboard/new/tanda-terima', 'newtanda', ['title' => 'New Tanda Terima']);
-    // Route::view('/dashboard/new/bukti-pengeluaran', 'newbukti', ['title' => 'New Bukti Pengeluaran Kas / Bank']);
+    // Route::view('dashboard/new/bukti-pengeluaran', 'newbukti', ['title' => 'New Bukti Pengeluaran Kas / Bank']);
 });
+
+// Invoice Routes (uncomment if needed)
+// Route::post('/dashboard/new/add-invoices', [InvoiceController::class, 'store'])->name('invoices.store');

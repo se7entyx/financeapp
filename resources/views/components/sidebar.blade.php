@@ -72,9 +72,6 @@
                     <li>
                         <a href="#" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">User</a>
                     </li>
-                    <li>
-                        <a href="#" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Doc</a>
-                    </li>
                 </ul>
             </li>
             @endif
