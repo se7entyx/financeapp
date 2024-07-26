@@ -78,20 +78,9 @@ class BuktiKasController extends Controller
         return redirect()->route('buktikas.index')->with('success', 'Bukti Kas created successfully!');
     }
 
-    // public function saveKeterangan(Request $request)
-    // {
-    //     $buktiData = $request->input('bukti');
-
-    //     // Loop through each bukti item and save it to the database
-    //     foreach ($buktiData as $bukti) {
-    //         KeteranganBuktiKas::create([
-    //             'bukti_kas_id' => DB::table('bukti_kas')->insertGetId([]),
-    //             'notes' => $bukti['notes'],
-    //             'dk' => $bukti['dk'],
-    //             'nominal_value' => $bukti['nominalValue'],
-    //         ]);
-    //     }
-
-    //     return response()->json(['success' => 'Keterangan bukti kas created successfully'], 200);
-    // }
+    public function showAll()
+    {
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->get();
+        return view('alldoc',['title' => 'All Document', 'buktiKasRecords' => $buktiKasRecords]);
+    }
 }

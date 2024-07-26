@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class TandaTerima extends Model
 {
@@ -23,11 +24,13 @@ class TandaTerima extends Model
         'keterangan'
     ];
 
-    public function invoice(): HasMany{
-        return $this->hasMany(Invoices::class,foreignKey:'tanda_terima_id');
+    public function invoice(): HasMany
+    {
+        return $this->hasMany(Invoices::class, foreignKey: 'tanda_terima_id');
     }
 
-    public function user(): BelongsTo{
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
@@ -36,9 +39,8 @@ class TandaTerima extends Model
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 
-    public function bukti_kas(): BelongsTo{
-        return $this->belongsTo(BuktiKas::class);
+    public function bukti_kas(): HasOne
+    {
+        return $this->hasOne(BuktiKas::class, foreignKey: 'tanda_terima_id');
     }
-
-
 }

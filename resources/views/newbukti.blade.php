@@ -586,8 +586,8 @@
         updateHiddenBuktiField(bukti);
       });
 
-      document.getElementById('submit-btn').addEventListener('submit', function() {
-        localStorage.clear()
+      document.getElementById('my-form').addEventListener('submit', function(e) {
+        localStorage.clear();
       });
 
       loadFromLocalStorage();

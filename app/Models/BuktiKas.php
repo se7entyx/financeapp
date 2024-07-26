@@ -28,8 +28,8 @@ class BuktiKas extends Model
         return $this->hasMany(KeteranganBuktiKas::class,foreignKey:'bukti_kas_id');
     }
 
-    public function tanda_terima():HasOne {
-        return $this->hasOne(TandaTerima::class, foreignKey:'tanda_terima_id');
+    public function tanda_terima(): BelongsTo {
+        return $this->belongsTo(TandaTerima::class);
     }
 
     public function user(): BelongsTo{
