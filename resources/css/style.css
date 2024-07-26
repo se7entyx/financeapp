@@ -44,4 +44,11 @@ html, body {
     .content {
         padding: 10px; /* Ensure content padding is consistent */
     }
+
+    thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10; /* Ensure it stays above other content */
+    }
+
 }

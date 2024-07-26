@@ -38,11 +38,13 @@ Route::post('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'sto
 Route::post('/post-bukti-info', [BuktiKasController::class, 'saveKeterangan'])->name('buktikas.saveKeterangan');
 Route::get('/get-supplier-info', [BuktiKasController::class, 'getSupplierInfo']);
 
-
+Route::get('/dashboard/all', function () {
+    return redirect('/dashboard/all/tanda-terima');
+});
 // Dashboard routes
 Route::middleware('auth')->group(function() {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/all', [TandaTerimaController::class, 'showAll'])->name('all.tanda-terima');
+    Route::get('/dashboard/all/tanda-terima', [TandaTerimaController::class, 'showAll'])->name('all.tanda-terima');
     Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
     Route::view('profile', 'profile', ['title' => 'Profile']);
     // Route::view('dashboard/new/tanda-terima', 'newtanda', ['title' => 'New Tanda Terima']);

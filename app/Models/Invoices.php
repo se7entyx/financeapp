@@ -12,11 +12,11 @@ class Invoices extends Model
     protected $fillable = [
         'tanda_terima_id',
         'nomor',
-        'nomonial',
+        'nominal',
         'currency'
     ];
 
-    public function tanda_terima(): BelongsTo{
+    public function tandaTerima(): BelongsTo{
         return $this->belongsTo(TandaTerima::class);
     }
 }
