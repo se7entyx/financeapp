@@ -16,7 +16,7 @@ class Invoices extends Model
         'currency'
     ];
 
-    public function tandaTerima(): BelongsTo{
+    public function tanda_terima(): BelongsTo{
         return $this->belongsTo(TandaTerima::class);
     }
 }

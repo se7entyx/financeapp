@@ -16,7 +16,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input type="text" name="email" id="topbar-search" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-9 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search">
+                            <input type="text" name="search" id="topbar-search" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-9 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search">
                         </div>
                     </form>
                 </div>
@@ -84,16 +84,16 @@
                     <tbody>
                         @foreach ($buktiKasRecords as $bk)
                         <tr>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1 }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->nomer }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->tanggal ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->tanda_terima->supplier->name }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->kas }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->jumlah }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->no_cek }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->user->name }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ `<a  href=# class="text-blue-500 hover:text-blue-700">
+                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900 text-center">{{ $loop->index + 1 }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">{{ $bk->nomer }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">{{ $bk->tanggal ?? 'N/A' }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">{{ $bk->tanda_terima->supplier->name }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">{{ $bk->kas }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">{{ $bk->jumlah }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">{{ $bk->no_cek }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">{{ $bk->user->name }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">{{ `<a  href=# class="text-blue-500 hover:text-blue-700">
                                 View Details
                                 </a>` }}
                             </td>
@@ -115,37 +115,62 @@
         document.getElementById(activeLinkId).classList.remove('text-gray-300');
         document.getElementById(inactiveLinkId).classList.remove('text-white');
         document.getElementById(inactiveLinkId).classList.add('text-gray-300');
-
-        // Update the URL without reloading the page
-        window.history.pushState(null, '', newUrl);
+        window.history.pushState(null, null, newUrl);
     }
 
-    // Set event listeners for the nav links
     document.getElementById('tanda-terima-link').addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent the default link behavior
+        event.preventDefault();
         switchTable('tanda-terima-table', 'bukti-kas-keluar-table', 'tanda-terima-link', 'bukti-kas-keluar-link', '/dashboard/all/tanda-terima');
     });
 
     document.getElementById('bukti-kas-keluar-link').addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent the default link behavior
+        event.preventDefault();
         switchTable('bukti-kas-keluar-table', 'tanda-terima-table', 'bukti-kas-keluar-link', 'tanda-terima-link', '/dashboard/all/bukti-kas');
     });
 
-    // Handle back/forward navigation
-    window.addEventListener('popstate', function(event) {
-        if (window.location.pathname === '/dashboard/all/tanda-terima') {
-            switchTable('tanda-terima-table', 'bukti-kas-keluar-table', 'tanda-terima-link', 'bukti-kas-keluar-link', '/dashboard/all/tanda-terima');
-        } else if (window.location.pathname === '/dashboard/all/bukti-kas') {
-            switchTable('bukti-kas-keluar-table', 'tanda-terima-table', 'bukti-kas-keluar-link', 'tanda-terima-link', '/dashboard/all/bukti-kas');
+
+    // Function to search and highlight rows based on the input
+    function searchAndHighlight(tableId, searchColumnIndex) {
+        const input = document.getElementById('topbar-search').value.toLowerCase();
+        const table = document.getElementById(tableId);
+        const rows = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+            const cells = rows[i].getElementsByTagName('td');
+            const cell = cells[searchColumnIndex];
+            if (cell) {
+                const text = cell.textContent || cell.innerText;
+                if (text.toLowerCase().indexOf(input) > -1) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
         }
+    }
+
+    document.getElementById('topbar-search').addEventListener('input', function() {
+        const tandaTerimaTableVisible = !document.getElementById('tanda-terima-table').classList.contains('hidden');
+        const tableId = tandaTerimaTableVisible ? 'tanda-terima-table' : 'bukti-kas-keluar-table';
+        const searchColumnIndex = tandaTerimaTableVisible ? 0 : 1; // Search by index for tanda-terima and nomer for bukti-kas
+        searchAndHighlight(tableId, searchColumnIndex);
     });
 
-    // Initialize the correct table based on the current URL
-    if (window.location.pathname === '/dashboard/all/tanda-terima') {
+    // On initial load
+    const currentPath = window.location.pathname;
+    if (currentPath === '/dashboard/all/tanda-terima') {
         switchTable('tanda-terima-table', 'bukti-kas-keluar-table', 'tanda-terima-link', 'bukti-kas-keluar-link', '/dashboard/all/tanda-terima');
-    } else if (window.location.pathname === '/dashboard/all/bukti-kas') {
+    } else if (currentPath === '/dashboard/all/bukti-kas') {
         switchTable('bukti-kas-keluar-table', 'tanda-terima-table', 'bukti-kas-keluar-link', 'tanda-terima-link', '/dashboard/all/bukti-kas');
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchBar = document.getElementById('topbar-search');
+        searchBar.addEventListener('input', () => {
+            searchAndHighlight('tanda-terima-table', 0); // Search by index for tanda-terima-table
+            searchAndHighlight('bukti-kas-keluar-table', 1); // Search by nomer for bukti-kas-keluar-table
+        });
+    });
 </script>
 
 <style>

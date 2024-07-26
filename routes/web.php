@@ -30,6 +30,7 @@ Route::get('/', function () {
 // Tanda Terima Routes
 // Dashboard routes
 Route::middleware('auth')->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/new/tanda-terima', [SupplierController::class, 'showForm'])->name('new.tanda-terima');
     Route::post('/dashboard/new/tanda-terima2', [TandaTerimaController::class, 'store'])->name('newtanda');
     Route::get('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'index'])->name('buktikas.index');
@@ -41,7 +42,6 @@ Route::middleware('auth')->group(function () {
     });
     Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware('auth');
     Route::post('/profile', [AuthenticationController::class, 'updatePassword'])->middleware('auth');
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/all/tanda-terima', [CombinedController::class, 'getTandaTerima'])->name('all.tanda-terima');
     Route::get('/dashboard/all/bukti-kas', [CombinedController::class, 'getBuktiKas'])->name('all.bukti-kas');
     Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);

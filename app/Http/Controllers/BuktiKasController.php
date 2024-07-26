@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BuktiKas;
+use App\Models\Invoices;
 use App\Models\KeteranganBuktiKas;
 use App\Models\TandaTerima;
 use Illuminate\Validation\ValidationException;
@@ -81,6 +82,7 @@ class BuktiKasController extends Controller
     public function showAll()
     {
         $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->get();
-        return view('alldoc',['title' => 'All Document', 'buktiKasRecords' => $buktiKasRecords]);
+        $currency = Invoices::with(['tanda_terima'])->where('id', $buktiKasRecords->tanda_terima->id)->pluck('currency')->first();
+        return view('alldoc',['title' => 'All Document', 'buktiKasRecords' => $buktiKasRecords, 'currency' => $currency]);
     }
 }
