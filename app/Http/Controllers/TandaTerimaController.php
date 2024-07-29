@@ -76,4 +76,11 @@ class TandaTerimaController extends Controller
         // Return or process the results as needed
         return response()->json($invoices);
     }
+
+    public function deleteTt($id) {
+        $x = TandaTerima::find($id);
+        $x->delete();
+
+        return response()->with('success', 'Tanda terima deleted successfully!');
+    }
 }

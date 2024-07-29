@@ -93,4 +93,10 @@ class BuktiKasController extends Controller
 
         return response()->json($buktiKas);
     }
+    public function deleteBk($id) {
+        $x = BuktiKas::find($id);
+        $x->delete();
+
+        return response()->with('success', 'Bukti Kas deleted successfully!');
+    }
 }

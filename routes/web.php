@@ -51,8 +51,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware('auth');
     Route::post('/profile', [AuthenticationController::class, 'updatePassword'])->middleware('auth');
     Route::get('/dashboard/all/tanda-terima', [CombinedController::class, 'getTandaTerima'])->name('all.tanda-terima');
+    Route::delete('/tanda-terima/{id}/delete', [TandaTerimaController::class, 'deleteTt'])->name('delete.tanda-terima');
+    Route::delete('/bukti-kas/{id}/delete', [BuktiKasController::class, 'deleteBk'])->name('delete.bukti-kas');
     Route::get('/dashboard/all/bukti-kas', [CombinedController::class, 'getBuktiKas'])->name('all.bukti-kas');
-    Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
+    Route::get('/dashboard/my/tanda-terima', [CombinedController::class, 'getMyTandaTerima'])->name('my.tanda-terima');
+    Route::get('/dashboard/my/bukti-kas', [CombinedController::class, 'getMyBuktiKas'])->name('my.bukti-kas');
+    // Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
     Route::view('profile', 'profile', ['title' => 'Profile']);
     // Route::view('dashboard/new/tanda-terima', 'newtanda', ['title' => 'New Tanda Terima']);
     // Route::view('dashboard/new/bukti-pengeluaran', 'newbukti', ['title' => 'New Bukti Pengeluaran Kas / Bank']);

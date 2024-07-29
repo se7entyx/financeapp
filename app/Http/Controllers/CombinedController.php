@@ -15,18 +15,39 @@ class CombinedController extends Controller
     {
         $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->get();
         $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->get();
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+
+        $title = 'All Document';
+        return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
+    }
+    public function getBuktiKas()
+    {
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->get();
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->get();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
 
         $title = 'All Document';
         return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
     }
 
-    public function getBuktiKas()
+    public function getMyTandaTerima()
     {
-        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->get();
-        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user','invoice'])->get();
+        $id = auth()->id();
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->get();
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->where('user_id', $id)->get();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $title = 'My Documents';
+        return view('mydoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
+    }
 
-        $title = 'All Document';
-        return view('alldoc', ['buktiKasRecords' => $buktiKasRecords, 'title' => $title, 'tandaTerimaRecords' => $tandaTerimaRecords]);
+    public function getMyBuktiKas()
+    {
+        $id = auth()->id();
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->get();
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->where('user_id', $id)->get();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+
+        $title = 'My Documents';
+        return view('mydoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
     }
 }
