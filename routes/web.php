@@ -42,6 +42,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/all', function () {
         return redirect('/dashboard/all/tanda-terima');
     });
+    // Route::get(
+    //     '/dashboard/all/tanda-terima/{tandaTerima:id}',
+    //     function (TandaTerima $tandaTerima) {
+    //         return view('alldocs',[CombinedController::class,'getDetailTandaTerima']);   
+    //     }
+    // )->middleware('auth');
     Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware('auth');
     Route::post('/profile', [AuthenticationController::class, 'updatePassword'])->middleware('auth');
     Route::get('/dashboard/all/tanda-terima', [CombinedController::class, 'getTandaTerima'])->name('all.tanda-terima');

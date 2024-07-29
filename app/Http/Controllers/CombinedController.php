@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BuktiKas;
 use App\Models\Invoices;
+use App\Models\Supplier;
 use App\Models\TandaTerima;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,10 @@ class CombinedController extends Controller
     {
         $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->get();
         $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->get();
+        $suppliers = Supplier::all();
 
         $title = 'All Document';
-        return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'buktiKasRecords' => $buktiKasRecords]);
+        return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
     }
 
     public function getBuktiKas()

@@ -25,12 +25,12 @@ class TandaTerimaFactory extends Factory
         return [
             'user_id' => User::factory(),
             'supplier_id' => Supplier::factory(),
-            'tanggal' => Carbon::now()->format('d-m-Y'),
+            'tanggal' => Carbon::now()->addDays(rand(1, 180))->format('d-m-Y'),
             'pajak' => $this->faker->randomElement(['true', 'false']),
             'po' => $this->faker->randomElement(['true', 'false']),
             'bpb' => $this->faker->randomElement(['true', 'false']),
             'surat_jalan' => $this->faker->randomElement(['true', 'false']),
-            'tanggal_jatuh_tempo' => Carbon::now()->addDays(rand(1, 365))->format('d-m-Y'),
+            'tanggal_jatuh_tempo' => Carbon::now()->addDays(rand(185, 365))->format('d-m-Y'),
             'keterangan' => $this->faker->sentence,
         ];
     }

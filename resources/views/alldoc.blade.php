@@ -1,16 +1,43 @@
 <x-layout>
     <x-slot:title>{{$title}}</x-slot:title>
-    <section class="bg-white dark:bg-gray-900 w-full">
+    <section class="bg-white dark:bg-gray-900 w-full min-h-screen flex flex-col">
         <nav class="bg-gray-800 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
             <div class="flex flex-wrap justify-between items-center">
-                <div class="flex justify-start items-center space-x-8">
-                    <a href="/dashboard/all/tanda-terima" class="text-gray-300 hover:text-white" id="tanda-terima-link">Tanda Terima</a>
-                    <a href="/dashboard/all/bukti-kas" class="text-gray-300 hover:text-white" id="bukti-kas-keluar-link">Bukti Kas Keluar</a>
+                <!-- Left section: Links -->
+                <div class="flex justify-start items-center space-x-4 lg:space-x-8">
+                    <a href="#" class="text-gray-300 hover:text-white" id="tanda-terima-link">Tanda Terima</a>
+                    <a href="#" class="text-gray-300 hover:text-white" id="bukti-kas-keluar-link">Bukti Kas Keluar</a>
                 </div>
-                <div class="flex justify-center items-center">
-                    <form action="#" method="GET" class="hidden lg:block lg:pl-2">
+
+                <!-- Middle section: Supplier and Dates -->
+                <div class="flex flex-wrap justify-center items-center space-x-2 lg:space-x-4 mt-2 lg:mt-0">
+                    <form id="filter-form" action="#" method="GET" class="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto">
+                        <div class="relative mt-1 lg:mt-0">
+                            <label for="supplier" class="sr-only">Supplier</label>
+                            <select id="supplier" name="supplier" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <option value="" selected>Select supplier</option>
+                                @foreach ($suppliers as $supplier)
+                                <option value="{{ $supplier->name }}">{{ $supplier->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="relative mt-1 lg:mt-0">
+                            <label for="start-date" class="sr-only">Start Date</label>
+                            <input type="date" id="start-date" name="start_date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        </div>
+                        <div class="relative mt-1 lg:mt-0">
+                            <label for="end-date" class="sr-only">End Date</label>
+                            <input type="date" id="end-date" name="end_date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right section: Search -->
+                <div class="flex justify-end items-center mt-2 lg:mt-0">
+                    <form action="#" method="GET" class="lg:w-96">
                         <label for="topbar-search" class="sr-only">Search</label>
-                        <div class="relative mt-1 lg:w-96">
+                        <div class="relative mt-1 lg:mt-0">
                             <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
@@ -22,12 +49,14 @@
                 </div>
             </div>
         </nav>
-        <div class="container">
-            <div id="tanda-terima-table" class="max-h-screen overflow-y-auto bg-white shadow-md rounded-lg hidden">
+
+        <div class="container flex-grow overflow-auto">
+            <div id="tanda-terima-table" class="bg-white shadow-md rounded-lg hidden">
                 <table class="min-w-full bg-white border border-gray-300">
                     <thead class="sticky top-0 bg-gray-200">
                         <tr class="text-gray-700">
-                            <th class="py-2 px-4 border-b"></th>
+                            <th class="py-2 px-4 border-b">No</th>
+                            <th class="py-2 px-4 border-b">Nomor Tanda Terima</th>
                             <th class="py-2 px-4 border-b">Tanggal</th>
                             <th class="py-2 px-4 border-b">Supplier</th>
                             <th class="py-2 px-4 border-b text-center">Faktur Pajak</th>
@@ -42,11 +71,12 @@
                     </thead>
                     <tbody>
                         @foreach ($tandaTerimaRecords as $tt)
-                        <tr>
+                        <tr class="border border-b">
                             <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1 }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $tt->id }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 tanggal">{{ $tt->tanggal }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 supplier">{{ $tt->supplier->name ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 pajak">
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500">
                                 {!! $tt->pajak == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
                             </td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 po">
@@ -58,31 +88,31 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 surat-jalan">
                                 {!! $tt->surat_jalan == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
                             </td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 jatuh-tempo">{{ $tt->tanggal_jatuh_tempo }}</td>
-                            <td class="py-4 px-6 text-sm text-gray-500 break-words keterangan">{{ $tt->keterangan ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
-                                <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
-                            </td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $tt->tanggal_jatuh_tempo }}</td>
+                            <td class="py-4 px-6 text-sm text-gray-500 break-words">{{ $tt->keterangan ?? 'N/A' }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $tt->user->name ?? 'N/A' }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500"><a href="" class="text-gray-500 hover:text-black underline">Detail</a></td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-            <div id="bukti-kas-keluar-table" class="max-h-screen overflow-y-auto bg-white shadow-md rounded-lg hidden">
+            <div id="bukti-kas-keluar-table" class="bg-white shadow-md rounded-lg hidden">
                 <table class="min-w-full bg-white border border-gray-300">
                     <thead class="sticky top-0 bg-gray-200">
                         <tr class="text-gray-700">
-                            <th class="py-2 px-4 border-b">No.</th>
-                            <th class="py-2 px-4 border-b">Nomer</th>
+                            <th class="py-2 px-4 border-b">No</th>
+                            <th class="py-2 px-4 border-b">Nomor Bukti Kas Keluar</th>
                             <th class="py-2 px-4 border-b">Tanggal</th>
-                            <th class="py-2 px-4 border-b">Dibayarkan Kepada</th>
-                            <th class="py-2 px-4 border-b">Kas/Cheque/Bilyet Giro Bank</th>
-                            <th class="py-2 px-4 border-b">Jumlah USD / Rp</th>
-                            <th class="py-2 px-4 border-b">No. Cek</th>
+                            <th class="py-2 px-4 border-b">Supplier</th>
+                            <th class="py-2 px-4 border-b text-center">Faktur Pajak</th>
+                            <th class="py-2 px-4 border-b text-center">PO</th>
+                            <th class="py-2 px-4 border-b text-center">BPB</th>
+                            <th class="py-2 px-4 border-b text-center">Surat Jalan</th>
                             <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
+                            <th class="py-2 px-4 border-b">Keterangan</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
-                            <th class="py-2 px-4 border-b">Aksi</th>
+                            <th class="py-2 px-4 border-b">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,6 +130,10 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
                             </td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->tanggal_jatuh_tempo }}</td>
+                            <td class="py-4 px-6 text-sm text-gray-500 break-words">{{ $bk->keterangan ?? 'N/A' }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->user->name ?? 'N/A' }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500"><a href="/dashboard/all/bukti-kas/{{$bk->id}}" class="text-gray-500 hover:text-black underline">Detail</a></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -125,11 +159,74 @@
             </div>
         </div>
     </section>
+
 </x-layout>
 
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        function parseDate(dateString) {
+            // Check if the date is in YYYY-MM-DD format
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+                return new Date(dateString);
+            }
+            // Otherwise, assume DD-MM-YYYY format
+            const [day, month, year] = dateString.split('-');
+            return new Date(year, month - 1, day);
+        }
+
+        function filterTableRows() {
+    console.log('Filtering...');
+    const selectedSupplier = document.getElementById('supplier').value;
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+
+    console.log('Selected Supplier:', selectedSupplier);
+    console.log('Start Date:', startDate);
+    console.log('End Date:', endDate);
+
+    const tables = ['tanda-terima-table', 'bukti-kas-keluar-table'];
+
+    tables.forEach(tableId => {
+        const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+        let visibleRows = 0;
+        
+        rows.forEach(row => {
+            const supplierCell = row.querySelector('td:nth-child(4)');
+            const dateCell = row.querySelector('td:nth-child(3)');
+            
+            if (!supplierCell || !dateCell) return;
+
+            const supplierName = supplierCell.textContent.trim();
+            const rowDateStr = dateCell.textContent.trim();
+
+            let showRow = true;
+
+            // Check supplier
+            if (selectedSupplier && selectedSupplier !== "") {
+                showRow = supplierName === selectedSupplier;
+            }
+
+            // Check date range
+            if (showRow && (startDate || endDate)) {
+                const rowDate = parseDate(rowDateStr);
+
+                if (startDate && rowDate < parseDate(startDate)) {
+                    showRow = false;
+                }
+                if (endDate && rowDate > parseDate(endDate)) {
+                    showRow = false;
+                }
+            }
+
+            row.style.display = showRow ? '' : 'none';
+            if (showRow) visibleRows++;
+        });
+
+        console.log(`Visible rows in ${tableId}: ${visibleRows}`);
+    });
+}
+
         function switchTable(showTableId, hideTableId, activeLinkId, inactiveLinkId, newUrl) {
             document.getElementById(showTableId).classList.remove('hidden');
             document.getElementById(hideTableId).classList.add('hidden');
@@ -314,13 +411,21 @@
             switchTable('bukti-kas-keluar-table', 'tanda-terima-table', 'bukti-kas-keluar-link', 'tanda-terima-link', '/dashboard/all/bukti-kas');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchBar = document.getElementById('topbar-search');
-            searchBar.addEventListener('input', () => {
-                searchAndHighlight('tanda-terima-table', 0); // Search by index for tanda-terima-table
-                searchAndHighlight('bukti-kas-keluar-table', 1); // Search by nomer for bukti-kas-keluar-table
-            });
+
+        const searchBar = document.getElementById('topbar-search');
+        searchBar.addEventListener('input', () => {
+            searchAndHighlight('tanda-terima-table', 0); // Search by index for tanda-terima-table
+            searchAndHighlight('bukti-kas-keluar-table', 1); // Search by nomer for bukti-kas-keluar-table
         });
+
+
+        const supplierDropdown = document.getElementById('supplier');
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+
+        supplierDropdown.addEventListener('change', filterTableRows);
+        startDateInput.addEventListener('input', filterTableRows);
+        endDateInput.addEventListener('input', filterTableRows);
     });
 </script>
 
