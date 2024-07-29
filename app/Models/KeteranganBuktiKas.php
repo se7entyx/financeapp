@@ -14,7 +14,6 @@ class KeteranganBuktiKas extends Model
         'keterangan',
         'dk',
         'jumlah',
-        'currency'
     ];
 
     public function bukti_kas(): BelongsTo{

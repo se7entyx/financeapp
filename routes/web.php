@@ -33,8 +33,10 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/new/tanda-terima', [SupplierController::class, 'showForm'])->name('new.tanda-terima');
     Route::post('/dashboard/new/tanda-terima2', [TandaTerimaController::class, 'store'])->name('newtanda');
+    Route::get('/tanda-terima/{id}/invoices', [TandaTerimaController::class, 'getInvoices']);
     Route::get('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'index'])->name('buktikas.index');
     Route::post('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'store'])->name('buktikas.store');
+    Route::get('/bukti-kas/{id}/details', [BuktiKasController::class, 'getDetails']);
     Route::post('/post-bukti-info', [BuktiKasController::class, 'saveKeterangan'])->name('buktikas.saveKeterangan');
     Route::get('/get-supplier-info', [BuktiKasController::class, 'getSupplierInfo']);
     Route::get('/dashboard/all', function () {

@@ -85,4 +85,12 @@ class BuktiKasController extends Controller
         $currency = Invoices::with(['tanda_terima'])->where('id', $buktiKasRecords->tanda_terima->id)->pluck('currency')->first();
         return view('alldoc',['title' => 'All Document', 'buktiKasRecords' => $buktiKasRecords, 'currency' => $currency]);
     }
+
+    public function getDetails($id)
+    {
+        // Fetch the BuktiKas record along with its related KeteranganBuktiKas records
+        $buktiKas = BuktiKas::with('keterangan_bukti_kas')->findOrFail($id);
+
+        return response()->json($buktiKas);
+    }
 }

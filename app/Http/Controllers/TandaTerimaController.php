@@ -60,11 +60,20 @@ class TandaTerimaController extends Controller
         }
 
         return redirect()->route('new.tanda-terima')->with('success', 'Tanda Terima created successfully.');
-
     }
-    public function showAll(){
+    public function showAll()
+    {
         $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->get();
 
         return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => 'All Documents']);
+    }
+
+    public function getInvoices($tandaTerimaId)
+    {
+        // Fetch all invoices related to the specified tanda_terima_id
+        $invoices = Invoices::where('tanda_terima_id', $tandaTerimaId)->get();
+
+        // Return or process the results as needed
+        return response()->json($invoices);
     }
 }
