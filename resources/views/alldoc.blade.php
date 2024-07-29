@@ -76,7 +76,7 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $tt->id }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 tanggal">{{ $tt->tanggal }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 supplier">{{ $tt->supplier->name ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500">
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 pajak">
                                 {!! $tt->pajak == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
                             </td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 po">
@@ -88,10 +88,12 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 surat-jalan">
                                 {!! $tt->surat_jalan == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
                             </td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $tt->tanggal_jatuh_tempo }}</td>
-                            <td class="py-4 px-6 text-sm text-gray-500 break-words">{{ $tt->keterangan ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $tt->user->name ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500"><a href="" class="text-gray-500 hover:text-black underline">Detail</a></td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 jatuh-tempo">{{ $tt->tanggal_jatuh_tempo }}</td>
+                            <td class="py-4 px-6 text-sm text-gray-500 break-words keterangan">{{ $tt->keterangan ?? 'N/A' }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
+                                <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -104,13 +106,11 @@
                             <th class="py-2 px-4 border-b">No</th>
                             <th class="py-2 px-4 border-b">Nomor Bukti Kas Keluar</th>
                             <th class="py-2 px-4 border-b">Tanggal</th>
-                            <th class="py-2 px-4 border-b">Supplier</th>
-                            <th class="py-2 px-4 border-b text-center">Faktur Pajak</th>
-                            <th class="py-2 px-4 border-b text-center">PO</th>
-                            <th class="py-2 px-4 border-b text-center">BPB</th>
-                            <th class="py-2 px-4 border-b text-center">Surat Jalan</th>
+                            <th class="py-2 px-4 border-b">Dibayarkan kepada</th>
+                            <th class="py-2 px-4 border-b text-center">Kas</th>
+                            <th class="py-2 px-4 border-b text-center">Jumlah</th>
+                            <th class="py-2 px-4 border-b text-center">No Cek</th>
                             <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
-                            <th class="py-2 px-4 border-b">Keterangan</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
                             <th class="py-2 px-4 border-b">Action</th>
                         </tr>
@@ -130,10 +130,6 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
                             </td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->tanggal_jatuh_tempo }}</td>
-                            <td class="py-4 px-6 text-sm text-gray-500 break-words">{{ $bk->keterangan ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500">{{ $bk->user->name ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500"><a href="/dashboard/all/bukti-kas/{{$bk->id}}" class="text-gray-500 hover:text-black underline">Detail</a></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -176,56 +172,56 @@
         }
 
         function filterTableRows() {
-    console.log('Filtering...');
-    const selectedSupplier = document.getElementById('supplier').value;
-    const startDate = document.getElementById('start-date').value;
-    const endDate = document.getElementById('end-date').value;
+            console.log('Filtering...');
+            const selectedSupplier = document.getElementById('supplier').value;
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
 
-    console.log('Selected Supplier:', selectedSupplier);
-    console.log('Start Date:', startDate);
-    console.log('End Date:', endDate);
+            console.log('Selected Supplier:', selectedSupplier);
+            console.log('Start Date:', startDate);
+            console.log('End Date:', endDate);
 
-    const tables = ['tanda-terima-table', 'bukti-kas-keluar-table'];
+            const tables = ['tanda-terima-table', 'bukti-kas-keluar-table'];
 
-    tables.forEach(tableId => {
-        const rows = document.querySelectorAll(`#${tableId} tbody tr`);
-        let visibleRows = 0;
-        
-        rows.forEach(row => {
-            const supplierCell = row.querySelector('td:nth-child(4)');
-            const dateCell = row.querySelector('td:nth-child(3)');
-            
-            if (!supplierCell || !dateCell) return;
+            tables.forEach(tableId => {
+                const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+                let visibleRows = 0;
 
-            const supplierName = supplierCell.textContent.trim();
-            const rowDateStr = dateCell.textContent.trim();
+                rows.forEach(row => {
+                    const supplierCell = row.querySelector('td:nth-child(4)');
+                    const dateCell = row.querySelector('td:nth-child(3)');
 
-            let showRow = true;
+                    if (!supplierCell || !dateCell) return;
 
-            // Check supplier
-            if (selectedSupplier && selectedSupplier !== "") {
-                showRow = supplierName === selectedSupplier;
-            }
+                    const supplierName = supplierCell.textContent.trim();
+                    const rowDateStr = dateCell.textContent.trim();
 
-            // Check date range
-            if (showRow && (startDate || endDate)) {
-                const rowDate = parseDate(rowDateStr);
+                    let showRow = true;
 
-                if (startDate && rowDate < parseDate(startDate)) {
-                    showRow = false;
-                }
-                if (endDate && rowDate > parseDate(endDate)) {
-                    showRow = false;
-                }
-            }
+                    // Check supplier
+                    if (selectedSupplier && selectedSupplier !== "") {
+                        showRow = supplierName === selectedSupplier;
+                    }
 
-            row.style.display = showRow ? '' : 'none';
-            if (showRow) visibleRows++;
-        });
+                    // Check date range
+                    if (showRow && (startDate || endDate)) {
+                        const rowDate = parseDate(rowDateStr);
 
-        console.log(`Visible rows in ${tableId}: ${visibleRows}`);
-    });
-}
+                        if (startDate && rowDate < parseDate(startDate)) {
+                            showRow = false;
+                        }
+                        if (endDate && rowDate > parseDate(endDate)) {
+                            showRow = false;
+                        }
+                    }
+
+                    row.style.display = showRow ? '' : 'none';
+                    if (showRow) visibleRows++;
+                });
+
+                console.log(`Visible rows in ${tableId}: ${visibleRows}`);
+            });
+        }
 
         function switchTable(showTableId, hideTableId, activeLinkId, inactiveLinkId, newUrl) {
             document.getElementById(showTableId).classList.remove('hidden');
