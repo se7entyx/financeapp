@@ -8,6 +8,7 @@ use App\Models\KeteranganBuktiKas;
 use App\Models\TandaTerima;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class BuktiKasController extends Controller
@@ -21,8 +22,15 @@ class BuktiKasController extends Controller
     }
     public function getSupplierInfo(Request $request)
     {
-        $tandaTerima = TandaTerima::with('supplier')->find($request->input('tanda_terima_id'));
+        // Get the current user ID
+        $userId = Auth::id();
 
+        // Fetch all TandaTerima records with the associated suppliers for the authenticated user using eager loading
+        $tandaTerima = TandaTerima::with('supplier', 'user')
+            ->where('user_id', $userId)
+            ->find($request->input('tanda_terima_id'));
+
+        // Prepare the response data
         if ($tandaTerima) {
             return response()->json([
                 'supplier_name' => $tandaTerima->supplier->name,
@@ -30,8 +38,10 @@ class BuktiKasController extends Controller
             ]);
         }
 
+        // Return the supplier data as a JSON response
         return response()->json(['error' => 'Tanda Terima not found'], 404);
     }
+    
     public function store(Request $request)
     {
 
@@ -83,7 +93,7 @@ class BuktiKasController extends Controller
     {
         $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->get();
         $currency = Invoices::with(['tanda_terima'])->where('id', $buktiKasRecords->tanda_terima->id)->pluck('currency')->first();
-        return view('alldoc',['title' => 'All Document', 'buktiKasRecords' => $buktiKasRecords, 'currency' => $currency]);
+        return view('alldoc', ['title' => 'All Document', 'buktiKasRecords' => $buktiKasRecords, 'currency' => $currency]);
     }
 
     public function getDetails($id)
@@ -93,7 +103,8 @@ class BuktiKasController extends Controller
 
         return response()->json($buktiKas);
     }
-    public function deleteBk($id) {
+    public function deleteBk($id)
+    {
         $x = BuktiKas::find($id);
         $x->delete();
 
