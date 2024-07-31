@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('keterangan_bukti_kas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('bukti_kas_id');
+            $table->uuid('bukti_kas_id');
             $table->text('keterangan');
             $table->text('dk');
             $table->integer('jumlah');
             $table->timestamps();
-
-
+    
             $table->foreign('bukti_kas_id')->references('id')->on('bukti_kas')->onDelete('cascade');
         });
     }

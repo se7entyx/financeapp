@@ -7,26 +7,32 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Ramsey\Uuid\Uuid;
 
 class TandaTerima extends Model
 {
     use HasFactory;
     protected $table = 'tanda_terima';
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $fillable = [
-        'user_id',
-        'tanggal',
-        'supplier_id',
-        'pajak',
-        'po',
-        'bpb',
-        'surat_jalan',
-        'tanggal_jatuh_tempo',
-        'keterangan'
+        'increment_id', 'user_id', 'tanggal', 'supplier_id', 'pajak', 'po', 'bpb', 'surat_jalan',
+        'tanggal_jatuh_tempo', 'keterangan'
     ];
 
-    public function invoice(): HasMany
+    protected static function boot()
     {
-        return $this->hasMany(Invoices::class, foreignKey: 'tanda_terima_id');
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = Uuid::uuid4()->toString();
+            $model->increment_id = static::max('increment_id') + 1;
+        });
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoices::class, 'tanda_terima_id');
     }
 
     public function user(): BelongsTo

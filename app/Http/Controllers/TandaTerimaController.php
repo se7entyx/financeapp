@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoices;
+use App\Models\Supplier;
 use App\Models\TandaTerima;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,8 +13,6 @@ class TandaTerimaController extends Controller
     public function store(Request $request)
     {
         $userId = auth()->id();
-
-        // dd($userId);
 
         // Validate Tanda Terima data
         $validated = $request->validate([
@@ -77,10 +76,64 @@ class TandaTerimaController extends Controller
         return response()->json($invoices);
     }
 
-    public function deleteTt($id) {
+    public function deleteTt($id)
+    {
         $x = TandaTerima::find($id);
         $x->delete();
 
         return response()->with('success', 'Tanda terima deleted successfully!');
+    }
+
+    public function showEditForm($id)
+    {
+        $tandaTerima = TandaTerima::with('invoices')->findOrFail($id);
+        $z = Supplier::all();
+        $title = 'Edit Tanda Terima';
+
+        // dd($tandaTerima->invoices);
+        return view('editdoc', ['tandaTerimaRecords' => $tandaTerima, 'title' => $title, 'suppliers' => $z]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validate Tanda Terima data
+        $validated = $request->validate([
+            'tanggal' => 'required|string',
+            'supplier_id' => 'required|exists:suppliers,id',
+            'faktur' => 'nullable|string',
+            'po' => 'nullable|string',
+            'bpb' => 'nullable|string',
+            'sjalan' => 'nullable|string',
+            'jatuh_tempo' => 'required|string',
+            'notes' => 'nullable|string',
+            'invoice' => 'required|array',
+            'invoice.*' => 'required|string',
+            'nominal' => 'required|array',
+            'nominal.*' => 'required|numeric',
+            'currency' => 'required|array',
+            'currency.*' => 'required|string|in:IDR,USD',
+        ]);
+
+        $tandaTerima = TandaTerima::findOrFail($id);
+        $tandaTerima->supplier_id = $validated['supplier_id'];
+        $tandaTerima->pajak = $validated['faktur'];
+        $tandaTerima->po = $validated['po'];
+        $tandaTerima->bpb = $validated['bpb'];
+        $tandaTerima->surat_jalan = $validated['sjalan'];
+        $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
+        $tandaTerima->keterangan = $validated['notes'];
+        $tandaTerima->save();
+
+        $tandaTerima->invoices()->whereNotIn('nomor', $validated['invoice'])->delete();
+
+        // Update or create invoices
+        foreach ($validated['invoice'] as $index => $invoiceNo) {
+            $invoice = $tandaTerima->invoices()->firstOrNew(['nomor' => $invoiceNo]);
+            $invoice->nominal = $validated['nominal'][$index];
+            $invoice->currency = $validated['currency'][$index];
+            $invoice->save();
+        }
+
+        return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima created successfully.');
     }
 }

@@ -22,8 +22,9 @@
           </div>
           <div class="col-span-1">
             <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada</label>
-            <input type="text" name="tanda_terima_id" id="input-no-tanda-terima" placeholder="Masukan nomor tanda terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <input type="hidden" name="tanda_terima_id_hidden" id="input-no-tanda-terima-hidden">
+            <input type="text" id="input-no-tanda-terima"  placeholder="Masukan nomor tanda terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <input type="hidden" id="input-no-tanda-terima-hidden" name="tanda_terima_id_hidden" readonly>
+
           </div>
           <div class="col-start-1">
             <label for="input-part4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kas/Cheque/Bilyet Giro Bank</label>
@@ -41,7 +42,7 @@
                   <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                 </svg>
               </div>
-              <input id="datepicker-autohide-x" datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 cursor-not-allowed focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic input" readonly>
+              <input id="datepicker-autohide-x" datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 cursor-not-allowed focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" placeholder="Automatic input" readonly>
             </div>
           </div>
           <input type="hidden" name="jumlah" id="total-amount">
@@ -226,27 +227,35 @@
       const tandaTerimaHiddenInput = document.getElementById('input-no-tanda-terima-hidden');
 
       function updateSupplierInfo() {
-        const tandaTerimaId = tandaTerimaInput.value;
+        const tandaTerimaId = document.getElementById('input-no-tanda-terima').value;
 
-        fetch(`/get-supplier-info?tanda_terima_id=${tandaTerimaId}`)
+        fetch(`/get-supplier-info?increment_id=${tandaTerimaId}`) // Ensure the correct parameter name
           .then(response => response.json())
           .then(data => {
             if (data.supplier_name) {
               // Update the visible input with supplier name
-              tandaTerimaInput.value = data.supplier_name;
+              document.getElementById('input-no-tanda-terima').value = data.supplier_name;
 
               // Update the hidden input with the original tanda_terima_id
-              tandaTerimaHiddenInput.value = tandaTerimaId;
+              document.getElementById('input-no-tanda-terima-hidden').value = data.tanda_terima_id;
+              console.log(data.tanda_terima_id);
+              console.log(document.getElementById('input-no-tanda-terima-hidden').value);
 
               // Update the datepicker field
               document.getElementById('datepicker-autohide-x').value = data.tanggal_jatuh_tempo;
             } else {
+              console.log(data);
               alert('Tanda Terima not found');
               document.getElementById('datepicker-autohide-x').value = '';
-              tandaTerimaHiddenInput.value = '';
+              document.getElementById('input-no-tanda-terima-hidden').value = '';
             }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while fetching the supplier information');
           });
       }
+
 
       function restoreOriginalValue() {
         const originalValue = tandaTerimaHiddenInput.value;
@@ -464,7 +473,7 @@
 
           const cellAction = newRow.insertCell(4);
           cellAction.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
-          cellAction.innerHTML = '<button class="mr-3 font-medium text-blue-600 dark:text-blue-500 hover:underline editButton" data-modal-toggle="edit-modal">Edit</button> <button class="font-medium text-red-600 dark:text-red-500 hover:underline deleteButton">Delete</button>';
+          cellAction.innerHTML = '<button type="button" class="mr-3 font-medium text-blue-600 dark:text-blue-500 hover:underline editButton" data-modal-target="edit-modal" data-modal-toggle="edit-modal">Edit</button> <button type="button" class="font-medium text-red-600 dark:text-red-500 hover:underline deleteButton">Delete</button>';
 
           // Add event listener for the delete button
           const deleteButton = newRow.querySelector('.deleteButton');

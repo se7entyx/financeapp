@@ -84,7 +84,7 @@
                         @foreach ($tandaTerimaRecords as $tt)
                         <tr class="border border-b">
                             <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1 }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $tt->id }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $tt->increment_id }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 tanggal">{{ $tt->tanggal }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 supplier">{{ $tt->supplier->name ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 pajak">
@@ -439,7 +439,7 @@
 
         const searchBar = document.getElementById('topbar-search');
         searchBar.addEventListener('input', () => {
-            searchAndHighlight('tanda-terima-table', 0); // Search by index for tanda-terima-table
+            searchAndHighlight('tanda-terima-table', 1); // Search by index for tanda-terima-table
             searchAndHighlight('bukti-kas-keluar-table', 1); // Search by nomer for bukti-kas-keluar-table
         });
 

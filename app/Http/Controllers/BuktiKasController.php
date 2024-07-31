@@ -28,24 +28,26 @@ class BuktiKasController extends Controller
         // Fetch all TandaTerima records with the associated suppliers for the authenticated user using eager loading
         $tandaTerima = TandaTerima::with('supplier', 'user')
             ->where('user_id', $userId)
-            ->find($request->input('tanda_terima_id'));
+            ->where('increment_id', $request->input('increment_id'))
+            ->first();
 
         // Prepare the response data
         if ($tandaTerima) {
             return response()->json([
                 'supplier_name' => $tandaTerima->supplier->name,
-                'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo
+                'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo,
+                'tanda_terima_id' => $tandaTerima->id
             ]);
         }
 
         // Return the supplier data as a JSON response
         return response()->json(['error' => 'Tanda Terima not found'], 404);
     }
-    
+
     public function store(Request $request)
     {
-
-        // try {
+        // dd($request);
+        try {
         $userId = auth()->id();
         $validated = $request->validate([
             // 'user_id' => $userId,
@@ -58,11 +60,10 @@ class BuktiKasController extends Controller
             'hiddenBuktiField' => 'required|string'
         ]);
         // dd($validated);
-        // }
-        // catch (ValidationException $e) {
-        //     dd($e->errors());
-        // }
-
+        }
+        catch (ValidationException $e) {
+            dd($validated);
+        }
         $buktikas = new BuktiKas();
         $buktikas->user_id = $userId;
         $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
@@ -109,5 +110,12 @@ class BuktiKasController extends Controller
         $x->delete();
 
         return response()->with('success', 'Bukti Kas deleted successfully!');
+    }
+    public function showEditForm($id)
+    {
+        $buktikas = BuktiKas::with(['keterangan_bukti_kas', 'tanda_terima.supplier',])->findOrFail($id);
+        $title = 'Edit Bukti Kas';
+
+        return view('editdoc2', ['buktiKasRecords' => $buktikas, 'title' => $title,]);
     }
 }
