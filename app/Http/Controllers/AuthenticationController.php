@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Termwind\Components\Hr;
 
 use function Laravel\Prompts\alert;
@@ -64,5 +65,55 @@ class AuthenticationController extends Controller
             $user->save();
             return redirect()->intended('/dashboard');
         }
+    }
+
+    public function getUsers(Request $request)
+    {
+        $users = User::get();
+        return view('user', ['title' => 'All Users', 'users' => $users]);
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate(
+            [
+                'name' => 'required|max:255',
+                'phone' => 'string',
+                'email' => 'required|email:dns|unique:users',
+                'password' => 'string'
+            ]
+        );
+        // $validatedData['password'] = bcrypt($validatedData['password']);
+        $validatedData['phone'] = '0812532162611';
+        $validatedData['email_verified_at'] = now();
+        $validatedData['remember_token'] = Str::random(10);
+        $validatedData['password'] = Hash::make('12345678');
+        User::create($validatedData);
+        // $request->session()->flash('success', 'Registration successfull! Please Login!');
+        return redirect('/dashboard/admin/users')->with('success', 'Registration successfull!');
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $credentials = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email:dns|unique:users,email,' . $id,
+            'password' => 'required|min:8|max:255',
+        ]);
+
+        if ($credentials) {
+            $user = User::find($id);
+            $user->name = $credentials['name'];
+            $user->email = $credentials['email'];
+            $user->password = $credentials['password'];
+            $user->save();
+            return redirect('/dashboard/admin/users')->with('success', 'Update successfull!');
+        }
+    }
+
+    public function destroy($id) {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect('/dashboard/admin/users')->with('success', 'Delete successfull!');
     }
 }

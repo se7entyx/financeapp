@@ -70,7 +70,7 @@
                 </button>
                 <ul id="dropdown-pages2" class="hidden py-2 space-y-2">
                     <li>
-                        <a href="#" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">User</a>
+                        <a href="/dashboard/admin/users" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">User</a>
                     </li>
                 </ul>
             </li>

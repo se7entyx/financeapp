@@ -58,8 +58,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/my/bukti-kas', [CombinedController::class, 'getMyBuktiKas'])->name('my.bukti-kas');
     // Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
     Route::view('profile', 'profile', ['title' => 'Profile']);
+
     // Route::view('dashboard/new/tanda-terima', 'newtanda', ['title' => 'New Tanda Terima']);
     // Route::view('dashboard/new/bukti-pengeluaran', 'newbukti', ['title' => 'New Bukti Pengeluaran Kas / Bank']);
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard/admin/users', [AuthenticationController::class, 'getUsers'])->name('users.getUsers');
+    Route::post('/dasboard/admin/users', [AuthenticationController::class, 'store'])->name('users.store');
+    Route::put('/dashboard/admin/users/{id}', [AuthenticationController::class, 'updateUser'])->name('users.updateUser');
+    Route::delete('/dashboard/admin/users/{id}', [AuthenticationController::class, 'destroy'])->name('users.destroy');
 });
 
 // Invoice Routes (uncomment if needed)
