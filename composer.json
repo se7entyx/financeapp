@@ -5,10 +5,13 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^7.3 || ^8.0",
         "barryvdh/laravel-debugbar": "^3.13",
+        "barryvdh/laravel-dompdf": "^2.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "maatwebsite/excel": "^3.1",
+        "mpdf/mpdf": "^8.2",
         "ramsey/uuid": "^4.7"
     },
     "require-dev": {

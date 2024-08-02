@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
+
 return [
 
     /*
@@ -117,6 +120,14 @@ return [
     | Supported drivers: "file", "cache"
     |
     */
+
+    // 'providers' => ServiceProvider::defaultProviders()->merge([
+    //     \Maatwebsite\Excel\ExcelServiceProvider::class
+    // ]),
+
+    // 'aliases' => Facade::defaultAliases()->merge([
+    //     'Excel' => \Maatwebsite\Excel\Facades\Excel::class
+    // ])->toArray(),
 
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),

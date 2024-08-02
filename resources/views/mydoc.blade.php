@@ -106,6 +106,7 @@
                                 <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
                                 <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
                                 <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 delete" data-id="{{ $tt->id }}" data-table="tanda-terima">Delete</a>
+                                <a href="/dashboard/print/tanda-terima/{{$tt->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
                             </td>
                         </tr>
                         @endforeach

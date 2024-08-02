@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BuktiKasController;
 use App\Http\Controllers\CombinedController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TandaTerimaController;
@@ -43,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/edit/bukti-kas/{id}', [BuktiKasController::class, 'showEditForm'])->name('bukti-kas.edit');
     Route::post('/post-bukti-info', [BuktiKasController::class, 'saveKeterangan'])->name('buktikas.saveKeterangan');
     Route::get('/get-supplier-info', [BuktiKasController::class, 'getSupplierInfo']);
+    Route::get('/dashboard/print/tanda-terima/{id}', [ExportController::class, 'export']);
     Route::get('/dashboard/all', function () {
         return redirect('/dashboard/all/tanda-terima');
     });

@@ -152,7 +152,7 @@
     `;
 
             invoiceFieldsContainer.appendChild(div);
-        }); 
+        });
     });
 
     function removeItem(button) {
