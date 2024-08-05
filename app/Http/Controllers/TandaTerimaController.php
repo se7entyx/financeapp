@@ -160,9 +160,9 @@ class TandaTerimaController extends Controller
         $filePath = storage_path('app/public/tanda_terima.pdf');
         file_put_contents($filePath, $output);
 
-        // Send PDF to printer
-        exec("lp $filePath");
+        $fileUrl = asset('storage/tanda_terima.pdf');
 
-        return response()->json(['message' => 'Tanda Terima sent to printer successfully.']);
+
+        return redirect($fileUrl);
     }
 }

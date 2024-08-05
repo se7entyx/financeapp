@@ -16,7 +16,7 @@
                     </div>
                     <div class="sm:col-span-2 md:col-span-1">
                         <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
-                        <input type="text" id="tanggal" name="tanggal" readonly class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <input type="text" id="tanggal" name="tanggal" datepicker-format="dd-mm-yyyy" readonly class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                     </div>
                     <div class="sm:col-span-2 md:col-span-1 lg:col-span-2">
@@ -56,18 +56,12 @@
                     <div class="col-span-3 justify-center items-center">
                         <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Invoice</label>
                         <div class="flex items-center">
-                    <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" id="addButton">Add</button>
-                    <select name="currency" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 ml-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="IDR" selected>IDR</option>
-                        <option value="USD">USD</option>
-                    </select>
-                </div>
-                        <!-- <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 mx-3 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 mt-3 items-center justify-center" id="addButton">Add</button> -->
-                            <!-- <label for="currency" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Currency</label>
-                            <select name="currency" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" id="addButton">Add</button>
+                            <select name="currency" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 ml-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="IDR" selected>IDR</option>
                                 <option value="USD">USD</option>
-                            </select> -->
+                            </select>
+                        </div>
                         <div id="invoiceFieldsContainer">
                             <!-- Invoice fields will be appended here -->
                         </div>
@@ -87,12 +81,9 @@
                         <label for="notes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Notes</label>
                         <textarea id="notes" name="notes" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
                     </div>
-                    <div class="sm:col-span-4 md:col-span-1 lg:col-span-4 flex justify-center">
+                    <div class="sm:col-span-4 md:col-span-1 lg:col-span-4 flex justify-end">
                         <button type="submit" id="submitform" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Submit
-                        </button>
-                        <button type="" class="inline-flex ml-4 items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Preview
                         </button>
                     </div>
             </form>
@@ -103,7 +94,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         console.log(document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-
+        var invoiceCount = 0;
         // Toggle checkbox values between 'true' and 'false'
         function toggleCheckboxValue(checkboxId) {
             document.getElementById(checkboxId).addEventListener('change', function() {
@@ -120,7 +111,7 @@
         const now = new Date();
         const formattedDate = now.toLocaleDateString('en-GB', {
             day: '2-digit',
-            month: 'short',
+            month: '2-digit',
             year: 'numeric'
         });
         document.getElementById('tanggal').value = formattedDate;
@@ -135,10 +126,21 @@
             return `${currency} ${new Intl.NumberFormat('id-ID').format(value)}`;
         }
 
-        let invoiceCount = 0;
+        
         // Add new invoice fields dynamically
         addButton.addEventListener('click', function() {
+            var invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
+            var invoiceCount = invoiceRow.length;
+            console.log(invoiceCount); // Decrement the invoice count after removing the item
+            if(invoiceCount == 6){
+                alert('Maksimal invoice adalah 6');
+                console.log(invoiceCount); // Decrement the invoice count after removing the item
+
+                return;
+            }
             invoiceCount++;
+            console.log(invoiceCount); // Decrement the invoice count after removing the item
+
             const div = document.createElement('div');
             div.className = 'invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end'; // Flex container with responsive direction
 
@@ -166,7 +168,28 @@
         const row = button.closest('.invoice-row');
         if (row) {
             row.remove();
-            invoiceCount--; // Decrement the invoice count after removing the item
+            invoiceCount--;
+            console.log(invoiceCount); // Decrement the invoice count after removing the item
         }
     }
+
+    document.getElementById('datepicker-autohide').addEventListener('change', function() {
+    // Get the selected date value
+    const selectedDate = this.value;
+
+    // Convert the selected date to a Date object (assuming format dd-mm-yyyy)
+    const [day, month, year] = selectedDate.split('-');
+    const selectedDateObj = new Date(`${year}-${month}-${day}`);
+
+    // Get today's date without time part
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Check if the selected date is valid and greater than today
+    if (isNaN(selectedDateObj.getTime()) || selectedDateObj <= today) {
+        alert('Please select a valid date greater than today.');
+        // Clear the input field
+        this.value = '';
+    }
+});
 </script>
