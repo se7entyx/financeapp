@@ -16,8 +16,18 @@ class BuktiKasController extends Controller
     protected $table = 'tanda_terima';
     public function index()
     {
-        return  view('newbukti', [
-            'title' => "New Bukti Pengeluaran Kas / Bank"
+        $userId = Auth::id();
+
+        // Fetch TandaTerima records that are not assigned to BuktiKas
+        $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
+            ->where('user_id', $userId)
+            ->whereDoesntHave('bukti_kas');
+
+        $tandaTerimas = $tandaTerimaQuery->get();
+
+        return view('newbukti', [
+            'title' => "New Bukti Pengeluaran Kas / Bank",
+            'tandaTerimas' => $tandaTerimas
         ]);
     }
     public function getSupplierInfo($tandaTerimaInc, $buktiKasId = null)
@@ -52,7 +62,7 @@ class BuktiKasController extends Controller
 
         // Prepare the response data
         if ($tandaTerima) {
-            $currency = $tandaTerima->invoices->first()->currency ?? 'IDR';
+            $currency = $tandaTerima->currency ?? 'IDR';
             return response()->json([
                 'supplier_name' => $tandaTerima->supplier->name,
                 'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo,

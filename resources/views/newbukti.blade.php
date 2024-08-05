@@ -21,8 +21,13 @@
             </div>
           </div>
           <div class="col-span-1">
-            <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Tanda Terima</label>
-            <input type="text" id="input-no-tanda-terima" placeholder="Masukan nomor tanda terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <label for="dropdown-no-tanda-terima" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Tanda Terima</label>
+            <select id="dropdown-no-tanda-terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option value="" disabled selected>Masukan nomor tanda terima</option>
+              @foreach($tandaTerimas as $tandaTerima)
+              <option value="{{ $tandaTerima->increment_id }}">{{ $tandaTerima->increment_id }}</option>
+              @endforeach
+            </select>
           </div>
           <div class="col-span-1">
             <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada</label>
@@ -229,7 +234,7 @@
       let currentEditRow = null;
       const editModal = document.getElementById('edit-modal');
       const overlay = document.getElementById('modal-overlay');
-      const tandaTerimaInput = document.getElementById('input-no-tanda-terima');
+      const tandaTerimaInput = document.getElementById('dropdown-no-tanda-terima');
       const tandaTerimaHiddenInput = document.getElementById('input-no-tanda-terima-hidden');
       const supplier = document.getElementById('input-supplier');
       const currency1 = document.getElementById('currency-button-1');
@@ -237,7 +242,7 @@
       // let original = null;
 
       function updateSupplierInfo() {
-        const tandaTerimaId = document.getElementById('input-no-tanda-terima').value;
+        const tandaTerimaId = document.getElementById('dropdown-no-tanda-terima').value;
 
         fetch(`/get-supplier-info/${tandaTerimaId}`) // Ensure the correct parameter name
           .then(response => response.json())
@@ -277,6 +282,10 @@
 
       // Restore the original value and update the hidden input on focus out
       tandaTerimaInput.addEventListener('focusout', updateSupplierInfo);
+
+      document.getElementById('dropdown-no-tanda-terima').addEventListener('change', function() {
+        this.blur(); // This will remove focus from the dropdown
+      });
 
       function updateHiddenBuktiField(buktiArray) {
         // Convert the array to a JSON string

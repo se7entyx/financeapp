@@ -55,11 +55,11 @@ class User extends Authenticatable
 
     public function tanda_terima(): HasMany
     {
-        return $this->hasMany(TandaTerima::class, foreignKey: 'user_id');
+        return $this->hasMany(TandaTerima::class, 'user_id');
     }
 
     public function bukti_kas(): HasMany
     {
-        return $this->hasMany(BuktiKas::class, foreignKey: 'user_id');
+        return $this->hasMany(BuktiKas::class, 'user_id');
     }
 }
