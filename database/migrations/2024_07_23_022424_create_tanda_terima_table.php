@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tanda_terima', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->unsignedBigInteger('increment_id')->unique();
             $table->unsignedBigInteger('user_id');
             $table->string('tanggal');
             $table->unsignedBigInteger('supplier_id');
@@ -21,9 +22,9 @@ return new class extends Migration
             $table->string('bpb');
             $table->string('surat_jalan');
             $table->string('tanggal_jatuh_tempo');
-            $table->text('keterangan');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
-
+    
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
         });

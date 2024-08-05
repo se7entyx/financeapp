@@ -20,49 +20,70 @@ class BuktiKasController extends Controller
             'title' => "New Bukti Pengeluaran Kas / Bank"
         ]);
     }
-    public function getSupplierInfo(Request $request)
+    public function getSupplierInfo($tandaTerimaInc, $buktiKasId = null)
     {
         // Get the current user ID
         $userId = Auth::id();
 
-        // Fetch all TandaTerima records with the associated suppliers for the authenticated user using eager loading
-        $tandaTerima = TandaTerima::with('supplier', 'user')
+        // Fetch TandaTerima records that are not assigned to BuktiKas, or are assigned to the current BuktiKas being edited
+        $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
             ->where('user_id', $userId)
-            ->find($request->input('tanda_terima_id'));
+            ->where('increment_id', $tandaTerimaInc);
+
+        if ($buktiKasId) {
+            $buktiKas = BuktiKas::find($buktiKasId);
+
+            if ($buktiKas) {
+                // Include the TandaTerima associated with the current BuktiKas being edited
+                $tandaTerimaQuery->where(function ($query) use ($buktiKas) {
+                    $query->whereDoesntHave('bukti_kas')
+                        ->orWhere('id', $buktiKas->tanda_terima_id);
+                });
+            } else {
+                // If BuktiKas is not found, still exclude those assigned to BuktiKas
+                $tandaTerimaQuery->whereDoesntHave('bukti_kas');
+            }
+        } else {
+            // Exclude those assigned to BuktiKas
+            $tandaTerimaQuery->whereDoesntHave('bukti_kas');
+        }
+
+        $tandaTerima = $tandaTerimaQuery->first();
 
         // Prepare the response data
         if ($tandaTerima) {
+            $currency = $tandaTerima->invoices->first()->currency ?? 'IDR';
             return response()->json([
                 'supplier_name' => $tandaTerima->supplier->name,
-                'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo
+                'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo,
+                'tanda_terima_id' => $tandaTerima->id,
+                'currency' => $currency
             ]);
         }
 
-        // Return the supplier data as a JSON response
-        return response()->json(['error' => 'Tanda Terima not found'], 404);
+        // Return an error if TandaTerima not found
+        return response()->json(['error' => 'Tanda Terima not found or already used'], 404);
     }
-    
+
     public function store(Request $request)
     {
-
-        // try {
-        $userId = auth()->id();
-        $validated = $request->validate([
-            // 'user_id' => $userId,
-            'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',
-            'nomer' => 'required|string',
-            'tanggal' => 'nullable|string',
-            'kas' => 'required|string',
-            'jumlah' => 'integer',
-            'no_cek' => 'string',
-            'hiddenBuktiField' => 'required|string'
-        ]);
-        // dd($validated);
-        // }
-        // catch (ValidationException $e) {
-        //     dd($e->errors());
-        // }
-
+        // dd($request);
+        try {
+            $userId = auth()->id();
+            $validated = $request->validate([
+                // 'user_id' => $userId,
+                'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',
+                'nomer' => 'required|string',
+                'tanggal' => 'nullable|string',
+                'kas' => 'required|string',
+                'jumlah' => 'integer',
+                'no_cek' => 'string',
+                'hiddenBuktiField' => 'required|string'
+            ]);
+            // dd($validated);
+        } catch (ValidationException $e) {
+            dd($validated);
+        }
         $buktikas = new BuktiKas();
         $buktikas->user_id = $userId;
         $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
@@ -109,5 +130,78 @@ class BuktiKasController extends Controller
         $x->delete();
 
         return response()->with('success', 'Bukti Kas deleted successfully!');
+    }
+    public function showEditForm($id)
+    {
+        $buktikas = BuktiKas::with(['keterangan_bukti_kas', 'tanda_terima.supplier', 'tanda_terima.invoices'])->findOrFail($id);
+        $tandaTerima = $buktikas->tanda_terima;
+        // Get the currency from the first invoice
+        $currency = $tandaTerima->invoices->first()->currency;
+
+        $title = 'Edit Bukti Kas';
+
+        return view('editdoc2', ['buktiKasRecords' => $buktikas, 'title' => $title, 'currency' => $currency]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validate Tanda Terima data
+        $validated = $request->validate([
+            'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',
+            'nomer' => 'required|string',
+            'tanggal' => 'nullable|string',
+            'kas' => 'required|string',
+            'jumlah' => 'integer',
+            'no_cek' => 'string',
+            'hiddenBuktiField' => 'required|string'
+        ]);
+
+        $buktikas = BuktiKas::findOrFail($id);
+        $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
+        $buktikas->nomer = $validated['nomer'];
+        $buktikas->tanggal = $validated['tanggal'];
+        $buktikas->kas = $validated['kas'];
+        $buktikas->jumlah = $validated['jumlah'];
+        $buktikas->no_cek = $validated['no_cek'];
+        $buktikas->save();
+
+        $buktiArray = json_decode($request->input('hiddenBuktiField'), true);
+
+
+        $existingBuktiKasIds = KeteranganBuktiKas::where('bukti_kas_id', $id)->pluck('id')->toArray();
+
+        // Create an array to keep track of processed IDs
+        $processedIds = [];
+
+        foreach ($buktiArray as $buktiItem) {
+            if (isset($buktiItem['id'])) {
+                // Update existing record
+                $updatedKeterangan = KeteranganBuktiKas::findOrFail($buktiItem['id']);
+                $updatedKeterangan->keterangan = $buktiItem['notes'];
+                $updatedKeterangan->dk = $buktiItem['dk'];
+                $updatedKeterangan->jumlah = $buktiItem['nominalValue'];
+                $updatedKeterangan->save();
+
+                // Add the processed ID to the array
+                $processedIds[] = $buktiItem['id'];
+            } else {
+                // Create new record
+                $newKeterangan = new KeteranganBuktiKas();
+                $newKeterangan->bukti_kas_id = $id;
+                $newKeterangan->keterangan = $buktiItem['notes'];
+                $newKeterangan->dk = $buktiItem['dk'];
+                $newKeterangan->jumlah = $buktiItem['nominalValue'];
+                $newKeterangan->save();
+
+                // Add the new ID to the processed IDs
+                $processedIds[] = $newKeterangan->id;
+            }
+        }
+
+        // Find IDs to delete (existing IDs that were not processed)
+        $idsToDelete = array_diff($existingBuktiKasIds, $processedIds);
+        KeteranganBuktiKas::whereIn('id', $idsToDelete)->delete();
+
+        return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas Updated successfully.');
     }
 }

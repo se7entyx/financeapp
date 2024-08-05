@@ -7,7 +7,7 @@
         <div class="grid gap-x-8 gap-y-4 mb-6 lg:grid-cols-4 md:grid-cols-1 sm:grid-cols-1">
           <div class="col-span-1">
             <label for="nomer-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomer</label>
-            <input type="text" id="nomer" name="nomer" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor"/>
+            <input type="text" id="nomer" name="nomer" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" />
           </div>
           <div class="col-span-1">
             <label for="input-part2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
@@ -21,9 +21,13 @@
             </div>
           </div>
           <div class="col-span-1">
+            <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Tanda Terima</label>
+            <input type="text" id="input-no-tanda-terima" placeholder="Masukan nomor tanda terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          </div>
+          <div class="col-span-1">
             <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada</label>
-            <input type="text" name="tanda_terima_id" id="input-no-tanda-terima" placeholder="Masukan nomor tanda terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <input type="hidden" name="tanda_terima_id_hidden" id="input-no-tanda-terima-hidden">
+            <input type="text" id="input-supplier" name="supplier-name" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic Input" tanda-id readonly>
+            <input type="hidden" id="input-no-tanda-terima-hidden" name="tanda_terima_id_hidden" readonly>
           </div>
           <div class="col-start-1">
             <label for="input-part4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kas/Cheque/Bilyet Giro Bank</label>
@@ -41,7 +45,7 @@
                   <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                 </svg>
               </div>
-              <input id="datepicker-autohide-x" datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 cursor-not-allowed focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic input" readonly>
+              <input id="datepicker-autohide-x" datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 cursor-not-allowed focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" placeholder="Automatic input" readonly>
             </div>
           </div>
           <input type="hidden" name="jumlah" id="total-amount">
@@ -70,12 +74,10 @@
                   </div>
                   <input type="number" id="currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" />
                 </div>
-                <button id="dropdown-currency-button-2" data-dropdown-toggle="dropdown-currency-2" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
-                  IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                  </svg>
+                <button id="currency-button-1" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
+                  Not Set
                 </button>
-                <div id="dropdown-currency-2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
+                <!-- <div id="dropdown-currency-2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
                   <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button-2">
                     <li>
                       <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-2" data-currency-2="IDR">
@@ -92,7 +94,7 @@
                       </button>
                     </li>
                   </ul>
-                </div>
+                </div> -->
               </div>
             </div>
             <div>
@@ -183,12 +185,10 @@
                     </div>
                     <input type="number" id="edit-currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" />
                   </div>
-                  <button id="dropdown-currency-button-3" data-dropdown-toggle="dropdown-currency-3" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
-                    IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                    </svg>
+                  <button id="currency-button-2" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
+                    IDR
                   </button>
-                  <div id="dropdown-currency-3" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
+                  <!-- <div id="dropdown-currency-3" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button-2">
                       <li>
                         <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-3" data-currency-3="IDR">
@@ -205,7 +205,7 @@
                         </button>
                       </li>
                     </ul>
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="col-start-2 flex justify-end pt-4">
@@ -222,43 +222,58 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      const buktiTable = document.getElementById('buktiTable').getElementsByTagName('tbody')[0];
+      const addButton = document.getElementById('add-btn');
+      let no = 1;
+      bukti = [];
+      let currentEditRow = null;
+      const editModal = document.getElementById('edit-modal');
+      const overlay = document.getElementById('modal-overlay');
       const tandaTerimaInput = document.getElementById('input-no-tanda-terima');
       const tandaTerimaHiddenInput = document.getElementById('input-no-tanda-terima-hidden');
+      const supplier = document.getElementById('input-supplier');
+      const currency1 = document.getElementById('currency-button-1');
+      const currency2 = document.getElementById('currency-button-2');
+      // let original = null;
 
       function updateSupplierInfo() {
-        const tandaTerimaId = tandaTerimaInput.value;
+        const tandaTerimaId = document.getElementById('input-no-tanda-terima').value;
 
-        fetch(`/get-supplier-info?tanda_terima_id=${tandaTerimaId}`)
+        fetch(`/get-supplier-info/${tandaTerimaId}`) // Ensure the correct parameter name
           .then(response => response.json())
           .then(data => {
             if (data.supplier_name) {
-              // Update the visible input with supplier name
-              tandaTerimaInput.value = data.supplier_name;
-
-              // Update the hidden input with the original tanda_terima_id
-              tandaTerimaHiddenInput.value = tandaTerimaId;
+              if (bukti.length > 0 && bukti[0].selectedCurrency !== data.currency) {
+                // Update all rows to the new currency
+                bukti.forEach((item, index) => {
+                  item.selectedCurrency = data.currency;
+                  buktiTable.rows[index].cells[3].textContent = formatCurrency(item.nominalValue, data.currency);
+                });
+                updateTotal();
+              }
+              document.getElementById('input-no-tanda-terima-hidden').value = data.tanda_terima_id;
+              currency1.innerHTML = data.currency;
+              supplier.value = data.supplier_name;
 
               // Update the datepicker field
               document.getElementById('datepicker-autohide-x').value = data.tanggal_jatuh_tempo;
             } else {
+              console.log(data);
               alert('Tanda Terima not found');
               document.getElementById('datepicker-autohide-x').value = '';
-              tandaTerimaHiddenInput.value = '';
+              document.getElementById('input-no-tanda-terima-hidden').value = '';
+              supplier.value = '';
+              currency1.innerHTML = 'Not Set';
             }
+          })
+          .catch(error => {
+            alert('Tanda Terima not found');
+            document.getElementById('datepicker-autohide-x').value = '';
+            document.getElementById('input-no-tanda-terima-hidden').value = '';
+            supplier.value = '';
+            currency1.innerHTML = 'Not Set';
           });
       }
-
-      function restoreOriginalValue() {
-        const originalValue = tandaTerimaHiddenInput.value;
-        if (originalValue) {
-          tandaTerimaInput.value = originalValue;
-        }
-      }
-
-      // Set the original value in data attribute on focus
-      tandaTerimaInput.addEventListener('focus', () => {
-        restoreOriginalValue(); // Restore the original value when the input is focused
-      });
 
       // Restore the original value and update the hidden input on focus out
       tandaTerimaInput.addEventListener('focusout', updateSupplierInfo);
@@ -271,19 +286,12 @@
         document.getElementById('hiddenBuktiField').value = jsonString;
       }
 
-      const dropdownButton2 = document.getElementById('dropdown-currency-button-2');
-      const dropdownMenu2 = document.getElementById('dropdown-currency-2');
-      const menuItems2 = dropdownMenu2.querySelectorAll('button[data-currency-2]');
-      const dropdownButton3 = document.getElementById('dropdown-currency-button-3');
-      const dropdownMenu3 = document.getElementById('dropdown-currency-3');
-      const menuItems3 = dropdownMenu3.querySelectorAll('button[data-currency-3]');
-      const buktiTable = document.getElementById('buktiTable').getElementsByTagName('tbody')[0];
-      const addButton = document.getElementById('add-btn');
-      let no = 1;
-      bukti = [];
-      let currentEditRow = null;
-      const editModal = document.getElementById('edit-modal');
-      const overlay = document.getElementById('modal-overlay');
+      // const dropdownButton2 = document.getElementById('dropdown-currency-button-2');
+      // const dropdownMenu2 = document.getElementById('dropdown-currency-2');
+      // const menuItems2 = dropdownMenu2.querySelectorAll('button[data-currency-2]');
+      // const dropdownButton3 = document.getElementById('dropdown-currency-button-3');
+      // const dropdownMenu3 = document.getElementById('dropdown-currency-3');
+      // const menuItems3 = dropdownMenu3.querySelectorAll('button[data-currency-3]');
 
       function saveToLocalStorage() {
         localStorage.setItem('bukti', JSON.stringify(bukti));
@@ -304,10 +312,10 @@
         }
       }
 
-      function toggleDropdown(dropdownMenu) {
-        dropdownMenu.classList.toggle('hidden');
-        dropdownMenu.classList.toggle('block');
-      }
+      // function toggleDropdown(dropdownMenu) {
+      //   dropdownMenu.classList.toggle('hidden');
+      //   dropdownMenu.classList.toggle('block');
+      // }
 
       // Function to format currency
       function formatCurrency(value, currency) {
@@ -339,23 +347,23 @@
       }
 
       // Set default value
-      dropdownButton2.innerHTML = 'IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>';
+      // dropdownButton2.innerHTML = 'IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>';
 
-      menuItems2.forEach(item => {
-        item.addEventListener('click', function() {
-          const selectedCurrency2 = this.getAttribute('data-currency-2');
-          dropdownButton2.innerHTML = `${selectedCurrency2} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
-          toggleDropdown(dropdownMenu2);
-        });
-      });
+      // menuItems2.forEach(item => {
+      //   item.addEventListener('click', function() {
+      //     const selectedCurrency2 = this.getAttribute('data-currency-2');
+      //     dropdownButton2.innerHTML = `${selectedCurrency2} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
+      //     toggleDropdown(dropdownMenu2);
+      //   });
+      // });
 
-      menuItems3.forEach(item => {
-        item.addEventListener('click', function() {
-          const selectedCurrency3 = this.getAttribute('data-currency-3');
-          dropdownButton3.innerHTML = `${selectedCurrency3} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
-          toggleDropdown(dropdownMenu3);
-        });
-      });
+      // menuItems3.forEach(item => {
+      //   item.addEventListener('click', function() {
+      //     const selectedCurrency3 = this.getAttribute('data-currency-3');
+      //     dropdownButton3.innerHTML = `${selectedCurrency3} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
+      //     toggleDropdown(dropdownMenu3);
+      //   });
+      // });
 
       function updateRowNumbers() {
         const rows = buktiTable.getElementsByTagName('tr');
@@ -371,12 +379,11 @@
         const notes = bukti[rowIndex].notes;
         const dk = bukti[rowIndex].dk;
         const nominalValue = bukti[rowIndex].nominalValue;
-        const selectedCurrency = bukti[rowIndex].selectedCurrency;
 
         document.getElementById('edit-notes-input').value = notes;
         document.getElementById('edit-dk-input').value = dk;
         document.getElementById('edit-currency-input-2').value = nominalValue;
-        dropdownButton3.innerHTML = `${selectedCurrency} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
+        currency2.innerHTML = currency1.innerHTML.trim();
 
         editModal.classList.remove('hidden');
         editModal.classList.add('flex');
@@ -395,23 +402,7 @@
           const editedNotes = document.getElementById('edit-notes-input').value;
           const editeddk = document.getElementById('edit-dk-input').value;
           const editedNominalValue = document.getElementById('edit-currency-input-2').value;
-          const editedCurrency = dropdownButton3.textContent.trim();
-
-          if (editedCurrency !== bukti[0].selectedCurrency) {
-            if (!confirm(`You are about to change the currency to ${editedCurrency}. This will update all rows to use the new currency. Continue?`)) {
-              return;
-            }
-
-            // Update all rows to the new currency
-            bukti.forEach((item, index) => {
-              item.selectedCurrency = editedCurrency;
-              buktiTable.rows[index].cells[3].textContent = formatCurrency(item.nominalValue, editedCurrency);
-            });
-
-            // Update dropdown buttons
-            dropdownButton.innerHTML = `${editedCurrency} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
-            dropdownButton2.innerHTML = `${editedCurrency} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
-          }
+          const editedCurrency = currency2.innerHTML.trim();
 
           // Update the row data in the table
           currentEditRow.cells[1].textContent = editedNotes;
@@ -490,10 +481,10 @@
 
       function addRow(notes, dk, nominalValue, selectedCurrency) {
         // Check if there's an existing row and enforce currency consistency
-        if (bukti.length > 0 && selectedCurrency !== bukti[0].selectedCurrency) {
-          alert(`Please use the same currency (${bukti[0].selectedCurrency}) as the first row.`);
-          return;
-        }
+        // if (bukti.length > 0 && selectedCurrency !== bukti[0].selectedCurrency) {
+        //   alert(`Please use the same currency (${bukti[0].selectedCurrency}) as the first row.`);
+        //   return;
+        // }
 
         if (notes && dk && nominalValue) {
           // Store the bukti data in the array
@@ -522,7 +513,11 @@
         const notes = document.getElementById('notes-input').value;
         const dk = document.getElementById('dk-input').value;
         const nominalValue = document.getElementById('currency-input-2').value;
-        const selectedCurrency = dropdownButton2.textContent.trim();
+        const selectedCurrency = currency1.innerHTML.trim();
+        if (selectedCurrency === 'Not Set') {
+          alert('Currency must be set before adding a new row');
+          return;
+        }
         addRow(notes, dk, nominalValue, selectedCurrency);
       });
 

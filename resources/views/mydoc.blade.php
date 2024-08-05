@@ -84,7 +84,7 @@
                         @foreach ($tandaTerimaRecords as $tt)
                         <tr class="border border-b">
                             <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1 }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $tt->id }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $tt->increment_id }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 tanggal">{{ $tt->tanggal }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 supplier">{{ $tt->supplier->name ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 pajak">
@@ -104,7 +104,7 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
-                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
                                 <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 delete" data-id="{{ $tt->id }}" data-table="tanda-terima">Delete</a>
                             </td>
                         </tr>
@@ -142,7 +142,7 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
-                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
+                                <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
                                 <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 delete" data-id="{{ $bk->id }}" data-table="bukti-kas">Delete</a>
                             </td>
                         </tr>
@@ -518,7 +518,7 @@
 
         const searchBar = document.getElementById('topbar-search');
         searchBar.addEventListener('input', () => {
-            searchAndHighlight('tanda-terima-table', 0); // Search by index for tanda-terima-table
+            searchAndHighlight('tanda-terima-table', 1); // Search by index for tanda-terima-table
             searchAndHighlight('bukti-kas-keluar-table', 1); // Search by nomer for bukti-kas-keluar-table
         });
 

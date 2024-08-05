@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('form_bank', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('bukti_kas_id');
+            $table->uuid('bukti_kas_id');
             $table->timestamps();
 
             $table->foreign('bukti_kas_id')->references('id')->on('bukti_kas')->onDelete('cascade');

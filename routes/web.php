@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TandaTerimaController;
+use App\Models\BuktiKas;
 use App\Models\TandaTerima;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -37,8 +38,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'index'])->name('buktikas.index');
     Route::post('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'store'])->name('buktikas.store');
     Route::get('/bukti-kas/{id}/details', [BuktiKasController::class, 'getDetails']);
+    Route::get('/dashboard/edit/tanda-terima/{id}', [TandaTerimaController::class, 'showEditForm'])->name('tanda-terima.edit');
+    Route::put('/dashboard/edit/tanda-terima/{id}', [TandaTerimaController::class, 'update'])->name('tanda-terima.update');
+    Route::get('/dashboard/edit/bukti-kas/{id}', [BuktiKasController::class, 'showEditForm'])->name('bukti-kas.edit');
+    Route::put('/dashboard/edit/bukti-kas/{id}', [BuktiKasController::class, 'update'])->name('bukti-kas-update.edit');
     Route::post('/post-bukti-info', [BuktiKasController::class, 'saveKeterangan'])->name('buktikas.saveKeterangan');
-    Route::get('/get-supplier-info', [BuktiKasController::class, 'getSupplierInfo']);
+    Route::get('/get-supplier-info/{tandaTerimaId}/{buktiKasId?}', [BuktiKasController::class, 'getSupplierInfo']);
     Route::get('/dashboard/all', function () {
         return redirect('/dashboard/all/tanda-terima');
     });
