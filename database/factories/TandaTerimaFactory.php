@@ -31,6 +31,7 @@ class TandaTerimaFactory extends Factory
             'bpb' => $this->faker->randomElement(['true', 'false']),
             'surat_jalan' => $this->faker->randomElement(['true', 'false']),
             'tanggal_jatuh_tempo' => Carbon::now()->addDays(rand(185, 365))->format('d-m-Y'),
+            'currency' => $this->faker->randomElement(['IDR', 'USD']),
             'keterangan' => $this->faker->sentence,
         ];
     }

@@ -40,11 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'store'])->name('buktikas.store');
     Route::get('/bukti-kas/{id}/details', [BuktiKasController::class, 'getDetails']);
     Route::get('/dashboard/edit/tanda-terima/{id}', [TandaTerimaController::class, 'showEditForm'])->name('tanda-terima.edit');
+    Route::get('/dashboard/print/tanda-terima/{id}', [TandaTerimaController::class, 'printTandaTerima']);
     Route::put('/dashboard/edit/tanda-terima/{id}', [TandaTerimaController::class, 'update'])->name('tanda-terima.update');
     Route::get('/dashboard/edit/bukti-kas/{id}', [BuktiKasController::class, 'showEditForm'])->name('bukti-kas.edit');
     Route::put('/dashboard/edit/bukti-kas/{id}', [BuktiKasController::class, 'update'])->name('bukti-kas-update.edit');
     Route::post('/post-bukti-info', [BuktiKasController::class, 'saveKeterangan'])->name('buktikas.saveKeterangan');
-    Route::get('/get-supplier-info/{tandaTerimaId}/{buktiKasId?}', [BuktiKasController::class, 'getSupplierInfo']);
     Route::get('/dashboard/all', function () {
         return redirect('/dashboard/all/tanda-terima');
     });

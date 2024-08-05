@@ -13,7 +13,6 @@ class Invoices extends Model
         'tanda_terima_id',
         'nomor',
         'nominal',
-        'currency'
     ];
 
     public function tandaTerima(): BelongsTo{

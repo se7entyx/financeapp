@@ -24,7 +24,6 @@ class InvoicesFactory extends Factory
             'tanda_terima_id' => TandaTerima::factory(),
             'nomor' => $this->faker->unique()->numerify('INV###'),
             'nominal' => $this->faker->numberBetween(1000, 100000),
-            'currency' => 'IDR',
         ];
     }   
 }
