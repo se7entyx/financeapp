@@ -17,7 +17,7 @@ class TandaTerima extends Model
     public $incrementing = false;
     protected $fillable = [
         'increment_id', 'user_id', 'tanggal', 'supplier_id', 'pajak', 'po', 'bpb', 'surat_jalan',
-        'tanggal_jatuh_tempo', 'keterangan'
+        'tanggal_jatuh_tempo', 'currency','keterangan',
     ];
 
     protected static function boot()

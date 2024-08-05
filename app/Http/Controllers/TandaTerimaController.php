@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoices;
 use App\Models\Supplier;
 use App\Models\TandaTerima;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -23,13 +24,12 @@ class TandaTerimaController extends Controller
             'bpb' => 'nullable|string',
             'sjalan' => 'nullable|string',
             'jatuh_tempo' => 'required|string',
+            'currency' => 'required|string|in:IDR,USD',
             'notes' => 'nullable|string',
             'invoice' => 'required|array',
             'invoice.*' => 'required|string',
             'nominal' => 'required|array',
             'nominal.*' => 'required|numeric',
-            'currency' => 'required|array',
-            'currency.*' => 'required|string|in:IDR,USD',
         ]);
 
         // dd($validated);
@@ -44,6 +44,7 @@ class TandaTerimaController extends Controller
         $tandaTerima->bpb = $validated['bpb'];
         $tandaTerima->surat_jalan = $validated['sjalan'];
         $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
+        $tandaTerima->currency = $validated['currency'];
         $tandaTerima->keterangan = $validated['notes'];
         $tandaTerima->save();
 
@@ -54,7 +55,7 @@ class TandaTerimaController extends Controller
             $invoice->tanda_terima_id = $tandaTerima->id;
             $invoice->nomor = $validated['invoice'][$index];
             $invoice->nominal = $validated['nominal'][$index];
-            $invoice->currency = $validated['currency'][$index];
+            // $invoice->currency = $validated['currency'][$index];
             $invoice->save();
         }
 
@@ -135,5 +136,33 @@ class TandaTerimaController extends Controller
         }
 
         return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima created successfully.');
+    }
+
+    // public function showPrintTemplate($id)
+    // {
+    //     $tandaTerimaRecords = TandaTerima::with(['supplier', 'invoices'])->find($id);
+
+    //     return view('print', ['tandaTerimaRecords' => $tandaTerimaRecords]);
+    // }
+
+    public function printTandaTerima($id)
+    {
+        $tandaTerima = TandaTerima::with(['supplier', 'invoices'])->find($id);
+
+        $html = view('print', compact('tandaTerima'))->render();
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $output = $dompdf->output();
+        $filePath = storage_path('app/public/tanda_terima.pdf');
+        file_put_contents($filePath, $output);
+
+        // Send PDF to printer
+        exec("lp $filePath");
+
+        return response()->json(['message' => 'Tanda Terima sent to printer successfully.']);
     }
 }
