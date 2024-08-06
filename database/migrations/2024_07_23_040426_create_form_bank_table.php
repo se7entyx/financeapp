@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('form_bank', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->uuid('bukti_kas_id');
             $table->timestamps();
 

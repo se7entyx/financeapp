@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('tanda_terima', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->unsignedBigInteger('increment_id')->unique();
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('user_id')->index();
             $table->string('tanggal');
-            $table->unsignedBigInteger('supplier_id');
+            $table->uuid('supplier_id')->index();
             $table->string('pajak');
             $table->string('po');
             $table->string('bpb');

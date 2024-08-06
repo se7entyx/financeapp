@@ -146,6 +146,7 @@
                                 <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
                                 <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 delete" data-id="{{ $bk->id }}" data-table="bukti-kas">Delete</a>
                                 <a href="/dashboard/print/bukti-kas/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
                             </td>
                         </tr>
                         @endforeach
