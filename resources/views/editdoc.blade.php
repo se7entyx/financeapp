@@ -67,8 +67,18 @@
                         </ul>
                     </div>
                     <div class="col-span-3 justify-center items-center">
-                        <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Invoice</label>
-                        <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 mx-3 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 mt-3 items-center justify-center" id="addButton">Add</button>
+                    <div class="flex items-center">
+                            <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" id="addButton">Add</button>
+                            <select name="currency" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 ml-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                @if ($tandaTerimaRecords->currency == 'IDR')
+                                <option value="IDR" selected>IDR</option>
+                                <option value="USD">USD</option>
+                                @elseif ($tandaTerimaRecords->currency == 'USD')
+                                <option value="IDR" >IDR</option>
+                                <option value="USD" selected>USD</option>
+                                @endif
+                            </select>
+                        </div>
                         <div id="invoiceFieldsContainer">
                             <!-- Invoice fields will be appended here -->
                             @foreach ($tandaTerimaRecords->invoices as $invoice)
@@ -81,18 +91,6 @@
                                 <div class="flex-1">
                                     <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal</label>
                                     <input type="number" name="nominal[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nominal" value="{{$invoice->nominal}}" required>
-                                </div>
-                                <div class="flex-1">
-                                    <label for="currency" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Currency</label>
-                                    <select name="currency[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        @if ($invoice->currency == 'IDR')
-                                        <option value="IDR" selected>IDR</option>
-                                        <option value="USD" >USD</option>
-                                        @elseif ($invoice->currency == 'USD')
-                                        <option value="IDR" >IDR</option>
-                                        <option value="USD" selected>USD</option>
-                                        @endif
-                                    </select>
                                 </div>
                                 <div class="flex-shrink-0 min-w-[200px] mt-4 md:mt-0">
                                     <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeItem(this)">Delete</button>
