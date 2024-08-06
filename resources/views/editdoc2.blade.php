@@ -26,9 +26,19 @@
                         <input type="text" name="tanda_terima_id" id="input-no-tanda-terima" placeholder="Masukan nomor tanda terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{$buktiKasRecords->tanda_terima->supplier->name}}" other="{{$buktiKasRecords->tanda_terima->increment_id}}">
                         <input type="hidden" name="tanda_terima_id_hidden" id="input-no-tanda-terima-hidden" value="{{$buktiKasRecords->tanda_terima_id}}">
                     </div> -->
-                    <div class="col-span-1">
+                    <!-- <div class="col-span-1">
                         <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Tanda Terima</label>
                         <input type="text" value="{{$buktiKasRecords->tanda_terima->increment_id}}" id="input-no-tanda-terima" placeholder="Masukan nomor tanda terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div> -->
+                    <div class="col-span-1">
+                        <label for="dropdown-no-tanda-terima" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Tanda Terima</label>
+                        <select id="dropdown-no-tanda-terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm block rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            @foreach($tandaTerimas as $tandaTerima)
+                            <option value="{{ $tandaTerima->increment_id }}" {{ $buktiKasRecords->tanda_terima && $tandaTerima->increment_id == $buktiKasRecords->tanda_terima->increment_id ? 'selected' : '' }}>
+                                {{ $tandaTerima->increment_id }}
+                            </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col-span-1">
                         <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada</label>
@@ -80,7 +90,7 @@
                                     <input type="number" id="currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" />
                                 </div>
                                 <button id="currency-button-1" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
-                                    {{$currency}}
+                                    {{$buktiKasRecords->tanda_terima->currency}}
                                 </button>
                                 <!-- <div id="dropdown-currency-2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button-2">
@@ -145,7 +155,7 @@
                                 <input type="hidden" name="jumlah" id="total-amount">
                                 <input type="hidden" id="hiddenBuktiField" name="hiddenBuktiField">
                                 <input type="hidden" id="keteranganBuktiKasData" value="{{ $buktiKasRecords->keterangan_bukti_kas->toJson() }}">
-                                <input type="hidden" id="currencyData" value="{{ $currency }}">
+                                <input type="hidden" id="currencyData" value="{{ $buktiKasRecords->currency }}">
                             </table>
                         </div>
                     </div>
@@ -233,7 +243,7 @@
     </section>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const tandaTerimaInput = document.getElementById('input-no-tanda-terima');
+            const tandaTerimaInput = document.getElementById('dropdown-no-tanda-terima');
             const tandaTerimaHiddenInput = document.getElementById('input-no-tanda-terima-hidden');
             const supplier = document.getElementById('input-supplier');
             const currency1 = document.getElementById('currency-button-1');
@@ -248,7 +258,7 @@
             // let original = null;
 
             function updateSupplierInfo() {
-                const tandaTerimaId = document.getElementById('input-no-tanda-terima').value;
+                const tandaTerimaId = document.getElementById('dropdown-no-tanda-terima').value;
                 const buktiKasId = "{{ $buktiKasRecords->id }}";
 
                 fetch(`/get-supplier-info/${tandaTerimaId}/${buktiKasId}?`) // Ensure the correct parameter name
@@ -291,6 +301,10 @@
             // Restore the original value and update the hidden input on focus out
             tandaTerimaInput.addEventListener('focusout', updateSupplierInfo);
 
+            document.getElementById('dropdown-no-tanda-terima').addEventListener('change', function() {
+                this.blur(); // This will remove focus from the dropdown
+            });
+
             function updateHiddenBuktiField(buktiArray) {
                 // Convert the array to a JSON string
                 var jsonString = JSON.stringify(buktiArray);
@@ -311,8 +325,7 @@
                 bukti = [];
 
                 const storedBukti = document.getElementById('keteranganBuktiKasData').value;
-                const currency = document.getElementById('currencyData').value;
-
+                const currency = '{{$buktiKasRecords->tanda_terima->currency}}';
                 if (storedBukti) {
                     parsedBukti = JSON.parse(storedBukti);
                     bukti = parsedBukti.map(item => ({

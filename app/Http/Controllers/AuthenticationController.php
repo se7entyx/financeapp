@@ -69,7 +69,7 @@ class AuthenticationController extends Controller
 
     public function getUsers(Request $request)
     {
-        $users = User::get();
+        $users = User::all();
         return view('user', ['title' => 'All Users', 'users' => $users]);
     }
 
@@ -79,7 +79,7 @@ class AuthenticationController extends Controller
             [
                 'name' => 'required|max:255',
                 'phone' => 'string',
-                'email' => 'required|email:dns|unique:users',
+                'email' => 'required|email',
                 'password' => 'string'
             ]
         );
@@ -97,9 +97,11 @@ class AuthenticationController extends Controller
     {
         $credentials = $request->validate([
             'name' => 'required|max:255',
-            'email' => 'required|email:dns|unique:users,email,' . $id,
+            'email' => 'required|email',
             'password' => 'required|min:8|max:255',
         ]);
+
+        // dd($credentials);
 
         if ($credentials) {
             $user = User::find($id);
@@ -109,9 +111,13 @@ class AuthenticationController extends Controller
             $user->save();
             return redirect('/dashboard/admin/users')->with('success', 'Update successfull!');
         }
+        else {
+            dd('asq');
+        }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $user = User::findOrFail($id);
         $user->delete();
         return redirect('/dashboard/admin/users')->with('success', 'Delete successfull!');

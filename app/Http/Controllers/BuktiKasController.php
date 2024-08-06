@@ -6,6 +6,7 @@ use App\Models\BuktiKas;
 use App\Models\Invoices;
 use App\Models\KeteranganBuktiKas;
 use App\Models\TandaTerima;
+use Dompdf\Dompdf;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,12 +63,11 @@ class BuktiKasController extends Controller
 
         // Prepare the response data
         if ($tandaTerima) {
-            $currency = $tandaTerima->currency ?? 'IDR';
             return response()->json([
                 'supplier_name' => $tandaTerima->supplier->name,
                 'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo,
                 'tanda_terima_id' => $tandaTerima->id,
-                'currency' => $currency
+                'currency' => $tandaTerima->currency
             ]);
         }
 
@@ -144,13 +144,38 @@ class BuktiKasController extends Controller
     public function showEditForm($id)
     {
         $buktikas = BuktiKas::with(['keterangan_bukti_kas', 'tanda_terima.supplier', 'tanda_terima.invoices'])->findOrFail($id);
-        $tandaTerima = $buktikas->tanda_terima;
-        // Get the currency from the first invoice
-        $currency = $tandaTerima->invoices->first()->currency;
 
         $title = 'Edit Bukti Kas';
 
-        return view('editdoc2', ['buktiKasRecords' => $buktikas, 'title' => $title, 'currency' => $currency]);
+        $userId = Auth::id();
+
+        // Fetch TandaTerima records that are not assigned to BuktiKas
+        $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
+            ->where('user_id', $userId);
+
+        // Check if $buktiKasId is provided
+        if ($id) {
+            // Find the specific BuktiKas record
+            $buktiKas = BuktiKas::find($id);
+
+            if ($buktiKas) {
+                // Include the TandaTerima associated with the current BuktiKas being edited
+                $tandaTerimaQuery->where(function ($query) use ($buktiKas) {
+                    $query->whereDoesntHave('bukti_kas')
+                        ->orWhere('id', $buktiKas->tanda_terima_id);
+                });
+            } else {
+                // If BuktiKas is not found, still exclude those assigned to BuktiKas
+                $tandaTerimaQuery->whereDoesntHave('bukti_kas');
+            }
+        } else {
+            // Exclude those assigned to BuktiKas
+            $tandaTerimaQuery->whereDoesntHave('bukti_kas');
+        }
+
+        $tandaTerimaOption = $tandaTerimaQuery->get();
+
+        return view('editdoc2', ['buktiKasRecords' => $buktikas, 'title' => $title, 'tandaTerimas' => $tandaTerimaOption]);
     }
 
     public function update(Request $request, $id)
@@ -213,5 +238,25 @@ class BuktiKasController extends Controller
         KeteranganBuktiKas::whereIn('id', $idsToDelete)->delete();
 
         return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas Updated successfully.');
+    }
+
+    public function printBuktiKas($id)
+    {
+        $buktiKas = BuktiKas::with(['tanda_terima', 'keterangan_bukti_kas'])->find($id);
+
+        $html = view('print2', compact('buktiKas'))->render();
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $output = $dompdf->output();
+        $filePath = storage_path('app/public/bukti_kas.pdf');
+        file_put_contents($filePath, $output);
+
+        // Send PDF to printer
+        $fileUrl = asset('storage/bukti_kas.pdf');
+        return redirect($fileUrl);
     }
 }
