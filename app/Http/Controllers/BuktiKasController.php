@@ -7,6 +7,7 @@ use App\Models\Invoices;
 use App\Models\KeteranganBuktiKas;
 use App\Models\TandaTerima;
 use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -258,5 +259,30 @@ class BuktiKasController extends Controller
         // Send PDF to printer
         $fileUrl = asset('storage/bukti_kas.pdf');
         return redirect($fileUrl);
+    }
+
+    public function printMandiri($id)
+    {
+        $buktiKas = BuktiKas::with(['tanda_terima'])->find($id);
+        // return view('printMandiri',compact('buktiKas'))
+        $htmlContent = view('printmandiri',compact('buktiKas'))->render();
+        // Initialize dompdf and set options
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true); // Enable HTML5 parsing
+        $options->set('isPhpEnabled', false); // Disable PHP in HTML (if not needed)
+        $dompdf = new Dompdf($options);
+
+        // Load HTML content
+        $dompdf->loadHtml($htmlContent);
+
+        // (Optional) Set paper size and orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Save the PDF to the storage directory
+        $pdfFilePath = storage_path('app/public/mandiri.pdf');
+        $dompdf->stream($pdfFilePath, ['Attachment' => 0]);
     }
 }
