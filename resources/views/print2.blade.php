@@ -144,11 +144,11 @@
                 <td class="no-border">: {{$buktiKas->tanda_terima->currency}} {{number_format($buktiKas->jumlah, 0, ',', '.')}}</td>
             </tr>
             <tr>
-                <td class="no-border align-left">No. Cek</td>
+                <td class="no-border align-left">No. cek</td>
                 <td class="no-border">: {{$buktiKas->no_cek}}</td>
             </tr>
             <tr>
-                <td class="no-border" style="width: 200px;">Tanggal</td>
+                <td class="no-border" style="width: 200px;">Tanggal jatuh tempo</td>
                 <td class="no-border">: {{$buktiKas->tanda_terima->tanggal_jatuh_tempo}}</td>
             </tr>
         </table>
