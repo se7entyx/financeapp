@@ -40,9 +40,11 @@ class AuthenticationController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            // dd('berhasil');
             return redirect()->intended('/dashboard');
         }
 
+        dd('gagal');
         return back()->with('error', 'Login Failed');
     }
 

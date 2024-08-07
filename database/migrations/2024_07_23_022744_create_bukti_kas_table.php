@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bukti_kas', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('user_id');
             $table->uuid('tanda_terima_id');
             $table->string('nomer');
             $table->string('tanggal')->nullable();
