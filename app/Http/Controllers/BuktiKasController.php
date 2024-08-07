@@ -41,23 +41,23 @@ class BuktiKasController extends Controller
             ->where('user_id', $userId)
             ->where('increment_id', $tandaTerimaInc);
 
-        if ($buktiKasId) {
-            $buktiKas = BuktiKas::find($buktiKasId);
+        // if ($buktiKasId) {
+        //     $buktiKas = BuktiKas::find($buktiKasId);
 
-            if ($buktiKas) {
-                // Include the TandaTerima associated with the current BuktiKas being edited
-                $tandaTerimaQuery->where(function ($query) use ($buktiKas) {
-                    $query->whereDoesntHave('bukti_kas')
-                        ->orWhere('id', $buktiKas->tanda_terima_id);
-                });
-            } else {
-                // If BuktiKas is not found, still exclude those assigned to BuktiKas
-                $tandaTerimaQuery->whereDoesntHave('bukti_kas');
-            }
-        } else {
-            // Exclude those assigned to BuktiKas
-            $tandaTerimaQuery->whereDoesntHave('bukti_kas');
-        }
+        //     if ($buktiKas) {
+        //         // Include the TandaTerima associated with the current BuktiKas being edited
+        //         $tandaTerimaQuery->where(function ($query) use ($buktiKas) {
+        //             $query->whereDoesntHave('bukti_kas')
+        //                 ->orWhere('id', $buktiKas->tanda_terima_id);
+        //         });
+        //     } else {
+        //         // If BuktiKas is not found, still exclude those assigned to BuktiKas
+        //         $tandaTerimaQuery->whereDoesntHave('bukti_kas');
+        //     }
+        // } else {
+        //     // Exclude those assigned to BuktiKas
+        //     $tandaTerimaQuery->whereDoesntHave('bukti_kas');
+        // }
 
         $tandaTerima = $tandaTerimaQuery->first();
 

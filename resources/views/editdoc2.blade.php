@@ -255,6 +255,7 @@
             let currentEditRow = null;
             const editModal = document.getElementById('edit-modal');
             const overlay = document.getElementById('modal-overlay');
+            let limit = 0;
             // let original = null;
 
             function updateSupplierInfo() {
@@ -323,6 +324,8 @@
             function loadketerangan() {
                 // Clear the bukti array
                 bukti = [];
+                limit = parseInt("{{ $buktiKasRecords->keterangan_bukti_kas->count() }}", 10);
+                console.log(limit);
 
                 const storedBukti = document.getElementById('keteranganBuktiKasData').value;
                 const currency = '{{$buktiKasRecords->tanda_terima->currency}}';
@@ -516,6 +519,8 @@
                     deleteButton.addEventListener('click', function() {
                         const rowIndex = newRow.rowIndex - 1; // Get the index of the row
                         bukti.splice(rowIndex, 1); // Remove the corresponding bukti from the array
+                        limit = limit - 1;
+                        console.log(limit);
                         updateTotal(); // Update the total amount
                         renderTable();
                         updateHiddenBuktiField(bukti);
@@ -536,6 +541,8 @@
 
                 if (notes && dk && nominalValue) {
                     // Store the bukti data in the array
+                    limit = limit + 1;
+                    console.log(limit);
                     bukti.push({
                         notes: notes,
                         dk: dk,
@@ -565,6 +572,9 @@
                 if (selectedCurrency === 'Not Set') {
                     alert('Currency must be set before adding a new row');
                     return;
+                }
+                if (limit >= 7) {
+                    return alert('Melebihi batas keterangan (maksimal 7)');
                 }
                 addRow(notes, dk, nominalValue, selectedCurrency);
             });

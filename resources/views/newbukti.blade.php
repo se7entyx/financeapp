@@ -239,6 +239,7 @@
       const supplier = document.getElementById('input-supplier');
       const currency1 = document.getElementById('currency-button-1');
       const currency2 = document.getElementById('currency-button-2');
+      let limit = 0;
       // let original = null;
 
       function updateSupplierInfo() {
@@ -304,6 +305,7 @@
 
       function saveToLocalStorage() {
         localStorage.setItem('bukti', JSON.stringify(bukti));
+        localStorage.setItem('limit', limit);
         renderTable();
       }
 
@@ -312,6 +314,7 @@
         bukti = [];
 
         const storedBukti = localStorage.getItem('bukti');
+        limit =localStorage.getItem('limit');
 
         if (storedBukti) {
           bukti = JSON.parse(storedBukti);
@@ -471,6 +474,8 @@
           deleteButton.addEventListener('click', function() {
             const rowIndex = newRow.rowIndex - 1; // Get the index of the row
             bukti.splice(rowIndex, 1); // Remove the corresponding bukti from the array
+            limit = limit - 1;
+            console.log(limit);
             updateTotal(); // Update the total amount
             saveToLocalStorage();
             updateHiddenBuktiField(bukti);
@@ -497,6 +502,8 @@
 
         if (notes && dk && nominalValue) {
           // Store the bukti data in the array
+          limit = limit + 1;
+          console.log(limit);
           bukti.push({
             notes: notes,
             dk: dk,
@@ -526,6 +533,9 @@
         if (selectedCurrency === 'Not Set') {
           alert('Currency must be set before adding a new row');
           return;
+        }
+        if (limit >= 7) {
+          return alert('Melebihi batas keterangan (maksimal 7)');
         }
         addRow(notes, dk, nominalValue, selectedCurrency);
       });
