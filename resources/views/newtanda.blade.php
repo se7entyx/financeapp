@@ -113,7 +113,8 @@
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
-        });
+        }).replace(/\//g, '-');
+
         document.getElementById('tanggal').value = formattedDate;
         console.log("Formatted Date:", formattedDate);
 
@@ -126,13 +127,13 @@
             return `${currency} ${new Intl.NumberFormat('id-ID').format(value)}`;
         }
 
-        
+
         // Add new invoice fields dynamically
         addButton.addEventListener('click', function() {
             var invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
             var invoiceCount = invoiceRow.length;
             console.log(invoiceCount); // Decrement the invoice count after removing the item
-            if(invoiceCount == 6){
+            if (invoiceCount == 6) {
                 alert('Maksimal invoice adalah 6');
                 console.log(invoiceCount); // Decrement the invoice count after removing the item
 
@@ -174,22 +175,22 @@
     }
 
     document.getElementById('datepicker-autohide').addEventListener('change', function() {
-    // Get the selected date value
-    const selectedDate = this.value;
+        // Get the selected date value
+        const selectedDate = this.value;
 
-    // Convert the selected date to a Date object (assuming format dd-mm-yyyy)
-    const [day, month, year] = selectedDate.split('-');
-    const selectedDateObj = new Date(`${year}-${month}-${day}`);
+        // Convert the selected date to a Date object (assuming format dd-mm-yyyy)
+        const [day, month, year] = selectedDate.split('-');
+        const selectedDateObj = new Date(`${year}-${month}-${day}`);
 
-    // Get today's date without time part
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+        // Get today's date without time part
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-    // Check if the selected date is valid and greater than today
-    if (isNaN(selectedDateObj.getTime()) || selectedDateObj <= today) {
-        alert('Please select a valid date greater than today.');
-        // Clear the input field
-        this.value = '';
-    }
-});
+        // Check if the selected date is valid and greater than today
+        if (isNaN(selectedDateObj.getTime()) || selectedDateObj <= today) {
+            alert('Please select a valid date greater than today.');
+            // Clear the input field
+            this.value = '';
+        }
+    });
 </script>

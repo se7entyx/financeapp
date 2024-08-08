@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('kas');
             $table->integer('jumlah');
             $table->string('no_cek');
+            $table->string('berita_transaksi');
             $table->timestamps();
     
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

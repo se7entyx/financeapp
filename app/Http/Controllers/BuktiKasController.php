@@ -89,6 +89,7 @@ class BuktiKasController extends Controller
                 'kas' => 'required|string',
                 'jumlah' => 'integer',
                 'no_cek' => 'string',
+                'berita_transaksi' => 'required|string',
                 'hiddenBuktiField' => 'required|string'
             ]);
             // dd($validated);
@@ -103,6 +104,7 @@ class BuktiKasController extends Controller
         $buktikas->kas = $validated['kas'];
         $buktikas->jumlah = $validated['jumlah'];
         $buktikas->no_cek = $validated['no_cek'];
+        $buktikas->berita_transaksi = $validated['berita_transaksi'];
 
         $buktikas->save();
 
@@ -189,6 +191,7 @@ class BuktiKasController extends Controller
             'kas' => 'required|string',
             'jumlah' => 'integer',
             'no_cek' => 'string',
+            'berita_transaksi' => 'required|string',
             'hiddenBuktiField' => 'required|string'
         ]);
 
@@ -199,6 +202,7 @@ class BuktiKasController extends Controller
         $buktikas->kas = $validated['kas'];
         $buktikas->jumlah = $validated['jumlah'];
         $buktikas->no_cek = $validated['no_cek'];
+        $buktikas->berita_transaksi = $validated['berita_transaksi'];
         $buktikas->save();
 
         $buktiArray = json_decode($request->input('hiddenBuktiField'), true);

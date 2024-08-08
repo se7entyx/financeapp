@@ -122,6 +122,7 @@
                             <th class="py-2 px-4 border-b text-center">Jumlah</th>
                             <th class="py-2 px-4 border-b text-center">No Cek</th>
                             <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
+                            <th class="py-2 px-4 border-b">Berita Transaksi</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
                             <th class="py-2 px-4 border-b">Aksi</th>
                         </tr>
@@ -137,6 +138,7 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah">{{ $bk->jumlah }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center no-cek">{{ $bk->no_cek }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi}}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
@@ -282,6 +284,7 @@
                     const jumlah = row.querySelector('.jumlah').textContent;
                     const noCek = row.querySelector('.no-cek').textContent;
                     const tanggalJatuhTempo = row.querySelector('.jatuh-tempo').textContent;
+                    const beritaTransaksi = row.querySelector('.berita-transaksi').textContent;
                     const dibuatOleh = row.querySelector('.dibuat-oleh').textContent;
 
                     fetch(`/bukti-kas/${typeId}/details`)
@@ -295,6 +298,7 @@
                         <div class="mb-4"><strong>Jumlah:</strong> ${jumlah || 'N/A'}</div>
                         <div class="mb-4"><strong>No. Cek:</strong> ${noCek || 'N/A'}</div>
                         <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo || 'N/A'}</div>
+                        <div class="mb-4"><strong>Berita Transaksi:</strong> ${beritaTransaksi || 'N/A'}</div>
                         <div class="mb-4"><strong>Dibuat oleh:</strong> ${dibuatOleh || 'N/A'}</div>
                         <div class="mb-4"><strong>Keterangan Bukti Kas:</strong></div>
                         <table class="w-full bg-white rtl:text-right border border-gray-300">
