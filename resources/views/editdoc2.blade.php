@@ -8,7 +8,7 @@
                 <div class="grid gap-x-8 gap-y-4 mb-6 lg:grid-cols-4 md:grid-cols-1 sm:grid-cols-1">
                     <div class="col-span-1">
                         <label for="nomer-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomer</label>
-                        <input type="text" id="nomer" name="nomer" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{$buktiKasRecords->nomer}}" placeholder="Masukan nomor" />
+                        <input type="text" id="nomer" name="nomer" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{$buktiKasRecords->nomer}}" placeholder="Masukan nomor" required />
                     </div>
                     <div class="col-span-1">
                         <label for="input-part2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-span-1">
                         <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada</label>
-                        <input type="text" id="input-supplier" name="supplier-name" value="{{$buktiKasRecords->tanda_terima->supplier->name}}" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic Input" readonly>
+                        <input type="text" id="input-supplier" name="supplier-name" value="{{$buktiKasRecords->tanda_terima->supplier->name}}" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic Input" readonly required>
                         <input type="hidden" id="input-no-tanda-terima-hidden" name="tanda_terima_id_hidden" value="{{$buktiKasRecords->tanda_terima_id}}" readonly>
                     </div>
                     <div class="col-start-1">
@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-span-1">
                         <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. cek</label>
-                        <input type="number" id="number-input" name="no_cek" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" value="{{$buktiKasRecords->no_cek}}" />
+                        <input type="number" id="number-input" name="no_cek" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" value="{{$buktiKasRecords->no_cek}}" required>
                     </div>
                     <div class="col-span-1">
                         <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal jatuh tempo</label>
@@ -61,7 +61,7 @@
                                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                                 </svg>
                             </div>
-                            <input id="datepicker-autohide-x" datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 cursor-not-allowed focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic input" value="{{$buktiKasRecords->tanda_terima->tanggal_jatuh_tempo}}" readonly>
+                            <input id="datepicker-autohide-x" datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 cursor-not-allowed focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic input" value="{{$buktiKasRecords->tanda_terima->tanggal_jatuh_tempo}}" readonly required>
                         </div>
                     </div>
                     <div class="col-span-1">
@@ -419,7 +419,7 @@
                 document.getElementById('edit-notes-input').value = notes;
                 document.getElementById('edit-dk-input').value = dk;
                 document.getElementById('edit-currency-input-2').value = nominalValue;
-                currency2.innerHTML = currency1.innerHTML.trim();
+                currency2.innerHTML = bukti[rowIndex].selectedCurrency;
 
                 editModal.classList.remove('hidden');
                 editModal.classList.add('flex');
@@ -457,6 +457,11 @@
                     // }
 
                     // Update the row data in the table
+                    if (!editedNotes || !editeddk || !editedNominalValue || !editedCurrency) {
+                        alert('Please fill in all fields.');
+                        return; // Do not proceed with saving
+                    }
+
                     currentEditRow.cells[1].textContent = editedNotes;
                     currentEditRow.cells[2].textContent = editeddk;
                     currentEditRow.cells[3].textContent = formatCurrency(editedNominalValue, editedCurrency);
@@ -597,6 +602,22 @@
 
             document.getElementById('cls-btn').addEventListener('click', function() {
                 closeModal(editModal);
+            });
+
+            document.getElementById('my-form').addEventListener('submit', function(e) {
+                const hiddenBuktiField = document.getElementById('hiddenBuktiField').value;
+                if (!hiddenBuktiField || hiddenBuktiField.trim() === '' || hiddenBuktiField === '[]') {
+                    e.preventDefault(); // Prevent form submission
+                    alert('Tabel keterangan tidak boleh kosong');
+                    return;
+                }
+
+                const confirmSubmit = confirm('Are you sure you want to submit the form?');
+                if (!confirmSubmit) {
+                    e.preventDefault(); // Prevent form submission if user cancels
+                    return;
+                }
+                alert('data berhasil diubah');
             });
 
             function preventEnterKey(e) {

@@ -298,7 +298,7 @@
                         <div class="mb-4"><strong>Jumlah:</strong> ${jumlah || 'N/A'}</div>
                         <div class="mb-4"><strong>No. Cek:</strong> ${noCek || 'N/A'}</div>
                         <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo || 'N/A'}</div>
-                        <div class="mb-4"><strong>Berita Transaksi:</strong> ${beritaTransaksi || 'N/A'}</div>
+                        <div class="mb-4"><strong>Berita Transaksi: </strong> ${beritaTransaksi || 'N/A'}</div>
                         <div class="mb-4"><strong>Dibuat oleh:</strong> ${dibuatOleh || 'N/A'}</div>
                         <div class="mb-4"><strong>Keterangan Bukti Kas:</strong></div>
                         <table class="w-full bg-white rtl:text-right border border-gray-300">
@@ -396,7 +396,7 @@
             document.getElementById('modal-overlay').classList.add('hidden');
 
         });
-        
+
 
         window.addEventListener('click', function(event) {
             if (event.target === detailModal) {

@@ -22,8 +22,10 @@ class BuktiKasController extends Controller
 
         // Fetch TandaTerima records that are not assigned to BuktiKas
         $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
-            ->where('user_id', $userId)
-            ->whereDoesntHave('bukti_kas');
+            ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
+            ->where('tanda_terima.user_id', $userId) // Specify table name to avoid ambiguity
+            ->whereNull('bukti_kas.tanda_terima_id') // Ensure there's no corresponding bukti_kas record
+            ->select('tanda_terima.*');
 
         $tandaTerimas = $tandaTerimaQuery->get();
 
@@ -142,21 +144,21 @@ class BuktiKasController extends Controller
         $x = BuktiKas::find($id);
         $x->delete();
 
-        return response()->with('success', 'Bukti Kas deleted successfully!');
+        return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas deleted successfully.');
     }
     public function showEditForm($id)
     {
         $buktikas = BuktiKas::with(['keterangan_bukti_kas', 'tanda_terima.supplier', 'tanda_terima.invoices'])->findOrFail($id);
 
         $title = 'Edit Bukti Kas';
-
         $userId = Auth::id();
 
-        // Fetch TandaTerima records that are not assigned to BuktiKas
+        // Create a base query for TandaTerima
         $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
-            ->where('user_id', $userId);
+            ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
+            ->where('tanda_terima.user_id', $userId);
 
-        // Check if $buktiKasId is provided
+        // Check if $id is provided
         if ($id) {
             // Find the specific BuktiKas record
             $buktiKas = BuktiKas::find($id);
@@ -164,21 +166,25 @@ class BuktiKasController extends Controller
             if ($buktiKas) {
                 // Include the TandaTerima associated with the current BuktiKas being edited
                 $tandaTerimaQuery->where(function ($query) use ($buktiKas) {
-                    $query->whereDoesntHave('bukti_kas')
-                        ->orWhere('id', $buktiKas->tanda_terima_id);
+                    $query->whereNull('bukti_kas.tanda_terima_id')
+                        ->orWhere('tanda_terima.id', $buktiKas->tanda_terima_id);
                 });
             } else {
                 // If BuktiKas is not found, still exclude those assigned to BuktiKas
-                $tandaTerimaQuery->whereDoesntHave('bukti_kas');
+                $tandaTerimaQuery->whereNull('bukti_kas.tanda_terima_id');
             }
         } else {
             // Exclude those assigned to BuktiKas
-            $tandaTerimaQuery->whereDoesntHave('bukti_kas');
+            $tandaTerimaQuery->whereNull('bukti_kas.tanda_terima_id');
         }
 
-        $tandaTerimaOption = $tandaTerimaQuery->get();
+        $tandaTerimaOption = $tandaTerimaQuery->select('tanda_terima.*')->get();
 
-        return view('editdoc2', ['buktiKasRecords' => $buktikas, 'title' => $title, 'tandaTerimas' => $tandaTerimaOption]);
+        return view('editdoc2', [
+            'buktiKasRecords' => $buktikas,
+            'title' => $title,
+            'tandaTerimas' => $tandaTerimaOption
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -269,7 +275,7 @@ class BuktiKasController extends Controller
     {
         $buktiKas = BuktiKas::with(['tanda_terima'])->find($id);
         // return view('printMandiri',compact('buktiKas'))
-        $htmlContent = view('printmandiri',compact('buktiKas'))->render();
+        $htmlContent = view('printmandiri', compact('buktiKas'))->render();
         // Initialize dompdf and set options
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true); // Enable HTML5 parsing

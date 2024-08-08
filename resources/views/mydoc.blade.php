@@ -103,10 +103,16 @@
                             <td class="py-4 px-6 text-sm text-gray-500 break-words keterangan">{{ $tt->keterangan ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
-                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
-                                <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
-                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 delete" data-id="{{ $tt->id }}" data-table="tanda-terima">Delete</a>
-                                <a href="/dashboard/print/tanda-terima/{{$tt->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                <div class="flex justify-center items-center space-x-4">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
+                                    <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                    <form id="delete-form" action="/tanda-terima/{{$tt->id}}/delete" method="POST" class="inline-block m-0 p-0">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
+                                    </form>
+                                    <a href="/dashboard/print/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -143,12 +149,18 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
-                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
-                                <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
-                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 delete" data-id="{{ $bk->id }}" data-table="bukti-kas">Delete</a>
-                                <a href="/dashboard/print/bukti-kas/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
-                                <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
+                                <div class="flex justify-center items-center space-x-4">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
+                                    <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
+                                    <form id="delete-form" action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
+                                    </form>
+                                    <a href="/dashboard/print/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                    <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -354,6 +366,15 @@
                     fetch(`/tanda-terima/${typeId}/invoices`)
                         .then(response => response.json())
                         .then(data => {
+                            const {
+                                invoices,
+                                currency
+                            } = data;
+                            const formatter = new Intl.NumberFormat('id-ID', {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            });
+
                             detailsContent.innerHTML = `
                         <div class="mb-4"><strong>Tanggal:</strong> ${tanggal || 'N/A'}</div>
                         <div class="mb-4"><strong>Supplier:</strong> ${supplier || 'N/A'}</div>
@@ -374,16 +395,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${data.map((kbk, index) => `
+                                ${invoices.map((kbk, index) => `
                                     <tr>
                                         <td scope="col" class="py-2 px-4 border-b w-1/3">${index + 1}</td>
                                         <td scope="col" class="py-2 px-4 border-b w-1/3">${kbk.nomor}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${kbk.nominal}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${currency} ${formatter.format(kbk.nominal)}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                         </table>
-                    `;
+                        `;
 
                             // Show the modal
                             detailModal.classList.remove('hidden');
@@ -411,82 +432,6 @@
             }
         });
 
-        document.querySelectorAll('.delete').forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                const typeId = this.getAttribute('data-id');
-                const tableType = this.getAttribute('data-table');
-
-                if (tableType == "tanda-terima") {
-                    const row = this.closest('tr');
-                    const loadingContainer = document.getElementById('loading-container');
-
-                    // Show the loading animation
-                    loadingContainer.classList.remove('hidden');
-
-                    fetch(`/tanda-terima/${typeId}/delete`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                            }
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                row.remove();
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('Success:', data);
-                            // Remove the row from the table
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        })
-                        .finally(() => {
-                            // Hide the loading animation
-                            loadingContainer.classList.add('hidden');
-                        });
-                }else if(tableType == 'bukti-kas'){
-                    const row = this.closest('tr');
-                    const loadingContainer = document.getElementById('loading-container');
-
-                    // Show the loading animation
-                    loadingContainer.classList.remove('hidden');
-
-                    fetch(`/bukti-kas/${typeId}/delete`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                            }
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                row.remove();
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('Success:', data);
-                            // Remove the row from the table
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        })
-                        .finally(() => {
-                            // Hide the loading animation
-                            loadingContainer.classList.add('hidden');
-                        });
-                }
-            });
-        });
-
-
-
         // Function to search and highlight rows based on the input
         function searchAndHighlight(tableId, searchColumnIndex) {
             const input = document.getElementById('topbar-search').value.toLowerCase();
@@ -506,6 +451,14 @@
                 }
             }
         }
+
+        document.getElementById('delete-form').addEventListener('submit', function(e) {
+            const confirmSubmit = confirm('Are you sure you want to delete the data?');
+            if (!confirmSubmit) {
+                e.preventDefault(); // Prevent form submission if user cancels
+                return;
+            }
+        });
 
         document.getElementById('topbar-search').addEventListener('input', function() {
             const tandaTerimaTableVisible = !document.getElementById('tanda-terima-table').classList.contains('hidden');

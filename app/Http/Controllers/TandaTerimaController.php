@@ -73,8 +73,18 @@ class TandaTerimaController extends Controller
         // Fetch all invoices related to the specified tanda_terima_id
         $invoices = Invoices::where('tanda_terima_id', $tandaTerimaId)->get();
 
-        // Return or process the results as needed
-        return response()->json($invoices);
+        // Fetch the currency value from the related TandaTerima model
+        $tandaTerima = TandaTerima::find($tandaTerimaId);
+        $currency = $tandaTerima->currency;
+
+        // Combine the invoices and currency into a single response
+        $response = [
+            'invoices' => $invoices,
+            'currency' => $currency,
+        ];
+
+        // Return the combined response as JSON
+        return response()->json($response);
     }
 
     public function deleteTt($id)

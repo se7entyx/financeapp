@@ -192,7 +192,7 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
                       </svg>
                     </div>
-                    <input type="number" id="edit-currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" required/>
+                    <input type="number" id="edit-currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" required />
                   </div>
                   <button id="currency-button-2" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
                     IDR
@@ -400,7 +400,7 @@
         document.getElementById('edit-notes-input').value = notes;
         document.getElementById('edit-dk-input').value = dk;
         document.getElementById('edit-currency-input-2').value = nominalValue;
-        currency2.innerHTML = currency1.innerHTML.trim();
+        currency2.innerHTML = bukti[rowIndex].selectedCurrency;
 
         editModal.classList.remove('hidden');
         editModal.classList.add('flex');
@@ -420,6 +420,11 @@
           const editeddk = document.getElementById('edit-dk-input').value;
           const editedNominalValue = document.getElementById('edit-currency-input-2').value;
           const editedCurrency = currency2.innerHTML.trim();
+
+          if (!editedNotes || !editeddk || !editedNominalValue || !editedCurrency) {
+            alert('Please fill in all fields.');
+            return; // Do not proceed with saving
+          }
 
           // Update the row data in the table
           currentEditRow.cells[1].textContent = editedNotes;
@@ -565,10 +570,16 @@
       document.getElementById('my-form').addEventListener('submit', function(e) {
         const hiddenBuktiField = document.getElementById('hiddenBuktiField').value;
         if (!hiddenBuktiField || hiddenBuktiField.trim() === '' || hiddenBuktiField === '[]') {
-        e.preventDefault(); // Prevent form submission
-        alert('Tabel keterangan tidak boleh kosong');
-        return;
-    }
+          e.preventDefault(); // Prevent form submission
+          alert('Tabel keterangan tidak boleh kosong');
+          return;
+        }
+        const confirmSubmit = confirm('Are you sure you want to submit the form?');
+        if (!confirmSubmit) {
+          e.preventDefault(); // Prevent form submission if user cancels
+          return;
+        }
+        alert('data berhasil dibuat');
         localStorage.clear();
       });
 
