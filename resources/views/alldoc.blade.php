@@ -1,4 +1,5 @@
 <x-layout>
+    @section('title', 'All Documents')
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900 w-full min-h-screen flex flex-col">
         <!-- Loading Animation -->
@@ -103,7 +104,13 @@
                             <td class="py-4 px-6 text-sm text-gray-500 break-words keterangan">{{ $tt->keterangan ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
-                                <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
+                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
+                                @if (Auth::check() && Auth::user()->role == 'admin')
+                                <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                <a href="#" class="text-blue-500 mr-4  hover:text-blue-700 delete" data-id="{{ $tt->id }}" data-table="tanda-terima">Delete</a>
+                                <a href="/dashboard/print/tanda-terima/{{$tt->id}}" class="text-blue-500 mr-4  hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                @endif
+
                             </td>
                         </tr>
                         @endforeach
@@ -135,13 +142,19 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center tanggal">{{ $bk->tanggal ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibayarkan-kepada">{{ $bk->tanda_terima->supplier->name }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kas">{{ $bk->kas }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah">{{ $bk->jumlah }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah"> {{$bk->tanda_terima->currency }} {{ number_format($bk->jumlah) }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center no-cek">{{ $bk->no_cek }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi}}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
+                                @if (Auth::check() && Auth::user()->role == 'admin')
+                                <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
+                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 delete" data-id="{{ $bk->id }}" data-table="bukti-kas">Delete</a>
+                                <a href="/dashboard/print/bukti-kas/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -176,14 +189,56 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        function parseDate(dateString) {
-            // Check if the date is in YYYY-MM-DD format
-            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-                return new Date(dateString);
-            }
-            // Otherwise, assume DD-MM-YYYY format
-            const [day, month, year] = dateString.split('-');
-            return new Date(year, month - 1, day);
+        function filterTableRows() {
+            console.log('Filtering...');
+            const selectedSupplier = document.getElementById('supplier').value;
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+
+            console.log('Selected Supplier:', selectedSupplier);
+            console.log('Start Date:', startDate);
+            console.log('End Date:', endDate);
+
+            const tables = ['tanda-terima-table', 'bukti-kas-keluar-table'];
+
+            tables.forEach(tableId => {
+                const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+                let visibleRows = 0;
+
+                rows.forEach(row => {
+                    const supplierCell = row.querySelector('td:nth-child(4)');
+                    const dateCell = row.querySelector('td:nth-child(3)');
+
+                    if (!supplierCell || !dateCell) return;
+
+                    const supplierName = supplierCell.textContent.trim();
+                    const rowDateStr = dateCell.textContent.trim();
+
+                    let showRow = true;
+
+                    // Check supplier
+                    if (selectedSupplier && selectedSupplier !== "") {
+                        showRow = supplierName === selectedSupplier;
+                    }
+
+                    // Check date range
+                    if (showRow && (startDate || endDate)) {
+                        const rowDate = parseDate(rowDateStr);
+
+                        if (startDate && rowDate < parseDate(startDate)) {
+                            showRow = false;
+                        }
+                        if (endDate && rowDate > parseDate(endDate)) {
+                            showRow = false;
+                        }
+                    }
+
+                    row.style.display = showRow ? '' : 'none';
+                    if (showRow) visibleRows++;
+                });
+
+                console.log(`Visible rows in ${tableId}: ${visibleRows}`);
+            });
         }
 
         function filterTableRows() {
@@ -261,6 +316,7 @@
         const detailModal = document.getElementById('detail-modal');
         const detailsContent = document.getElementById('details-content');
         const closeModalButton = document.getElementById('close-modal');
+        const formatter = new Intl.NumberFormat('en-US');
 
         document.querySelectorAll('.view-details').forEach(link => {
             link.addEventListener('click', function(event) {
@@ -371,7 +427,7 @@
                                     <tr>
                                         <td scope="col" class="py-2 px-4 border-b w-1/3">${index + 1}</td>
                                         <td scope="col" class="py-2 px-4 border-b w-1/3">${kbk.nomor}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${kbk.nominal}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${currency} ${kbk.nominal}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -396,7 +452,7 @@
             document.getElementById('modal-overlay').classList.add('hidden');
 
         });
-        
+
 
         window.addEventListener('click', function(event) {
             if (event.target === detailModal) {

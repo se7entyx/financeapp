@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->string('no_rek');
+            $table->string('bank');
             $table->timestamps();
         });
     }

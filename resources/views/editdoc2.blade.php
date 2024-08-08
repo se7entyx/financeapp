@@ -1,4 +1,5 @@
 <x-layout>
+@section('title', 'Edit Bukti Pengeluaran Kas')
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900 w-full">
         <div class="py-4 px-8 mx-auto max-w-7xl">

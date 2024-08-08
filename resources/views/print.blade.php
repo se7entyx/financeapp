@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Tanda Terima</title>
+    <title>Print Tanda Terima</title>
     <style>
         body {
             font-family: Arial, sans-serif;

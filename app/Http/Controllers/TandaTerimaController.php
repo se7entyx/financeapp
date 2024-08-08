@@ -105,14 +105,13 @@ class TandaTerimaController extends Controller
             'po' => 'nullable|string',
             'bpb' => 'nullable|string',
             'sjalan' => 'nullable|string',
+            'currency' => 'required|string|in:IDR,USD',
             'jatuh_tempo' => 'required|string',
             'notes' => 'nullable|string',
             'invoice' => 'required|array',
             'invoice.*' => 'required|string',
             'nominal' => 'required|array',
             'nominal.*' => 'required|numeric',
-            'currency' => 'required|array',
-            'currency.*' => 'required|string|in:IDR,USD',
         ]);
 
         $tandaTerima = TandaTerima::findOrFail($id);
@@ -120,6 +119,7 @@ class TandaTerimaController extends Controller
         $tandaTerima->pajak = $validated['faktur'];
         $tandaTerima->po = $validated['po'];
         $tandaTerima->bpb = $validated['bpb'];
+        $tandaTerima->currency = $validated['currency'];
         $tandaTerima->surat_jalan = $validated['sjalan'];
         $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
         $tandaTerima->keterangan = $validated['notes'];
@@ -131,7 +131,6 @@ class TandaTerimaController extends Controller
         foreach ($validated['invoice'] as $index => $invoiceNo) {
             $invoice = $tandaTerima->invoices()->firstOrNew(['nomor' => $invoiceNo]);
             $invoice->nominal = $validated['nominal'][$index];
-            $invoice->currency = $validated['currency'][$index];
             $invoice->save();
         }
 

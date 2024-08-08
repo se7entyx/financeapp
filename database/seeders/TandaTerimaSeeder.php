@@ -15,19 +15,23 @@ class TandaTerimaSeeder extends Seeder
     {
         // Fetch all users
         $users = User::all();
+        $suppliers = Supplier::all();
 
-        // Loop through each user
-        foreach ($users as $user) {
-            // Each user can have multiple TandaTerima
-            TandaTerima::factory()
-                ->count(10)
-                ->for($user) // Associate with the current user
-                ->for(Supplier::inRandomOrder()->first()) // Associate with a random supplier
-                ->has(
-                    Invoices::factory()->count(random_int(1, 6)), // Create 1-6 invoices for each TandaTerima
-                    'invoices'
-                )
-                ->create();
-        }
+        TandaTerima::factory()
+            ->count(150)
+            ->make()
+            ->each(function ($tandaTerima) use ($users, $suppliers) {
+                $user = $users->random();
+                $supplier = $suppliers->random();
+
+                $tandaTerima->user()->associate($user);
+                $tandaTerima->supplier()->associate($supplier);
+                $tandaTerima->save();
+
+                // Create a random number of invoices for each TandaTerima
+                Invoices::factory()
+                    ->count(random_int(1, 6))
+                    ->create(['tanda_terima_id' => $tandaTerima->id]);
+            });
     }
 }
