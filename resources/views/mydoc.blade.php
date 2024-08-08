@@ -1,4 +1,5 @@
 <x-layout>
+@section('title', 'My Documents')
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900 w-full min-h-screen flex flex-col">
         <!-- Loading Animation -->
@@ -144,7 +145,7 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center tanggal">{{ $bk->tanggal ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibayarkan-kepada">{{ $bk->tanda_terima->supplier->name }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kas">{{ $bk->kas }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah">{{ $bk->jumlah }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah">{{$bk->tanda_terima->currency}} {{ number_format($bk->jumlah) }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center no-cek">{{ $bk->no_cek }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi }}</td>

@@ -1,4 +1,5 @@
 <x-layout>
+    @section('title', 'Edit Tanda Terima')
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900">
         <div class="py-8 px-4 mx-auto max-w-7xl">
@@ -67,14 +68,14 @@
                         </ul>
                     </div>
                     <div class="col-span-3 justify-center items-center">
-                    <div class="flex items-center">
+                        <div class="flex items-center">
                             <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" id="addButton">Add</button>
                             <select name="currency" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 ml-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 @if ($tandaTerimaRecords->currency == 'IDR')
                                 <option value="IDR" selected>IDR</option>
                                 <option value="USD">USD</option>
                                 @elseif ($tandaTerimaRecords->currency == 'USD')
-                                <option value="IDR" >IDR</option>
+                                <option value="IDR">IDR</option>
                                 <option value="USD" selected>USD</option>
                                 @endif
                             </select>
@@ -152,6 +153,7 @@
         });
         document.getElementById('tanggal').value = formattedDate;
         console.log("Formatted Date:", formattedDate);
+        var form = document.getElementById('edittandaterima');
 
         const addButton = document.getElementById('addButton');
         const invoiceFieldsContainer = document.getElementById('invoiceFieldsContainer');
@@ -191,7 +193,16 @@
     `;
 
             invoiceFieldsContainer.appendChild(div);
-        }); 
+        });
+        form.addEventListener('submit', function(event) {
+            var invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
+            var invoiceCount = invoiceRow.length;
+
+            if (invoiceCount == 0) {
+                alert('Anda harus input minimal 1 invoice');
+                event.preventDefault(); // Prevent the form from submitting
+            }
+        });
     });
 
     function removeItem(button) {

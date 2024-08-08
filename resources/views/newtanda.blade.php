@@ -1,4 +1,5 @@
 <x-layout>
+@section('title', 'New Tanda Terima')
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900">
         <div class="py-8 px-4 mx-auto max-w-7xl">
@@ -74,7 +75,7 @@
                                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                                 </svg>
                             </div>
-                            <input id="datepicker-autohide" name="jatuh_tempo" datepicker datepicker-autohide datepicker-format="dd-mm-yyyy" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
+                            <input id="datepicker-autohide" name="jatuh_tempo" datepicker datepicker-autohide datepicker-format="dd-mm-yyyy" required type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
                         </div>
                     </div>
                     <div class="col-span-3">
@@ -120,6 +121,7 @@
 
         const addButton = document.getElementById('addButton');
         const invoiceFieldsContainer = document.getElementById('invoiceFieldsContainer');
+        var form = document.getElementById('addtandaterima'); 
         let currentEditIndex = null;
 
         // Function to format currency
@@ -161,6 +163,15 @@
 
             invoiceFieldsContainer.appendChild(div);
         });
+        form.addEventListener('submit', function(event) {
+        var invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
+        var invoiceCount = invoiceRow.length;
+
+        if (invoiceCount == 0) {
+            alert('Anda harus input minimal 1 invoice');
+            event.preventDefault(); // Prevent the form from submitting
+        }
+    });
     });
 
     function removeItem(button) {

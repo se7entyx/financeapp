@@ -51,7 +51,6 @@ class AuthenticationController extends Controller
     public function updatePassword(Request $request)
     {
         $credentials = $request->validate([
-            'current_password' => 'required|min:8|max:255',
             'new_password' => 'required|min:8|max:255',
             'confirm_password' => 'required|min:8|max:255'
         ]);
@@ -59,14 +58,14 @@ class AuthenticationController extends Controller
         // $user = User::where('id', Auth::user()->id);
         // dd($user);
 
-        if (!Hash::check($credentials['current_password'], Auth::user()->password)) {
-            return back()->with('error', 'Change Password Failed');
-        } else {
-            $user = User::find(Auth::user()->id);
-            $user->password = Hash::make($credentials['new_password']);
-            $user->save();
-            return redirect()->intended('/dashboard');
+        if ($request->new_password !== $request->confirm_password) {
+            return back()->withErrors(['confirm_password' => 'The new password and confirm password do not match.']);
         }
+
+        $user = User::find(Auth::user()->id);
+        $user->password = Hash::make($credentials['new_password']);
+        $user->save();
+        return back()->with('status', 'Password successfully changed.');
     }
 
     public function getUsers(Request $request)
@@ -82,9 +81,12 @@ class AuthenticationController extends Controller
                 'name' => 'required|max:255',
                 'phone' => 'string',
                 'email' => 'required|email',
-                'password' => 'string'
+                'password' => 'string',
+                'role' => 'required|string'
             ]
         );
+
+        // dd($validatedData);
         // $validatedData['password'] = bcrypt($validatedData['password']);
         $validatedData['phone'] = '0812532162611';
         $validatedData['email_verified_at'] = now();
@@ -97,23 +99,28 @@ class AuthenticationController extends Controller
 
     public function updateUser(Request $request, $id)
     {
+        // dd('panggil');
         $credentials = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email',
-            'password' => 'required|min:8|max:255',
+            'password' => 'max:255',
+            'role' =>  'required|string'
         ]);
 
         // dd($credentials);
 
         if ($credentials) {
             $user = User::find($id);
+            if($credentials['password'] == ''){
+                $credentials['password'] = $user->password;
+            }
             $user->name = $credentials['name'];
             $user->email = $credentials['email'];
             $user->password = $credentials['password'];
+            $user->role = $credentials['role'];
             $user->save();
             return redirect('/dashboard/admin/users')->with('success', 'Update successfull!');
-        }
-        else {
+        } else {
             dd('asq');
         }
     }

@@ -1,5 +1,21 @@
 <x-layout>
+@section('title', 'Profile')
     <x-slot:title>{{$title}}</x-slot:title>
+    @if (session('status'))
+    <div class="alert alert-success">
+        <script>
+            alert("Password sudah terganti");
+        </script>
+    </div>
+    @endif
+
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <script>
+            alert("Password tidak sama");
+        </script>
+    </div>
+    @endif
     <div class="bg-white shadow-md rounded p-6 max-w-md w-full">
         <!-- <h2 class="text-2xl font-bold mb-4">Profile Information</h2> -->
         <div class="mb-4">
@@ -19,16 +35,12 @@
             <form id="changePasswordForm" method="post" action="/profile" onsubmit="return validatePassword()">
                 @csrf
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="current_password">Current Password:</label>
-                    <input type="password" id="current_password" name="current_password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="new_password">New Password:</label>
-                    <input type="password" id="new_password" name="new_password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="password" id="new_password" name="new_password" minlength="8" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm_password">Confirm New Password:</label>
-                    <input type="password" id="confirm_password" name="confirm_password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input type="password" id="confirm_password" name="confirm_password" minlength="8" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div class="flex items-center justify-between">
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
@@ -46,18 +58,6 @@
 
             function closeModal() {
                 document.getElementById('passwordModal').classList.add('hidden');
-            }
-
-            function validatePassword() {
-                const newPassword = document.getElementById('new_password').value;
-                const confirmPassword = document.getElementById('confirm_password').value;
-                const currentPassword = document.getElementById('current_password').value;
-
-                if (newPassword !== confirmPassword) {
-                    alert('New Password and Confirm New Password do not match');
-                    return false;
-                }
-                return true;
             }
         </script>
 </x-layout>

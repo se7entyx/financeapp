@@ -2,7 +2,7 @@
     <html>
 
     <head>
-        <title>Mandiri</title>
+        <title>Print Mandiri</title>
         <style>
             .container table {
                 width: 100%;
@@ -187,7 +187,7 @@
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td colspan="4" style="text-align: center;">{{$buktiKas->no_cek}}</td>
+                    <td colspan="4" style="text-align: center;">{{$buktiKas->tanda_terima->supplier->no_rek}}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -196,7 +196,7 @@
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td colspan="4" style="text-align: center; vertical-align: top;">{{$buktiKas->kas}}</td>
+                    <td colspan="4" style="text-align: center; vertical-align: top;">{{$buktiKas->tanda_terima->supplier->bank}}</td>
                     <td colspan="5" id="terbilang">
                         @php
                         function numberToWords($number) {
@@ -242,13 +242,18 @@
                         return trim($str);
                         }
 
-                        return convertNumber($number, $one, $teen, $tens, $hundred, $thousand) . ' Rupiah';
+                        return convertNumber($number, $one, $teen, $tens, $hundred, $thousand);
                         }
 
                         $jumlah = $buktiKas->jumlah;
                         $terbilang = numberToWords($jumlah);
+                        if($buktiKas->tanda_terima->currency == 'IDR'){
+                            $currency = 'Rupiah';
+                        }else{
+                            $currency = 'Dollar';
+                        }
                         @endphp
-                        {{ $terbilang }}
+                        {{ $terbilang }} {{$currency}}
                     </td>
                 </tr>
                 <tr>
@@ -289,7 +294,7 @@
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td colspan="4">{{$buktiKas->nomer}}</td>
+                    <td colspan="4">{{$buktiKas->berita_transaksi}}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -468,69 +473,4 @@
             </table>
         </div>
     </body>
-
-    <script>
-        function numberToWords(number) {
-            const one = [
-                '', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan'
-            ];
-            const ten = [
-                '', 'Sepuluh', 'Sebelas', 'Dua Belas', 'Tiga Belas', 'Empat Belas', 'Lima Belas', 'Enam Belas', 'Tujuh Belas', 'Delapan Belas', 'Sembilan Belas'
-            ];
-            const hundred = [
-                '', 'Seratus', 'Dua Ratus', 'Tiga Ratus', 'Empat Ratus', 'Lima Ratus', 'Enam Ratus', 'Tujuh Ratus', 'Delapan Ratus', 'Sembilan Ratus'
-            ];
-            const thousand = [
-                '', 'Ribu', 'Juta', 'Miliar', 'Triliun'
-            ];
-
-            function convertHundreds(num) {
-                if (num === 0) return '';
-                let str = '';
-                let h = Math.floor(num / 100);
-                let t = Math.floor((num % 100) / 10);
-                let o = num % 10;
-
-                if (h > 0) {
-                    str += (h === 1 && t === 0 && o === 0) ? 'Seratus ' : hundred[h] + ' ';
-                }
-                if (t > 1) {
-                    str += ten[t] + ' ';
-                    str += one[o] + ' ';
-                } else if (t === 1) {
-                    str += ten[o] + ' ';
-                } else {
-                    str += one[o] + ' ';
-                }
-                return str.trim();
-            }
-
-            function convertNumber(num) {
-                if (num === 0) return 'Nol';
-                let str = '';
-                let idx = 0;
-
-                while (num > 0) {
-                    let chunk = num % 1000;
-                    if (chunk > 0) {
-                        str = convertHundreds(chunk) + ' ' + thousand[idx] + ' ' + str;
-                    }
-                    num = Math.floor(num / 1000);
-                    idx++;
-                }
-
-                return str.trim();
-            }
-
-            return convertNumber(number) + ' Rupiah';
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const jumlahValue = document.getElementById('jumlah').value;
-            const num = parseInt(jumlahValue);
-            const terbilang = document.getElementById('terbilang');
-            terbilang.textContent = numberToWords(num);
-        });
-    </script>
-
     </html>
