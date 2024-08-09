@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Termwind\Components\Hr;
 
@@ -34,7 +35,7 @@ class AuthenticationController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required|min:8|max:255'
         ]);
 
@@ -43,8 +44,6 @@ class AuthenticationController extends Controller
             // dd('berhasil');
             return redirect()->intended('/dashboard');
         }
-
-        dd('gagal');
         return back()->with('error', 'Login Failed');
     }
 
@@ -79,17 +78,15 @@ class AuthenticationController extends Controller
         $validatedData = $request->validate(
             [
                 'name' => 'required|max:255',
-                'phone' => 'string',
-                'email' => 'required|email',
-                'password' => 'string',
+                'username' => 'required|max:255|unique:users,username', // Ensure username is unique in the users table
                 'role' => 'required|string'
             ]
         );
 
+        dd($validatedData);
+
         // dd($validatedData);
         // $validatedData['password'] = bcrypt($validatedData['password']);
-        $validatedData['phone'] = '0812532162611';
-        $validatedData['email_verified_at'] = now();
         $validatedData['remember_token'] = Str::random(10);
         $validatedData['password'] = Hash::make('12345678');
         User::create($validatedData);
@@ -102,20 +99,24 @@ class AuthenticationController extends Controller
         // dd('panggil');
         $credentials = $request->validate([
             'name' => 'required|max:255',
-            'email' => 'required|email',
-            'password' => 'max:255',
-            'role' =>  'required|string'
+            'username' => [
+                'required',
+                'string',
+                Rule::unique('users')->ignore($id),
+            ],
+            'password' => 'nullable|string|min:8',
+            'role' => 'required|string'
         ]);
 
         // dd($credentials);
 
         if ($credentials) {
             $user = User::find($id);
-            if($credentials['password'] == ''){
+            if ($credentials['password'] == '') {
                 $credentials['password'] = $user->password;
             }
             $user->name = $credentials['name'];
-            $user->email = $credentials['email'];
+            $user->username = $credentials['username'];
             $user->password = $credentials['password'];
             $user->role = $credentials['role'];
             $user->save();

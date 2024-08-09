@@ -23,8 +23,8 @@
             <p id="name" class="text-gray-900 text-md">{{Auth::user()->name}}</p>
         </div>
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="email">Email:</label>
-            <p id="email" class="text-gray-900 text-md">{{Auth::user()->email}}</p>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="email">Username:</label>
+            <p id="email" class="text-gray-900 text-md">{{Auth::user()->username}}</p>
         </div>
         <button class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="openModal()">Change Password</button>
     </div>

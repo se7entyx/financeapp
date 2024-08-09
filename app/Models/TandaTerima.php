@@ -48,6 +48,6 @@ class TandaTerima extends Model
 
     public function bukti_kas(): HasOne
     {
-        return $this->hasOne(BuktiKas::class, foreignKey: 'tanda_terima_id');
+        return $this->hasOne(BuktiKas::class, 'tanda_terima_id');
     }
 }

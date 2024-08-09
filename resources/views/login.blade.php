@@ -12,7 +12,7 @@
 <body class="h-full">
   @if (session('error') || $errors->has('password'))
   <div id="error-message" class="absolute bg-red-100 border border-red-400 text-red-700 px-10 py-3 rounded" style="top: 3rem; left: 50%; transform: translateX(-50%);" role="alert">
-    <strong class="font-bold">Email or password</strong>
+    <strong class="font-bold">Username or password</strong>
     <span class="block sm:inline">is incorrect.</span>
     <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="document.getElementById('error-message').style.display='none'">
       <svg class="fill-current h-6 w-6 text-red-500 cursor-pointer" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -32,9 +32,9 @@
       <form class="space-y-6" action="/login" method="post">
         @csrf
         <div>
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+          <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
           <div class="mt-2">
-            <input id="email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value="{{ old('email') }}">
+            <input id="username" name="username" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value="{{ old('username') }}">
           </div>
         </div>
 

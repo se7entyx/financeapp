@@ -4,6 +4,17 @@
     <x-slot:title>{{$title}}</x-slot:title>
     <!-- Start block -->
     <section class="w-full bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <script>
+                alert('Username telah digunakan. Silahkan Coba lagi');
+            </script>
+        </div>
+        @else
+        <script>
+            alert('Data berhasil ditambahkan/diubah');
+        </script>
+        @endif
         <div class="mx-auto max-w-screen-xl">
             <!-- Start coding here -->
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -24,7 +35,7 @@
                                 <th scope="col" class="px-4 py-4">No.</th>
                                 <th scope="col" class="px-4 py-3">Nama</th>
                                 <th scope="col" class="px-4 py-3">Peran</th>
-                                <th scope="col" class="px-4 py-3">Email</th>
+                                <th scope="col" class="px-4 py-3">Username</th>
                                 <th scope="col" class="px-4 py-3">
                                     <span class="sr-only">Actions</span>
                                 </th>
@@ -36,7 +47,7 @@
                                 <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $loop->index + 1}}</th>
                                 <td class="px-4 py-3">{{ $user->name }}</td>
                                 <td class="px-4 py-3">{{ $user->role }}</td>
-                                <td class="px-4 py-3 max-w-[12rem] truncate">{{ $user->email }}</td>
+                                <td class="px-4 py-3 max-w-[12rem] truncate">{{ $user->username }}</td>
                                 <td class="px-4 py-3 flex items-center justify-end">
                                     <button id="dropdown-button-{{ $user->id }}" data-dropdown-toggle="dropdown-{{ $user->id }}" class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
                                         <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -46,7 +57,7 @@
                                     <div id="dropdown-{{ $user->id }}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-1 text-sm" aria-labelledby="dropdown-button-{{ $user->id }}">
                                             <li>
-                                                <button id='edit-button' type="button" data-modal-target="updateProductModal" data-modal-toggle="updateProductModal" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200" data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}" data-user-email="{{ $user->email }}" data-user-role="{{$user->role}}">
+                                                <button id='edit-button' type="button" data-modal-target="updateProductModal" data-modal-toggle="updateProductModal" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200" data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}" data-user-username="{{ $user->username }}" data-user-role="{{$user->role}}">
                                                     <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                         <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
@@ -89,15 +100,6 @@
                         </button>
                     </div>
                     <!-- Modal body -->
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
                     <form action="{{ route('users.store') }}" method="post">
                         @csrf
                         <div class="grid gap-4 mb-10 sm:grid-cols-2">
@@ -106,8 +108,8 @@
                                 <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan nama" required="">
                             </div>
                             <div class="col-span-2">
-                                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                <input type="text" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan email" required="">
+                                <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                                <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan username" required>
                             </div>
                             <div class="col-span-2">
                                 <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
@@ -154,8 +156,8 @@
                                 <input type="text" name="name" id="editname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan nama" required>
                             </div>
                             <div class="col-span-2">
-                                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                <input type="email" name="email" id="editemail" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan email" required>
+                                <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                                <input type="username" name="username" id="editusername" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan username" required>
                             </div>
                             <div class="col-span-2">
                                 <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
@@ -224,7 +226,7 @@
                 button.addEventListener('click', function() {
                     const id = this.getAttribute('data-user-id');
                     const name = this.getAttribute('data-user-name');
-                    const email = this.getAttribute('data-user-email');
+                    const username = this.getAttribute('data-user-username');
                     const role = this.getAttribute('data-user-role');
                     console.log(id);
 
@@ -234,7 +236,7 @@
                         updateForm.action = '/dashboard/admin/users/' + id;
                         console.log(updateForm.action);
                         document.getElementById('editname').value = name;
-                        document.getElementById('editemail').value = email;
+                        document.getElementById('editusername').value = username;
 
                         const roleSelect = document.getElementById('role');
                         if (roleSelect) {

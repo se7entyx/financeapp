@@ -23,9 +23,7 @@ class UserSeeder extends Seeder
         User::create([
             'role' => 'admin',
             'name' => \Faker\Factory::create()->name,
-            'phone' => \Faker\Factory::create()->unique()->phoneNumber,
-            'email' => 'admin@example.com', // Replace with your desired admin email
-            'email_verified_at' => now(),
+            'username' => 'admin123',
             'password' => Hash::make('12345678'),
             'remember_token' => Str::random(10),
         ]);
