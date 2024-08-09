@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -128,6 +129,6 @@ class AuthenticationController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return redirect('/dashboard/admin/users')->with('success', 'Delete successfull!');
+        return redirect('/dashboard/admin/users')->with('successdel', 'Delete successfull!');
     }
 }

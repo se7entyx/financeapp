@@ -10,6 +10,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TandaTerimaController;
 use App\Models\BuktiKas;
+use App\Models\Supplier;
 use App\Models\TandaTerima;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -75,6 +76,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard/admin/users', [AuthenticationController::class, 'getUsers'])->name('users.getUsers');
+    Route::get('/dashboard/admin/suppliers', [SupplierController::class, 'getSuppliers'])->name('suppliers.getSuppliers');
+    Route::post('/dasboard/admin/suppliers', [SupplierController::class, 'store'])->name('supplier.store');
+    Route::put('/dashboard/admin/supplier/{id}', [SupplierController::class, 'updateSupplier'])->name('supplier.updateSupplier');
+    Route::delete('/dashboard/admin/supplier/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
     Route::post('/dasboard/admin/users', [AuthenticationController::class, 'store'])->name('users.store');
     Route::put('/dashboard/admin/users/{id}', [AuthenticationController::class, 'updateUser'])->name('users.updateUser');
     Route::delete('/dashboard/admin/users/{id}', [AuthenticationController::class, 'destroy'])->name('users.destroy');
