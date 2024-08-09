@@ -1,5 +1,10 @@
 <x-layout>
   @section('title', 'New Bukti Pengeluaran Kas')
+  <style>
+    .required{
+      color: red;
+    }
+  </style>
   <x-slot:title>{{$title}}</x-slot:title>
   <section class="bg-white dark:bg-gray-900 w-full">
     <div class="py-4 px-8 mx-auto max-w-7xl">
@@ -7,7 +12,7 @@
         @csrf
         <div class="grid gap-x-8 gap-y-4 mb-6 lg:grid-cols-4 md:grid-cols-1 sm:grid-cols-1">
           <div class="col-span-1">
-            <label for="nomer-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomer</label>
+            <label for="nomer-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomer <span class="required">*</span></label>
             <input type="text" id="nomer" name="nomer" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" required />
           </div>
           <div class="col-span-1">
@@ -22,7 +27,7 @@
             </div>
           </div>
           <div class="col-span-1">
-            <label for="dropdown-no-tanda-terima" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Tanda Terima</label>
+            <label for="dropdown-no-tanda-terima" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Tanda Terima <span class="required">*</span></label>
             <select id="dropdown-no-tanda-terima" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm block rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
               <option value="" disabled selected>Masukan nomor tanda terima</option>
               @foreach($tandaTerimas as $tandaTerima)
@@ -31,16 +36,16 @@
             </select>
           </div>
           <div class="col-span-1">
-            <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada</label>
+            <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada <span class="required">*</span></label>
             <input type="text" id="input-supplier" name="supplier-name" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic Input" tanda-id readonly required>
             <input type="hidden" id="input-no-tanda-terima-hidden" name="tanda_terima_id_hidden" readonly required>
           </div>
           <div class="col-start-1">
-            <label for="input-part4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kas/Cheque/Bilyet Giro Bank</label>
+            <label for="input-part4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kas/Cheque/Bilyet Giro Bank <span class="required">*</span></label>
             <input type="text" id="input-bank" name="kas" value="Mandiri" class=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" readonly>
           </div>
           <div class="col-span-1">
-            <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. cek</label>
+            <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. cek <span class="required">*</span></label>
             <input type="number" id="number-input" name="no_cek" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" required>
           </div>
           <div class="col-span-1">
@@ -55,18 +60,19 @@
             </div>
           </div>
           <div class="col-span-1">
-            <label for="berita_transaksi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Berita Transaksi</label>
+            <label for="berita_transaksi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Berita Transaksi <span class="required">*</span></label>
             <input type="text" id="berita_transaksi" name="berita_transaksi" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan berita" required>
           </div>
           <input type="hidden" name="jumlah" id="total-amount">
           <input type="hidden" id="hiddenBuktiField" name="hiddenBuktiField" value=''>
           <div class="lg:col-start-1 lg:col-span-2 md:col-span-1 sm:col-span-1">
-            <label for="notes-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan</label>
+            <label for="notes-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
             <textarea id="notes-input" rows="1" class="bg-gray-50 block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keterangan"></textarea>
+            <p class="text-sm text-gray-500"><span class="required">*</span>Input minimal satu keterangan</p>
           </div>
           <div class="lg:col-span-2 flex md:col-span-1 sm:col-span-1">
             <div class="mr-8">
-              <label for="dk-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">D/K</label>
+              <label for="dk-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">D/K <span class="required">*</span></label>
               <select id="dk-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option selected value="" disabled>D/K</option>
                 <option value="D">D</option>
@@ -74,7 +80,7 @@
               </select>
             </div>
             <div class="mr-8">
-              <label for="jumlah-input-2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah</label>
+              <label for="jumlah-input-2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah <span class="required">*</span></label>
               <div class="flex w-3/2">
                 <div class="relative w-full">
                   <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">

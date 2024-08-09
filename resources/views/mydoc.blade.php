@@ -107,7 +107,7 @@
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
                                     <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
-                                    <form id="delete-form" action="/tanda-terima/{{$tt->id}}/delete" method="POST" class="inline-block m-0 p-0">
+                                    <form action="/tanda-terima/{{$tt->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
@@ -154,7 +154,7 @@
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
                                     <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
-                                    <form id="delete-form-bk" action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0">
+                                    <form action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form-bk">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
@@ -461,27 +461,25 @@
             }
         }
 
-        const cek1 = document.getElementById('delete-form');
-        if (cek1) {
-            document.getElementById('delete-form').addEventListener('submit', function(e) {
+        document.querySelectorAll('.delete-form').forEach(function(form) {
+            form.addEventListener('submit', function(e) {
                 const confirmSubmit = confirm('Are you sure you want to delete the data?');
                 if (!confirmSubmit) {
                     e.preventDefault(); // Prevent form submission if user cancels
                     return;
                 }
             });
-        }
+        });
 
-        const cek2 = document.getElementById('delete-form-bk');
-        if (cek2) {
-            document.getElementById('delete-form-bk').addEventListener('submit', function(e) {
+        document.querySelectorAll('.delete-form-bk').forEach(function(form) {
+            form.addEventListener('submit', function(e) {
                 const confirmSubmit = confirm('Are you sure you want to delete the data?');
                 if (!confirmSubmit) {
                     e.preventDefault(); // Prevent form submission if user cancels
                     return;
                 }
             });
-        }
+        });
 
         document.getElementById('topbar-search').addEventListener('input', function() {
             const tandaTerimaTableVisible = !document.getElementById('tanda-terima-table').classList.contains('hidden');
