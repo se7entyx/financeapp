@@ -135,9 +135,21 @@ class BuktiKasController extends Controller
     public function getDetails($id)
     {
         // Fetch the BuktiKas record along with its related KeteranganBuktiKas records
-        $buktiKas = BuktiKas::with('keterangan_bukti_kas')->findOrFail($id);
+        $buktiKas = BuktiKas::with('keterangan_bukti_kas', 'tanda_terima')->findOrFail($id);
+        $ket = $buktiKas->keterangan_bukti_kas;
 
-        return response()->json($buktiKas);
+        // Fetch the currency value from the related TandaTerima model
+        $tandaTerima = TandaTerima::find($buktiKas->tanda_terima_id);
+        $currency = $tandaTerima->currency;
+
+        // Combine the invoices and currency into a single response
+        $response = [
+            'ket' => $ket,
+            'currency' => $currency,
+        ];
+
+        // Return the combined response as JSON
+        return response()->json($response);
     }
     public function deleteBk($id)
     {

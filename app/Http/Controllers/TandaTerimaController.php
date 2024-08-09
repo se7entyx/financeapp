@@ -92,7 +92,7 @@ class TandaTerimaController extends Controller
         $x = TandaTerima::find($id);
         $x->delete();
 
-        return response()->with('success', 'Tanda terima deleted successfully!');
+        return redirect()->route('my.tanda-terima')->with('success', 'Tanda terima deleted successfully.');
     }
 
     public function showEditForm($id)

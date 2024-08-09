@@ -1,5 +1,5 @@
 <x-layout>
-@section('title', 'New Bukti Pengeluaran Kas')
+  @section('title', 'New Bukti Pengeluaran Kas')
   <x-slot:title>{{$title}}</x-slot:title>
   <section class="bg-white dark:bg-gray-900 w-full">
     <div class="py-4 px-8 mx-auto max-w-7xl">
@@ -337,7 +337,7 @@
 
       // Function to format currency
       function formatCurrency(value, currency) {
-        return `${currency} ${new Intl.NumberFormat('id-ID').format(value)}`;
+        return `${currency} ${new Intl.NumberFormat('en-US').format(value)}`;
       }
 
       function updateTotal() {
@@ -350,7 +350,8 @@
           const cellAmount = rows[i].cells[3].textContent.trim();
           const parts = cellAmount.split(' ');
           if (parts.length === 2) {
-            const numericValue = parseFloat(parts[1].replace(/\./g, '').replace(/,/g, '.')); // Handle thousands and decimal separators
+            // Replace commas with nothing and periods with commas for numeric value parsing
+            const numericValue = parseFloat(parts[1].replace(/,/g, '').replace(/\./g, '.'));
             if (!isNaN(numericValue)) {
               total += numericValue;
               currency = parts[0];
@@ -363,6 +364,7 @@
         totalCell.textContent = formatCurrency(total, currency);
         document.getElementById('total-amount').value = total;
       }
+
 
       // Set default value
       // dropdownButton2.innerHTML = 'IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>';

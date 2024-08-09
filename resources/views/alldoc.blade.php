@@ -103,15 +103,24 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 jatuh-tempo">{{ $tt->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 text-sm text-gray-500 break-words keterangan">{{ $tt->keterangan ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
+                            @if (Auth::check() && Auth::user()->role == 'admin')
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
+                                <div class="flex justify-center items-center space-x-4">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
+                                    <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                    <form id="delete-form" action="/tanda-terima/{{$tt->id}}/delete" method="POST" class="inline-block m-0 p-0">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
+                                    </form>
+                                    <a href="/dashboard/print/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                </div>
+                            </td>
+                            @else
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
-                                @if (Auth::check() && Auth::user()->role == 'admin')
-                                <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
-                                <a href="#" class="text-blue-500 mr-4  hover:text-blue-700 delete" data-id="{{ $tt->id }}" data-table="tanda-terima">Delete</a>
-                                <a href="/dashboard/print/tanda-terima/{{$tt->id}}" class="text-blue-500 mr-4  hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
-                                @endif
-
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>
@@ -147,15 +156,25 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi}}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
+                            @if (Auth::check() && Auth::user()->role == 'admin')
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
+                                <div class="flex justify-center items-center space-x-4">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
+                                    <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
+                                    <form id="delete-form-bk" action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
+                                    </form>
+                                    <a href="/dashboard/print/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                    <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
+                                </div>
+                            </td>
+                            @else
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
-                                @if (Auth::check() && Auth::user()->role == 'admin')
-                                <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
-                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 delete" data-id="{{ $bk->id }}" data-table="bukti-kas">Delete</a>
-                                <a href="/dashboard/print/bukti-kas/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
-                                <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 mr-4 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
-                                @endif
                             </td>
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>
@@ -346,6 +365,14 @@
                     fetch(`/bukti-kas/${typeId}/details`)
                         .then(response => response.json())
                         .then(data => {
+                            const {
+                                ket,
+                                currency
+                            } = data;
+                            const formatter = new Intl.NumberFormat('en-US', {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            });
                             detailsContent.innerHTML = `
                         <div class="mb-4"><strong>Nomer:</strong> ${nomer}</div>
                         <div class="mb-4"><strong>Tanggal:</strong> ${tanggal || 'N/A'}</div>
@@ -354,7 +381,7 @@
                         <div class="mb-4"><strong>Jumlah:</strong> ${jumlah || 'N/A'}</div>
                         <div class="mb-4"><strong>No. Cek:</strong> ${noCek || 'N/A'}</div>
                         <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo || 'N/A'}</div>
-                        <div class="mb-4"><strong>Berita Transaksi: </strong> ${beritaTransaksi || 'N/A'}</div>
+                        <div class="mb-4"><strong>Berita Transaksi:</strong> ${beritaTransaksi || 'N/A'}</div>
                         <div class="mb-4"><strong>Dibuat oleh:</strong> ${dibuatOleh || 'N/A'}</div>
                         <div class="mb-4"><strong>Keterangan Bukti Kas:</strong></div>
                         <table class="w-full bg-white rtl:text-right border border-gray-300">
@@ -367,12 +394,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${data.keterangan_bukti_kas.map((kbk, index) => `
+                                ${ket.map((kbk, index) => `
                                     <tr>
                                         <td scope="col" class="py-2 px-4 border-b w-1/6">${index + 1}</td>
                                         <td scope="col" class="py-2 px-4 border-b w-1/2">${kbk.keterangan}</td>
                                         <td scope="col" class="py-2 px-4 border-b w-1/6">${kbk.dk}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${kbk.jumlah}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${currency} ${formatter.format(kbk.jumlah)}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -403,6 +430,15 @@
                     fetch(`/tanda-terima/${typeId}/invoices`)
                         .then(response => response.json())
                         .then(data => {
+                            const {
+                                invoices,
+                                currency
+                            } = data;
+                            const formatter = new Intl.NumberFormat('en-US', {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            });
+
                             detailsContent.innerHTML = `
                         <div class="mb-4"><strong>Tanggal:</strong> ${tanggal || 'N/A'}</div>
                         <div class="mb-4"><strong>Supplier:</strong> ${supplier || 'N/A'}</div>
@@ -423,16 +459,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${data.map((kbk, index) => `
+                                ${invoices.map((kbk, index) => `
                                     <tr>
                                         <td scope="col" class="py-2 px-4 border-b w-1/3">${index + 1}</td>
                                         <td scope="col" class="py-2 px-4 border-b w-1/3">${kbk.nomor}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${currency} ${kbk.nominal}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${currency} ${formatter.format(kbk.nominal)}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                         </table>
-                    `;
+                        `;
 
                             // Show the modal
                             detailModal.classList.remove('hidden');
@@ -479,6 +515,28 @@
                     }
                 }
             }
+        }
+
+        const cek1 = document.getElementById('delete-form');
+        if (cek1) {
+            document.getElementById('delete-form').addEventListener('submit', function(e) {
+                const confirmSubmit = confirm('Are you sure you want to delete the data?');
+                if (!confirmSubmit) {
+                    e.preventDefault(); // Prevent form submission if user cancels
+                    return;
+                }
+            });
+        }
+
+        const cek2 = document.getElementById('delete-form-bk');
+        if (cek2) {
+            document.getElementById('delete-form-bk').addEventListener('submit', function(e) {
+                const confirmSubmit = confirm('Are you sure you want to delete the data?');
+                if (!confirmSubmit) {
+                    e.preventDefault(); // Prevent form submission if user cancels
+                    return;
+                }
+            });
         }
 
         document.getElementById('topbar-search').addEventListener('input', function() {

@@ -1,5 +1,5 @@
 <x-layout>
-@section('title', 'My Documents')
+    @section('title', 'My Documents')
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900 w-full min-h-screen flex flex-col">
         <!-- Loading Animation -->
@@ -154,7 +154,7 @@
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
                                     <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
-                                    <form id="delete-form" action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0">
+                                    <form id="delete-form-bk" action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
@@ -310,6 +310,14 @@
                     fetch(`/bukti-kas/${typeId}/details`)
                         .then(response => response.json())
                         .then(data => {
+                            const {
+                                ket,
+                                currency
+                            } = data;
+                            const formatter = new Intl.NumberFormat('en-US', {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            });
                             detailsContent.innerHTML = `
                         <div class="mb-4"><strong>Nomer:</strong> ${nomer}</div>
                         <div class="mb-4"><strong>Tanggal:</strong> ${tanggal || 'N/A'}</div>
@@ -331,12 +339,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${data.keterangan_bukti_kas.map((kbk, index) => `
+                                ${ket.map((kbk, index) => `
                                     <tr>
                                         <td scope="col" class="py-2 px-4 border-b w-1/6">${index + 1}</td>
                                         <td scope="col" class="py-2 px-4 border-b w-1/2">${kbk.keterangan}</td>
                                         <td scope="col" class="py-2 px-4 border-b w-1/6">${kbk.dk}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${kbk.jumlah}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${currency} ${formatter.format(kbk.jumlah)}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -371,7 +379,7 @@
                                 invoices,
                                 currency
                             } = data;
-                            const formatter = new Intl.NumberFormat('id-ID', {
+                            const formatter = new Intl.NumberFormat('en-US', {
                                 minimumFractionDigits: 0,
                                 maximumFractionDigits: 0
                             });
@@ -453,13 +461,27 @@
             }
         }
 
-        document.getElementById('delete-form').addEventListener('submit', function(e) {
-            const confirmSubmit = confirm('Are you sure you want to delete the data?');
-            if (!confirmSubmit) {
-                e.preventDefault(); // Prevent form submission if user cancels
-                return;
-            }
-        });
+        const cek1 = document.getElementById('delete-form');
+        if (cek1) {
+            document.getElementById('delete-form').addEventListener('submit', function(e) {
+                const confirmSubmit = confirm('Are you sure you want to delete the data?');
+                if (!confirmSubmit) {
+                    e.preventDefault(); // Prevent form submission if user cancels
+                    return;
+                }
+            });
+        }
+
+        const cek2 = document.getElementById('delete-form-bk');
+        if (cek2) {
+            document.getElementById('delete-form-bk').addEventListener('submit', function(e) {
+                const confirmSubmit = confirm('Are you sure you want to delete the data?');
+                if (!confirmSubmit) {
+                    e.preventDefault(); // Prevent form submission if user cancels
+                    return;
+                }
+            });
+        }
 
         document.getElementById('topbar-search').addEventListener('input', function() {
             const tandaTerimaTableVisible = !document.getElementById('tanda-terima-table').classList.contains('hidden');

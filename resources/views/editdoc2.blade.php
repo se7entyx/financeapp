@@ -1,5 +1,5 @@
 <x-layout>
-@section('title', 'Edit Bukti Pengeluaran Kas')
+    @section('title', 'Edit Bukti Pengeluaran Kas')
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900 w-full">
         <div class="py-4 px-8 mx-auto max-w-7xl">
@@ -355,7 +355,7 @@
 
             // Function to format currency
             function formatCurrency(value, currency) {
-                return `${currency} ${new Intl.NumberFormat('id-ID').format(value)}`;
+                return `${currency} ${new Intl.NumberFormat('en-US').format(value)}`;
             }
 
             function updateTotal() {
@@ -368,7 +368,8 @@
                     const cellAmount = rows[i].cells[3].textContent.trim();
                     const parts = cellAmount.split(' ');
                     if (parts.length === 2) {
-                        const numericValue = parseFloat(parts[1].replace(/\./g, '').replace(/,/g, '.')); // Handle thousands and decimal separators
+                        // Replace commas with nothing and periods with commas for numeric value parsing
+                        const numericValue = parseFloat(parts[1].replace(/,/g, '').replace(/\./g, '.'));
                         if (!isNaN(numericValue)) {
                             total += numericValue;
                             currency = parts[0];
