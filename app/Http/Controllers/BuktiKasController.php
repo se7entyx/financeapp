@@ -156,7 +156,7 @@ class BuktiKasController extends Controller
         $x = BuktiKas::find($id);
         $x->delete();
 
-        return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas deleted successfully.');
+        return back()->with('success', 'Action completed successfully!');
     }
     public function showEditForm($id)
     {

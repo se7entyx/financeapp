@@ -1,13 +1,25 @@
 <x-layout>
-@section('title', 'New Tanda Terima')
+    @section('title', 'New Tanda Terima')
+    <style>
+        .required {
+            color: red
+        }
+    </style>
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900">
+        @if (session('success'))
+        <div class="alert alert-success">
+            <script>
+                alert("Tanda terima berhasil dibuat");
+            </script>
+        </div>
+        @endif
         <div class="py-8 px-4 mx-auto max-w-7xl">
             <form id="addtandaterima" action="/dashboard/new/tanda-terima2" method="post">
                 @csrf
                 <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
                     <div class="sm:col-span-2 md:col-span-1">
-                        <label for="supplier" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier</label>
+                        <label for="supplier" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier <span class="required">*</span></label>
                         <select id="supplier_id" name="supplier_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="" disabled selected>Select supplier</option>
                             @foreach ($suppliers as $supplier)
@@ -16,7 +28,7 @@
                         </select>
                     </div>
                     <div class="sm:col-span-2 md:col-span-1">
-                        <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
+                        <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal <span class="required">*</span></label>
                         <input type="text" id="tanggal" name="tanggal" datepicker-format="dd-mm-yyyy" readonly class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                     </div>
@@ -55,7 +67,7 @@
                         </ul>
                     </div>
                     <div class="col-span-3 justify-center items-center">
-                        <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Invoice</label>
+                        <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Invoice <span class="required">*</span></label>
                         <div class="flex items-center">
                             <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" id="addButton">Add</button>
                             <select name="currency" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 ml-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -68,7 +80,7 @@
                         </div>
                     </div>
                     <div class="sm:col-span-2 md:col-span-1 lg:col-span-2">
-                        <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Jatuh Tempo</label>
+                        <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Jatuh Tempo <span class="required">*</span></label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -121,7 +133,7 @@
 
         const addButton = document.getElementById('addButton');
         const invoiceFieldsContainer = document.getElementById('invoiceFieldsContainer');
-        var form = document.getElementById('addtandaterima'); 
+        var form = document.getElementById('addtandaterima');
         let currentEditIndex = null;
 
         // Function to format currency
@@ -145,15 +157,15 @@
             console.log(invoiceCount); // Decrement the invoice count after removing the item
 
             const div = document.createElement('div');
-            div.className = 'invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end'; // Flex container with responsive direction
+            div.className = 'invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2'; // Flex container with responsive direction
 
             div.innerHTML = `
         <div class="flex-1">
-            <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Invoice</label>
+            <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Invoice <span class="required">*</span></label>
             <input type="text" name="invoice[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Invoice" required>
         </div>
         <div class="flex-1">
-            <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal</label>
+            <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
             <input type="number" name="nominal[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nominal" required>
         </div>
         <div class="flex-shrink-0 min-w-[200px] mt-4 md:mt-0">
@@ -164,14 +176,14 @@
             invoiceFieldsContainer.appendChild(div);
         });
         form.addEventListener('submit', function(event) {
-        var invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
-        var invoiceCount = invoiceRow.length;
+            var invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
+            var invoiceCount = invoiceRow.length;
 
-        if (invoiceCount == 0) {
-            alert('Anda harus input minimal 1 invoice');
-            event.preventDefault(); // Prevent the form from submitting
-        }
-    });
+            if (invoiceCount == 0) {
+                alert('Anda harus input minimal 1 invoice');
+                event.preventDefault(); // Prevent the form from submitting
+            }
+        });
     });
 
     function removeItem(button) {
