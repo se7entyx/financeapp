@@ -10,7 +10,7 @@
                 alert('Username telah digunakan. Silahkan Coba lagi');
             </script>
         </div>
-        @else
+        @elseif (session('success'))
         <script>
             alert('Data berhasil ditambahkan/diubah');
         </script>

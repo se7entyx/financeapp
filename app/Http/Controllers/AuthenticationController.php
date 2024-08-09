@@ -83,8 +83,6 @@ class AuthenticationController extends Controller
             ]
         );
 
-        dd($validatedData);
-
         // dd($validatedData);
         // $validatedData['password'] = bcrypt($validatedData['password']);
         $validatedData['remember_token'] = Str::random(10);
