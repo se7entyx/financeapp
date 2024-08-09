@@ -17,6 +17,10 @@
                 border: none;
                 text-align: left;
             }
+
+            body {
+                font-family: Calibri, sans-serif;
+            }
         </style>
     </head>
 
@@ -248,9 +252,9 @@
                         $jumlah = $buktiKas->jumlah;
                         $terbilang = numberToWords($jumlah);
                         if($buktiKas->tanda_terima->currency == 'IDR'){
-                            $currency = 'Rupiah';
+                        $currency = 'Rupiah';
                         }else{
-                            $currency = 'Dollar';
+                        $currency = 'Dollar';
                         }
                         @endphp
                         {{ $terbilang }} {{$currency}}
@@ -473,4 +477,5 @@
             </table>
         </div>
     </body>
+
     </html>
