@@ -139,6 +139,7 @@
                             <th class="py-2 px-4 border-b text-center">No Cek</th>
                             <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
                             <th class="py-2 px-4 border-b">Berita Transaksi</th>
+                            <th class="py-2 px-4 border-b">Kapan dibuat</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
                             <th class="py-2 px-4 border-b">Aksi</th>
                         </tr>
@@ -155,6 +156,7 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center no-cek">{{ $bk->no_cek }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi}}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kapan-dibuat">{{ $bk->created_at->format('d-m-Y')}}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
                             @if (Auth::check() && Auth::user()->role == 'admin')
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
@@ -218,58 +220,6 @@
             return new Date(year, month - 1, day);
         }
 
-        function filterTableRows() {
-            console.log('Filtering...');
-            const selectedSupplier = document.getElementById('supplier').value;
-            const startDate = document.getElementById('start-date').value;
-            const endDate = document.getElementById('end-date').value;
-
-            console.log('Selected Supplier:', selectedSupplier);
-            console.log('Start Date:', startDate);
-            console.log('End Date:', endDate);
-
-            const tables = ['tanda-terima-table', 'bukti-kas-keluar-table'];
-
-            tables.forEach(tableId => {
-                const rows = document.querySelectorAll(`#${tableId} tbody tr`);
-                let visibleRows = 0;
-
-                rows.forEach(row => {
-                    const supplierCell = row.querySelector('td:nth-child(4)');
-                    const dateCell = row.querySelector('td:nth-child(3)');
-
-                    if (!supplierCell || !dateCell) return;
-
-                    const supplierName = supplierCell.textContent.trim();
-                    const rowDateStr = dateCell.textContent.trim();
-
-                    let showRow = true;
-
-                    // Check supplier
-                    if (selectedSupplier && selectedSupplier !== "") {
-                        showRow = supplierName === selectedSupplier;
-                    }
-
-                    // Check date range
-                    if (showRow && (startDate || endDate)) {
-                        const rowDate = parseDate(rowDateStr);
-
-                        if (startDate && rowDate < parseDate(startDate)) {
-                            showRow = false;
-                        }
-                        if (endDate && rowDate > parseDate(endDate)) {
-                            showRow = false;
-                        }
-                    }
-
-                    row.style.display = showRow ? '' : 'none';
-                    if (showRow) visibleRows++;
-                });
-
-                console.log(`Visible rows in ${tableId}: ${visibleRows}`);
-            });
-        }
-
         function switchTable(showTableId, hideTableId, activeLinkId, inactiveLinkId, newUrl) {
             document.getElementById(showTableId).classList.remove('hidden');
             document.getElementById(hideTableId).classList.add('hidden');
@@ -318,6 +268,7 @@
                     const noCek = row.querySelector('.no-cek').textContent;
                     const tanggalJatuhTempo = row.querySelector('.jatuh-tempo').textContent;
                     const beritaTransaksi = row.querySelector('.berita-transaksi').textContent;
+                    const kapanDibuat = row.querySelector('.kapan-dibuat').textContent;
                     const dibuatOleh = row.querySelector('.dibuat-oleh').textContent;
 
                     fetch(`/bukti-kas/${typeId}/details`)
@@ -340,6 +291,7 @@
                         <div class="mb-4"><strong>No. Cek:</strong> ${noCek || 'N/A'}</div>
                         <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo || 'N/A'}</div>
                         <div class="mb-4"><strong>Berita Transaksi:</strong> ${beritaTransaksi || 'N/A'}</div>
+                        <div class="mb-4"><strong>Kapan dibuat:</strong> ${kapanDibuat || 'N/A'}</div>
                         <div class="mb-4"><strong>Dibuat oleh:</strong> ${dibuatOleh || 'N/A'}</div>
                         <div class="mb-4"><strong>Keterangan Bukti Kas:</strong></div>
                         <table class="w-full bg-white rtl:text-right border border-gray-300">
@@ -493,7 +445,13 @@
 
                 rows.forEach(row => {
                     const supplierCell = row.querySelector('td:nth-child(4)');
-                    const dateCell = row.querySelector('td:nth-child(3)');
+
+                    let dateCell;
+                    if (tableId === 'tanda-terima-table') {
+                        dateCell = row.querySelector('td:nth-child(3)');
+                    } else if (tableId === 'bukti-kas-keluar-table') {
+                        dateCell = row.querySelector('td:nth-child(10)');
+                    }
 
                     if (!supplierCell || !dateCell) return;
 
@@ -526,6 +484,8 @@
                 console.log(`Visible rows in ${tableId}: ${visibleRows}`);
             });
         }
+
+
 
         document.querySelectorAll('.delete-form').forEach(function(form) {
             form.addEventListener('submit', function(e) {

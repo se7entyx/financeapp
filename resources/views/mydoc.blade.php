@@ -133,6 +133,7 @@
                             <th class="py-2 px-4 border-b text-center">No Cek</th>
                             <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
                             <th class="py-2 px-4 border-b">Berita Transaksi</th>
+                            <th class="py-2 px-4 border-b">Kapan dibuat</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
                             <th class="py-2 px-4 border-b">Aksi</th>
                         </tr>
@@ -149,6 +150,7 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center no-cek">{{ $bk->no_cek }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kapan-dibuat">{{ $bk->created_at->format('d-m-Y')}}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
                                 <div class="flex justify-center items-center space-x-4">
@@ -223,7 +225,13 @@
 
                 rows.forEach(row => {
                     const supplierCell = row.querySelector('td:nth-child(4)');
-                    const dateCell = row.querySelector('td:nth-child(3)');
+
+                    let dateCell;
+                    if (tableId === 'tanda-terima-table') {
+                        dateCell = row.querySelector('td:nth-child(3)');
+                    } else if (tableId === 'bukti-kas-keluar-table') {
+                        dateCell = row.querySelector('td:nth-child(10)');
+                    }
 
                     if (!supplierCell || !dateCell) return;
 
@@ -305,6 +313,7 @@
                     const noCek = row.querySelector('.no-cek').textContent;
                     const tanggalJatuhTempo = row.querySelector('.jatuh-tempo').textContent;
                     const beritaTransaksi = row.querySelector('.berita-transaksi').textContent;
+                    const kapanDibuat = row.querySelector('.kapan-dibuat').textContent;
                     const dibuatOleh = row.querySelector('.dibuat-oleh').textContent;
 
                     fetch(`/bukti-kas/${typeId}/details`)
@@ -327,6 +336,7 @@
                         <div class="mb-4"><strong>No. Cek:</strong> ${noCek || 'N/A'}</div>
                         <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo || 'N/A'}</div>
                         <div class="mb-4"><strong>Berita Transaksi:</strong> ${beritaTransaksi || 'N/A'}</div>
+                        <div class="mb-4"><strong>Kapan dibuat:</strong> ${kapanDibuat || 'N/A'}</div>
                         <div class="mb-4"><strong>Dibuat oleh:</strong> ${dibuatOleh || 'N/A'}</div>
                         <div class="mb-4"><strong>Keterangan Bukti Kas:</strong></div>
                         <table class="w-full bg-white rtl:text-right border border-gray-300">
