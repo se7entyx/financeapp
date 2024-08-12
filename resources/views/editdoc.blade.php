@@ -71,8 +71,8 @@
                             </li>
                             <li class="border-b border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center px-3 py-2">
-                                    <input id="sjalan-checkbox" name="sjalan" value="true" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" @if ($tandaTerimaRecords->sjalan == "true")
-                                    checked
+                                    <input id="sjalan-checkbox" name="sjalan" value="true" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" @if ($tandaTerimaRecords->surat_jalan == "true")
+                                    checked 
                                     @endif>
                                     <label for="sjalan-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Surat Jalan</label>
                                 </div>
@@ -129,12 +129,9 @@
                         {{trim(old('notes', $tandaTerimaRecords->keterangan))}}
                         </textarea>
                     </div>
-                    <div class="sm:col-span-4 md:col-span-1 lg:col-span-4 flex justify-center">
+                    <div class="sm:col-span-4 md:col-span-1 lg:col-span-4 flex justify-end">
                         <button type="submit" id="submitform" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Submit
-                        </button>
-                        <button type="" class="inline-flex ml-4 items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Preview
                         </button>
                     </div>
             </form>
