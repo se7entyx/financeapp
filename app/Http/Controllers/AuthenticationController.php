@@ -68,7 +68,7 @@ class AuthenticationController extends Controller
 
     public function getUsers(Request $request)
     {
-        $users = User::paginate(20);
+        $users = User::latest()->paginate(20);
         return view('user', ['title' => 'All Users', 'users' => $users]);
     }
 

@@ -2,23 +2,34 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Builder;
 use Ramsey\Uuid\Uuid;
 
 class TandaTerima extends Model
 {
-    use HasFactory,HasUuids;
+    use HasFactory, HasUuids;
     protected $table = 'tanda_terima';
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
-        'increment_id', 'user_id', 'tanggal', 'supplier_id', 'pajak', 'po', 'bpb', 'surat_jalan',
-        'tanggal_jatuh_tempo', 'currency','keterangan',
+        'increment_id',
+        'user_id',
+        'tanggal',
+        'supplier_id',
+        'pajak',
+        'po',
+        'bpb',
+        'surat_jalan',
+        'tanggal_jatuh_tempo',
+        'currency',
+        'keterangan',
     ];
 
     protected static function boot()
@@ -49,5 +60,24 @@ class TandaTerima extends Model
     public function bukti_kas(): HasOne
     {
         return $this->hasOne(BuktiKas::class, 'tanda_terima_id');
+    }
+
+    public function scopeFilter(Builder $query, array $filters): void
+    {
+        $query->when(
+            $filters['search'] ?? false,
+            fn ($query, $search) =>
+            $query->where('increment_id', 'like', '%' . $search . '%')
+        )->when(
+            $filters['supplier'] ?? false,
+            fn ($query, $supplier) => 
+            $query->whereHas('supplier', fn($query) => $query->where('name', $supplier))
+        )->when(
+            isset($filters['start_date']) && isset($filters['end_date']),
+            fn ($query) => $query->whereBetween('tanggal', [
+                Carbon::createFromFormat('Y-m-d', $filters['start_date'])->format('d-m-Y'),
+                Carbon::createFromFormat('Y-m-d', $filters['end_date'])->format('d-m-Y')
+            ])
+        ); 
     }
 }

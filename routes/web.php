@@ -61,12 +61,12 @@ Route::middleware('auth')->group(function () {
     // )->middleware('auth');
     Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware('auth');
     Route::post('/profile', [AuthenticationController::class, 'updatePassword'])->middleware('auth');
-    Route::get('/dashboard/all/tanda-terima', [CombinedController::class, 'getTandaTerima'])->name('all.tanda-terima');
+    Route::get('/dashboard/all/tanda-terima', [TandaTerimaController::class, 'getTandaTerima'])->name('all.tanda-terima');
     Route::delete('/tanda-terima/{id}/delete', [TandaTerimaController::class, 'deleteTt'])->name('delete.tanda-terima');
     Route::delete('/bukti-kas/{id}/delete', [BuktiKasController::class, 'deleteBk'])->name('delete.bukti-kas');
-    Route::get('/dashboard/all/bukti-kas', [CombinedController::class, 'getBuktiKas'])->name('all.bukti-kas');
-    Route::get('/dashboard/my/tanda-terima', [CombinedController::class, 'getMyTandaTerima'])->name('my.tanda-terima');
-    Route::get('/dashboard/my/bukti-kas', [CombinedController::class, 'getMyBuktiKas'])->name('my.bukti-kas');
+    Route::get('/dashboard/all/bukti-kas', [BuktiKasController::class, 'getBuktiKas'])->name('all.bukti-kas');
+    Route::get('/dashboard/my/tanda-terima', [TandaTerimaController::class, 'getMyTandaTerima'])->name('my.tanda-terima');
+    Route::get('/dashboard/my/bukti-kas', [BuktiKasController::class, 'getMyBuktiKas'])->name('my.bukti-kas');
     // Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
     Route::view('profile', 'profile', ['title' => 'Profile']);
 

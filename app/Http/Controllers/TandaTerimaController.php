@@ -11,6 +11,23 @@ use Illuminate\Support\Facades\Log;
 
 class TandaTerimaController extends Controller
 {
+    public function getTandaTerima()
+    {
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->filter(request(['search', 'supplier', 'start_date', 'end_date']))->latest()->paginate(20)->withQueryString();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+
+        $title = 'All Document';
+        return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'suppliers' => $suppliers]);
+    }
+
+    public function getMyTandaTerima()
+    {
+        $id = auth()->id();
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date']))->latest()->paginate(20)->withQueryString();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $title = 'My Documents';
+        return view('mydoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'suppliers' => $suppliers]);
+    }
     public function store(Request $request)
     {
         $userId = auth()->id();

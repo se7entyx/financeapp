@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BuktiKas;
 use App\Models\Invoices;
 use App\Models\KeteranganBuktiKas;
+use App\Models\Supplier;
 use App\Models\TandaTerima;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -16,6 +17,27 @@ use Illuminate\Support\Facades\DB;
 class BuktiKasController extends Controller
 {
     protected $table = 'tanda_terima';
+
+    public function getBuktiKas()
+    {
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->filter(request(['search', 'supplier', 'start_date', 'end_date']))->latest()->paginate(20)->withQueryString();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+
+        $title = 'All Document';
+        return view('alldoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
+    }
+
+
+    public function getMyBuktiKas()
+    {
+        $id = auth()->id();
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date']))->latest()->paginate(20)->withQueryString();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+
+        $title = 'My Documents';
+        return view('mydoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
+    }
+
     public function index()
     {
         $userId = Auth::id();

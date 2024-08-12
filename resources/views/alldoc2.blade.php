@@ -1,5 +1,5 @@
 <x-layout>
-    @section('title', 'My Tanda Terima')
+    @section('title', 'All Documents')
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900 w-full min-h-screen flex flex-col">
         <!-- Loading Animation -->
@@ -17,8 +17,8 @@
             <div class="flex flex-wrap justify-between items-center">
                 <!-- Left section: Links -->
                 <div class="flex justify-start items-center space-x-4 lg:space-x-8">
-                    <a href="/dashboard/my/tanda-terima" class="text-white hover:text-white" id="tanda-terima-link">Tanda Terima</a>
-                    <a href="/dashboard/my/bukti-kas" class="text-gray-300 hover:text-white" id="bukti-kas-keluar-link">Bukti Kas Keluar</a>
+                    <a href="/dashboard/all/tanda-terima" class="text-gray-300 hover:text-white" id="tanda-terima-link">Tanda Terima</a>
+                    <a href="/dashboard/all/bukti-kas" class="text-white hover:text-white" id="bukti-kas-keluar-link">Bukti Kas Keluar</a>
                 </div>
 
                 <!-- Middle section: Supplier and Dates -->
@@ -50,69 +50,62 @@
                             </div>
                             <input type="text" name="search" id="topbar-search" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-9 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search">
                         </div>
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+                        <button type="submit" class="text-white end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
                     </form>
                 </div>
             </div>
         </nav>
 
         <div class="container flex-grow overflow-auto">
-            <div id="tanda-terima-table" class="bg-white shadow-md rounded-lg">
+            <div id="bukti-kas-keluar-table" class="bg-white shadow-md rounded-lg">
                 <table class="min-w-full bg-white border border-gray-300">
                     <thead class="sticky top-0 bg-gray-200">
                         <tr class="text-gray-700">
                             <th class="py-2 px-4 border-b">No</th>
-                            <th class="py-2 px-4 border-b">Nomor Tanda Terima</th>
+                            <th class="py-2 px-4 border-b">Nomor Bukti Kas Keluar</th>
                             <th class="py-2 px-4 border-b">Tanggal</th>
-                            <th class="py-2 px-4 border-b">Supplier</th>
-                            <th class="py-2 px-4 border-b text-center">Faktur Pajak</th>
-                            <th class="py-2 px-4 border-b text-center">PO</th>
-                            <th class="py-2 px-4 border-b text-center">BPB</th>
-                            <th class="py-2 px-4 border-b text-center">Surat Jalan</th>
+                            <th class="py-2 px-4 border-b">Dibayarkan kepada</th>
+                            <th class="py-2 px-4 border-b text-center">Kas</th>
+                            <th class="py-2 px-4 border-b text-center">Jumlah</th>
+                            <th class="py-2 px-4 border-b text-center">No Cek</th>
                             <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
-                            <th class="py-2 px-4 border-b">Keterangan</th>
+                            <th class="py-2 px-4 border-b">Berita Transaksi</th>
+                            <th class="py-2 px-4 border-b">Kapan dibuat</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
                             <th class="py-2 px-4 border-b">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($tandaTerimaRecords as $tt)
-                        <tr class="border border-b">
-                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1 }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $tt->increment_id }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 tanggal">{{ $tt->tanggal }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 supplier">{{ $tt->supplier->name ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 pajak">
-                                {!! $tt->pajak == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
-                            </td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 po">
-                                {!! $tt->po == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
-                            </td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 bpb">
-                                {!! $tt->bpb == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
-                            </td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 surat-jalan">
-                                {!! $tt->surat_jalan == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
-                            </td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 jatuh-tempo">{{ $tt->tanggal_jatuh_tempo }}</td>
-                            <td class="py-4 px-6 text-sm text-gray-500 break-words keterangan">{{ $tt->keterangan ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
+                        @foreach ($buktiKasRecords as $bk)
+                        <tr>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900 text-center">{{ $loop->index + 1 }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center nomer">{{ $bk->nomer }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center tanggal">{{ $bk->tanggal ?? 'N/A' }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibayarkan-kepada">{{ $bk->tanda_terima->supplier->name }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kas">{{ $bk->kas }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah"> {{$bk->tanda_terima->currency }} {{ number_format($bk->jumlah) }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center no-cek">{{ $bk->no_cek }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi}}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kapan-dibuat">{{ $bk->created_at->format('d-m-Y')}}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
                             @if (Auth::check() && Auth::user()->role == 'admin')
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
                                 <div class="flex justify-center items-center space-x-4">
-                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
-                                    <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
-                                    <form action="/tanda-terima/{{$tt->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
+                                    <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
+                                    <form action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form-bk">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
                                     </form>
-                                    <a href="/dashboard/print/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                    <a href="/dashboard/print/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                    <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
                                 </div>
                             </td>
                             @else
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
-                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
+                                <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
                             </td>
                             @endif
                         </tr>
@@ -142,7 +135,7 @@
             </div>
         </div>
         <div class="p-4">
-            {{ $tandaTerimaRecords->links() }}
+            {{ $buktiKasRecords->links() }}
         </div>
     </section>
 
@@ -160,7 +153,6 @@
             const [day, month, year] = dateString.split('-');
             return new Date(year, month - 1, day);
         }
-
 
         const detailModal = document.getElementById('detail-modal');
         const detailsContent = document.getElementById('details-content');
@@ -180,63 +172,66 @@
                 loadingContainer.classList.remove('hidden');
 
                 const row = this.closest('tr');
+                const nomer = row.querySelector('.nomer').textContent;
                 const tanggal = row.querySelector('.tanggal').textContent;
-                const supplier = row.querySelector('.supplier').textContent;
-                const fakturPajak = row.querySelector('.pajak').textContent;
-                const po = row.querySelector('.po').textContent;
-                const bpb = row.querySelector('.bpb').textContent;
-                const suratJalan = row.querySelector('.surat-jalan').textContent;
+                const dibayarkanKepada = row.querySelector('.dibayarkan-kepada').textContent;
+                const dibayarkan = row.querySelector('.kas').textContent;
+                const jumlah = row.querySelector('.jumlah').textContent;
+                const noCek = row.querySelector('.no-cek').textContent;
                 const tanggalJatuhTempo = row.querySelector('.jatuh-tempo').textContent;
-                const keterangan = row.querySelector('.keterangan').textContent;
-                const pembuat = row.querySelector('.dibuat-oleh').textContent;
+                const beritaTransaksi = row.querySelector('.berita-transaksi').textContent;
+                const kapanDibuat = row.querySelector('.kapan-dibuat').textContent;
+                const dibuatOleh = row.querySelector('.dibuat-oleh').textContent;
 
-                fetch(`/tanda-terima/${typeId}/invoices`)
+                fetch(`/bukti-kas/${typeId}/details`)
                     .then(response => response.json())
                     .then(data => {
                         const {
-                            invoices,
+                            ket,
                             currency
                         } = data;
                         const formatter = new Intl.NumberFormat('en-US', {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
                         });
-
                         detailsContent.innerHTML = `
+                        <div class="mb-4"><strong>Nomer:</strong> ${nomer}</div>
                         <div class="mb-4"><strong>Tanggal:</strong> ${tanggal || 'N/A'}</div>
-                        <div class="mb-4"><strong>Supplier:</strong> ${supplier || 'N/A'}</div>
-                        <div class="mb-4"><strong>Faktur Pajak:</strong> ${fakturPajak}</div>
-                        <div class="mb-4"><strong>PO:</strong> ${po}</div>
-                        <div class="mb-4"><strong>BPB:</strong> ${bpb}</div>
-                        <div class="mb-4"><strong>Surat Jalan:</strong> ${suratJalan}</div>
-                        <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo}</div>
-                        <div class="mb-4"><strong>Keterangan:</strong> ${keterangan}</div>
-                        <div class="mb-4"><strong>Dibuat oleh:</strong> ${pembuat}</div>
-                        <div class="mb-4"><strong>Invoices:</strong></div>
+                        <div class="mb-4"><strong>Dibayarkan kepada:</strong> ${dibayarkanKepada || 'N/A'}</div>
+                        <div class="mb-4"><strong>Kas/Cheque/Bilyet Giro Bank:</strong> ${dibayarkan || 'N/A'}</div>
+                        <div class="mb-4"><strong>Jumlah:</strong> ${jumlah || 'N/A'}</div>
+                        <div class="mb-4"><strong>No. Cek:</strong> ${noCek || 'N/A'}</div>
+                        <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo || 'N/A'}</div>
+                        <div class="mb-4"><strong>Berita Transaksi:</strong> ${beritaTransaksi || 'N/A'}</div>
+                        <div class="mb-4"><strong>Kapan dibuat:</strong> ${kapanDibuat || 'N/A'}</div>
+                        <div class="mb-4"><strong>Dibuat oleh:</strong> ${dibuatOleh || 'N/A'}</div>
+                        <div class="mb-4"><strong>Keterangan Bukti Kas:</strong></div>
                         <table class="w-full bg-white rtl:text-right border border-gray-300">
                             <thead class="bg-gray-200">
                                 <tr class="text-gray-700">
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">No</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Invoice</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Nominal</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/6 text-start">No</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/2 text-start">Keterangan</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/6 text-start">D/K</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Jumlah</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${invoices.map((kbk, index) => `
+                                ${ket.map((kbk, index) => `
                                     <tr>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${index + 1}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${kbk.nomor}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${currency} ${formatter.format(kbk.nominal)}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${index + 1}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/2">${kbk.keterangan}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${kbk.dk}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${currency} ${formatter.format(kbk.jumlah)}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                         </table>
-                        `;
+                    `;
 
                         // Show the modal
                         detailModal.classList.remove('hidden');
                     })
-                    .catch(error => console.error('Error fetching tandaTerimaInvoices details:', error))
+                    .catch(error => console.error('Error fetching KeteranganBuktiKas details:', error))
                     .finally(() => {
                         // Hide the loading animation
                         loadingContainer.classList.add('hidden');
@@ -251,13 +246,11 @@
 
         });
 
-
         window.addEventListener('click', function(event) {
             if (event.target === detailModal) {
                 detailModal.classList.add('hidden');
             }
         });
-
         document.querySelectorAll('.delete-form').forEach(function(form) {
             form.addEventListener('submit', function(e) {
                 const confirmSubmit = confirm('Are you sure you want to delete the data?');
