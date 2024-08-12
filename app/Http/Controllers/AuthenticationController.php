@@ -23,8 +23,6 @@ class AuthenticationController extends Controller
         ]);
     }
 
-
-
     public function logout(Request $request)
     {
         Auth::logout();
@@ -70,7 +68,7 @@ class AuthenticationController extends Controller
 
     public function getUsers(Request $request)
     {
-        $users = User::all();
+        $users = User::paginate(20);
         return view('user', ['title' => 'All Users', 'users' => $users]);
     }
 
