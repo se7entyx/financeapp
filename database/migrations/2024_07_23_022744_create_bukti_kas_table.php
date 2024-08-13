@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('tanggal')->nullable();
             $table->string('kas');
             $table->integer('jumlah');
-            $table->string('no_cek');
+            $table->string('no_cek')->nullable();
             $table->string('berita_transaksi');
             $table->timestamps();
     

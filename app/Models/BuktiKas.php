@@ -32,10 +32,6 @@ class BuktiKas extends Model
         });
     }
 
-    public function keterangan_bukti_kas():HasMany {
-        return $this->hasMany(KeteranganBuktiKas::class,'bukti_kas_id');
-    }
-
     public function tanda_terima(): BelongsTo {
         return $this->belongsTo(TandaTerima::class);
     }
