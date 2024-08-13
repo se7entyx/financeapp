@@ -17,6 +17,7 @@ class Invoices extends Model
         'tanda_terima_id',
         'nomor',
         'nominal',
+        'keterangan',
     ];
 
     protected static function boot()
