@@ -109,7 +109,6 @@ class BuktiKasController extends Controller
                 // 'user_id' => $userId,
                 'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',
                 'nomer' => 'required|string',
-                'tanggal' => 'nullable|string',
                 'kas' => 'required|string',
                 'jumlah' => 'integer',
                 'no_cek' => 'string',
@@ -124,7 +123,7 @@ class BuktiKasController extends Controller
         $buktikas->user_id = $userId;
         $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
         $buktikas->nomer = $validated['nomer'];
-        $buktikas->tanggal = $validated['tanggal'];
+        $buktikas->tanggal = null;
         $buktikas->kas = $validated['kas'];
         $buktikas->jumlah = $validated['jumlah'];
         $buktikas->no_cek = $validated['no_cek'];
