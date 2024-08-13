@@ -14,12 +14,12 @@
           <div class="col-span-1">
             <label for="nomer-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomer <span class="required">*</span></label>
             <div class="flex space-x-2">
-              <select id="dropdown-Kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm block rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                <option value="RMK">RMK</option>
-                <option value="DMK">LMK</option>
+              <select id="dropdown-kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm block rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                <option value="RMK" selected>RMK</option>
+                <option value="DMK">DMK</option>
               </select>
               <select id="dropdown-bulan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm block rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                <option value="I">I</option>
+                <option value="I" selected>I</option>
                 <option value="II">II</option>
                 <option value="III">III</option>
                 <option value="IV">IV</option>
@@ -37,7 +37,7 @@
                 $startYear = date('Y');
                 for ($i = 0; $i < 8; $i++) {
                   $year=$startYear + $i;
-                  echo "<option value=\" $year\">$year</option>";
+                  echo "<option value=\"$year\"".($i==0 ? ' selected' : '' ).">$year</option>";
                   }
                   @endphp
               </select>
@@ -81,7 +81,7 @@
           </div>
           <div class="col-span-1">
             <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. cek </label>
-            <input type="number" id="number-input" name="no_cek" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor">
+            <input type="text" id="number-input" name="no_cek" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan cek">
           </div>
           <input type="hidden" name="jumlah" id="total-amount">
           <div class="col-span-4">
@@ -112,7 +112,7 @@
               </table>
             </div>
           </div>
-          <div class="col-start-4 flex justify-evenly pt-4">
+          <div class="col-start-4 flex justify-evenly">
             <button id="submit-btn" type="submit" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Submit</button>
           </div>
         </div>
@@ -130,21 +130,23 @@
       const supplier = document.getElementById('input-supplier');
       // let original = null;
 
-      document.querySelectorAll('#dropwdown-RMK, #dropdown-bulan, #dropdown-tahun').forEach(input => {
+      document.querySelectorAll('#dropdown-kode, #dropdown-bulan, #dropdown-tahun').forEach(input => {
         input.addEventListener('input', updateNomer);
       });
 
       function updateNomer() {
-        const part1 = document.getElementById('dropwdown-RMK').value;
+        const part1 = document.getElementById('dropdown-kode').value;
         const part2 = document.getElementById('dropdown-bulan').value;
         const part3 = document.getElementById('dropdown-tahun').value;
         const nomer = `${part1}/       /${part2}/${part3}`;
         document.getElementById('nomer').value = nomer;
+        console.log(nomer);
       }
 
       const searchInput = document.getElementById('dropdown-search');
       const optionsContainer = document.getElementById('dropdown-options');
       const options = optionsContainer.getElementsByClassName('option');
+      let isOptionClicked = false;
 
       searchInput.addEventListener('focus', function() {
         optionsContainer.classList.remove('hidden');
@@ -156,15 +158,18 @@
       });
 
       searchInput.addEventListener('blur', function(event) {
-        // Delay hiding the optionsContainer to allow time for the click event on options
-        setTimeout(function() {
-          optionsContainer.classList.add('hidden');
-          updateSupplierInfo(searchInput.value);
-        }, 100);
+        if (isOptionClicked) {
+          event.preventDefault(); // Prevent blur if an option was clicked
+          isOptionClicked = false; // Reset the flag
+          return;
+        }
+        optionsContainer.classList.add('hidden');
+        updateSupplierInfo(searchInput.value);
       });
 
-      optionsContainer.addEventListener('click', function(event) {
+      optionsContainer.addEventListener('mousedown', function(event) {
         if (event.target.classList.contains('option')) {
+          isOptionClicked = true;
           searchInput.value = event.target.textContent;
           updateSupplierInfo(searchInput.value);
           optionsContainer.classList.add('hidden');
@@ -188,7 +193,7 @@
       }
 
       function updateSupplierInfo(id) {
-        const tandaTerimaId = id
+        const tandaTerimaId = id;
 
         fetch(`/get-supplier-info/${tandaTerimaId}`) // Ensure the correct parameter name
           .then(response => response.json())
@@ -199,13 +204,14 @@
 
               // Update the datepicker field
               document.getElementById('datepicker-autohide-x').value = data.tanggal_jatuh_tempo;
-              // let currency = data.currency
-              // bukti = data.invoices.map(item => ({
-              //   notes: item.keterangan,
-              //   nominalValue: item.nominal,
-              //   selectedCurrency: currency
-              // }));
-              // renderTable();
+              let currency = data.currency
+              bukti = data.invoices.map(item => ({
+                notes: item.keterangan,
+                nominalValue: item.nominal,
+                selectedCurrency: currency
+              }));
+              console.log(bukti);
+              renderTable();
 
             } else {
               console.log(data);
@@ -213,6 +219,8 @@
               document.getElementById('datepicker-autohide-x').value = '';
               document.getElementById('input-no-tanda-terima-hidden').value = '';
               supplier.value = '';
+              buktiTable.innerHTML = '';
+              updateTotal();
             }
           })
           .catch(error => {
@@ -220,6 +228,10 @@
             document.getElementById('datepicker-autohide-x').value = '';
             document.getElementById('input-no-tanda-terima-hidden').value = '';
             supplier.value = '';
+            buktiTable.innerHTML = '';
+            updateTotal();
+          }).finally(() => {
+            // Hide the loading animation
           });
       }
 
@@ -238,7 +250,7 @@
 
         // Iterate through table rows to calculate total and determine currency
         for (let i = 0; i < rows.length; i++) {
-          const cellAmount = rows[i].cells[3].textContent.trim();
+          const cellAmount = rows[i].cells[2].textContent.trim();
           const parts = cellAmount.split(' ');
           if (parts.length === 2) {
             // Replace commas with nothing and periods with commas for numeric value parsing
@@ -281,13 +293,13 @@
           cellNotes.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
           cellNotes.textContent = item.notes;
 
-          const cellAmount = newRow.insertCell(3);
-          cellAmount.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
+          const cellAmount = newRow.insertCell(2);
+          cellAmount.className = "px-6 py-4 border border-gray-200 dark:border-gray-700 text-right";
           cellAmount.textContent = formatCurrency(item.nominalValue, item.selectedCurrency);
         });
 
         // Update the row numbers and total after rendering
-        updateRowNumbers();
+        // updateRowNumbers();
         updateTotal();
       }
 
@@ -312,6 +324,8 @@
       inputs.forEach(input => {
         input.addEventListener('keydown', preventEnterKey);
       });
+
+      updateNomer();
     });
   </script>
 </x-layout>

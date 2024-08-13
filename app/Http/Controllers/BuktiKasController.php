@@ -117,7 +117,7 @@ class BuktiKasController extends Controller
             ]);
             // dd($validated);
         } catch (ValidationException $e) {
-            // dd($validated);
+            dd($e);
         }
         $buktikas = new BuktiKas();
         $buktikas->user_id = $userId;
