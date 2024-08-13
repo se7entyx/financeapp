@@ -84,22 +84,18 @@
             <input type="number" id="number-input" name="no_cek" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor">
           </div>
           <input type="hidden" name="jumlah" id="total-amount">
-          <input type="hidden" id="hiddenBuktiField" name="hiddenBuktiField" value=''>
           <div class="col-span-4">
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
               <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400" id="buktiTable">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    <th scope="col" class="px-6 py-3 border-gray-200 dark:border-gray-700">
+                    <th scope="col" class="text-center w-10 px-6 py-3 border-gray-200 dark:border-gray-700">
                       No
                     </th>
-                    <th scope="col" class="px-6 py-3 border-gray-200 dark:border-gray-700">
+                    <th scope="col" class="text-center px-6 py-3 border-gray-200 dark:border-gray-700">
                       Keterangan
                     </th>
-                    <th scope="col" class="px-6 py-3 border-gray-200 dark:border-gray-700">
-                      D/K
-                    </th>
-                    <th scope="col" class="px-6 py-3 border-gray-200 dark:border-gray-700">
+                    <th scope="col" class="text-center w-64 px-6 py-3 border-gray-200 dark:border-gray-700">
                       Jumlah
                     </th>
                   </tr>
@@ -110,8 +106,7 @@
                   <tr class="font-semibold text-gray-900 dark:text-white">
                     <th scope="row" class="px-6 py-3 text-base">Total</th>
                     <td></td>
-                    <td></td>
-                    <td class="px-6 py-3">0</td>
+                    <td class="px-6 py-3 text-right">0</td>
                   </tr>
                 </tfoot>
               </table>
@@ -122,98 +117,17 @@
           </div>
         </div>
       </form>
-      <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
-      <div id="edit-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-          <!-- Modal content -->
-          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 border border-gray-300 dark:border-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Ubah
-              </h3>
-              <button id="cls-btn" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="edit-modal">
-                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                </svg>
-                <span class="sr-only">Close modal</span>
-              </button>
-            </div>
-            <!-- Modal body -->
-            <div class="p-4 md:p-5 grid gap-4 mb-4 grid-cols-2">
-              <div class="col-span-2">
-                <label for="edit-notes-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan</label>
-                <textarea id="edit-notes-input" rows="1" class="bg-gray-50 block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keterangan" required></textarea>
-              </div>
-              <div class="col-span-2 sm:col-span-2">
-                <label for="edit-dk-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">D/K</label>
-                <select id="edit-dk-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                  <option selected value="" disabled>D/K</option>
-                  <option value="D">D</option>
-                  <option value="K">K</option>
-                </select>
-              </div>
-              <div class="col-span-2 sm:col-span-2">
-                <label for="jumlah-input-2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah</label>
-                <div class="flex w-3/2">
-                  <div class="relative w-full">
-                    <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
-                      <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
-                      </svg>
-                    </div>
-                    <input type="number" id="edit-currency-input-2" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Masukan jumlah" min="0" required />
-                  </div>
-                  <button id="currency-button-2" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
-                    IDR
-                  </button>
-                  <!-- <div id="dropdown-currency-3" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button-2">
-                      <li>
-                        <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-3" data-currency-3="IDR">
-                          <div class="inline-flex items-center">
-                            IDR
-                          </div>
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem-3" data-currency-3="USD">
-                          <div class="inline-flex items-center">
-                            USD
-                          </div>
-                        </button>
-                      </li>
-                    </ul>
-                  </div> -->
-                </div>
-              </div>
-              <div class="col-start-2 flex justify-end pt-4">
-                <button type="submit" class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-3/4" id="save-edit-button">
-                  Simpan
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const buktiTable = document.getElementById('buktiTable').getElementsByTagName('tbody')[0];
-      const addButton = document.getElementById('add-btn');
       let no = 1;
       bukti = [];
-      let currentEditRow = null;
-      const editModal = document.getElementById('edit-modal');
-      const overlay = document.getElementById('modal-overlay');
       const tandaTerimaInput = document.getElementById('dropdown-no-tanda-terima');
       const tandaTerimaHiddenInput = document.getElementById('input-no-tanda-terima-hidden');
       const supplier = document.getElementById('input-supplier');
-      const currency1 = document.getElementById('currency-button-1');
-      const currency2 = document.getElementById('currency-button-2');
-      let limit = 0;
       // let original = null;
 
       document.querySelectorAll('#dropwdown-RMK, #dropdown-bulan, #dropdown-tahun').forEach(input => {
@@ -241,11 +155,12 @@
         filterOptions();
       });
 
-      document.addEventListener('click', function(event) {
-        if (!event.target.closest('.relative')) {
+      searchInput.addEventListener('blur', function(event) {
+        // Delay hiding the optionsContainer to allow time for the click event on options
+        setTimeout(function() {
           optionsContainer.classList.add('hidden');
           updateSupplierInfo(searchInput.value);
-        }
+        }, 100);
       });
 
       optionsContainer.addEventListener('click', function(event) {
@@ -254,18 +169,6 @@
           updateSupplierInfo(searchInput.value);
           optionsContainer.classList.add('hidden');
           searchInput.setCustomValidity('');
-        }
-      });
-
-      searchInput.addEventListener('blur', function() {
-        const inputValue = searchInput.value.toLowerCase();
-
-        for (let i = 0; i < options.length; i++) {
-          if (options[i].textContent.toLowerCase() === inputValue) {
-            updateSupplierInfo(inputValue);
-            searchInput.setCustomValidity('');
-            break;
-          }
         }
       });
 
@@ -296,6 +199,14 @@
 
               // Update the datepicker field
               document.getElementById('datepicker-autohide-x').value = data.tanggal_jatuh_tempo;
+              // let currency = data.currency
+              // bukti = data.invoices.map(item => ({
+              //   notes: item.keterangan,
+              //   nominalValue: item.nominal,
+              //   selectedCurrency: currency
+              // }));
+              // renderTable();
+
             } else {
               console.log(data);
               alert('Tanda Terima not found');
@@ -315,19 +226,6 @@
       // Restore the original value and update the hidden input on focus out
       // searchInput.addEventListener('focusout', updateSupplierInfo);
 
-      document.getElementById('dropdown-search').addEventListener('change', function() {
-        this.blur(); // This will remove focus from the dropdown
-      });
-
-      function updateHiddenBuktiField(buktiArray) {
-        // Convert the array to a JSON string
-        var jsonString = JSON.stringify(buktiArray);
-
-        // Update the hidden input field with the JSON string
-        document.getElementById('hiddenBuktiField').value = jsonString;
-        console.log(jsonString);
-      }
-      
       // Function to format currency
       function formatCurrency(value, currency) {
         return `${currency} ${new Intl.NumberFormat('en-US').format(value)}`;
@@ -358,91 +256,11 @@
         document.getElementById('total-amount').value = total;
       }
 
-
-      // Set default value
-      // dropdownButton2.innerHTML = 'IDR <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>';
-
-      // menuItems2.forEach(item => {
-      //   item.addEventListener('click', function() {
-      //     const selectedCurrency2 = this.getAttribute('data-currency-2');
-      //     dropdownButton2.innerHTML = `${selectedCurrency2} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
-      //     toggleDropdown(dropdownMenu2);
-      //   });
-      // });
-
-      // menuItems3.forEach(item => {
-      //   item.addEventListener('click', function() {
-      //     const selectedCurrency3 = this.getAttribute('data-currency-3');
-      //     dropdownButton3.innerHTML = `${selectedCurrency3} <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>`;
-      //     toggleDropdown(dropdownMenu3);
-      //   });
-      // });
-
       function updateRowNumbers() {
         const rows = buktiTable.getElementsByTagName('tr');
         for (let i = 0; i < rows.length; i++) {
           const cell = rows[i].getElementsByTagName('td')[0];
           cell.textContent = i + 1;
-        }
-      }
-
-      function openEditModal(rowIndex) {
-        currentEditRow = buktiTable.rows[rowIndex];
-        console.log(currentEditRow);
-        const notes = bukti[rowIndex].notes;
-        const dk = bukti[rowIndex].dk;
-        const nominalValue = bukti[rowIndex].nominalValue;
-
-        document.getElementById('edit-notes-input').value = notes;
-        document.getElementById('edit-dk-input').value = dk;
-        document.getElementById('edit-currency-input-2').value = nominalValue;
-        currency2.innerHTML = bukti[rowIndex].selectedCurrency;
-
-        editModal.classList.remove('hidden');
-        editModal.classList.add('flex');
-        overlay.classList.remove('hidden');
-      }
-
-      function closeModal(modal) {
-        modal.classList.remove('flex');
-        modal.classList.add('hidden');
-        overlay.classList.add('hidden');
-      }
-
-      function saveEdit() {
-        if (currentEditRow) {
-          console.log(currentEditRow);
-          const editedNotes = document.getElementById('edit-notes-input').value;
-          const editeddk = document.getElementById('edit-dk-input').value;
-          const editedNominalValue = document.getElementById('edit-currency-input-2').value;
-          const editedCurrency = currency2.innerHTML.trim();
-
-          if (!editedNotes || !editeddk || !editedNominalValue || !editedCurrency) {
-            alert('Please fill in all fields.');
-            return; // Do not proceed with saving
-          }
-
-          // Update the row data in the table
-          currentEditRow.cells[1].textContent = editedNotes;
-          currentEditRow.cells[2].textContent = editeddk;
-          currentEditRow.cells[3].textContent = formatCurrency(editedNominalValue, editedCurrency);
-
-          // Update the bukti array
-          const rowIndex = currentEditRow.rowIndex - 1;
-          bukti[rowIndex] = {
-            notes: editedNotes,
-            dk: editeddk,
-            nominalValue: editedNominalValue,
-            selectedCurrency: editedCurrency
-          };
-
-          console.log('Bukti after edit:', bukti); // Log the array to the console for verification
-
-          // Hide the modal
-          closeModal(editModal);
-          currentEditRow = null;
-          updateTotal();
-          renderTable();
         }
       }
 
@@ -463,35 +281,9 @@
           cellNotes.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
           cellNotes.textContent = item.notes;
 
-          const celldk = newRow.insertCell(2);
-          celldk.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
-          celldk.textContent = item.dk;
-
           const cellAmount = newRow.insertCell(3);
           cellAmount.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
           cellAmount.textContent = formatCurrency(item.nominalValue, item.selectedCurrency);
-
-          const cellAction = newRow.insertCell(4);
-          cellAction.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
-          cellAction.innerHTML = '<button type="button" class="mr-3 font-medium text-blue-600 dark:text-blue-500 hover:underline editButton" data-modal-toggle="edit-modal">Edit</button> <button class="font-medium text-red-600 dark:text-red-500 hover:underline deleteButton">Delete</button>';
-
-          // Add event listener for the delete button
-          const deleteButton = newRow.querySelector('.deleteButton');
-          deleteButton.addEventListener('click', function() {
-            const rowIndex = newRow.rowIndex - 1; // Get the index of the row
-            bukti.splice(rowIndex, 1); // Remove the corresponding bukti from the array
-            limit = limit - 1;
-            console.log(limit);
-            updateTotal(); // Update the total amount
-            renderTable();
-            updateHiddenBuktiField(bukti);
-          });
-
-          // Add event listener for the edit button
-          const editButton = newRow.querySelector('.editButton');
-          editButton.addEventListener('click', function() {
-            openEditModal(newRow.rowIndex - 1); // Pass the row index to the function
-          });
         });
 
         // Update the row numbers and total after rendering
@@ -499,53 +291,12 @@
         updateTotal();
       }
 
-      function addRow(notes, dk, nominalValue, selectedCurrency) {
-        // Check if there's an existing row and enforce currency consistency
-        // if (bukti.length > 0 && selectedCurrency !== bukti[0].selectedCurrency) {
-        //   alert(`Please use the same currency (${bukti[0].selectedCurrency}) as the first row.`);
-        //   return;
-        // }
-
-        if (notes && dk && nominalValue) {
-          // Store the bukti data in the array
-          limit = limit + 1;
-          console.log(limit);
-          bukti.push({
-            notes: notes,
-            dk: dk,
-            nominalValue: nominalValue,
-            selectedCurrency: selectedCurrency
-          });
-
-          console.log('Bukti:', bukti); // Log the array to the console for verification
-
-          // Clear inputs
-          document.getElementById('notes-input').value = '';
-          document.getElementById('dk-input').selectedIndex = 0;
-          document.getElementById('currency-input-2').value = '';
-
-          // Re-render the table
-          renderTable();
-          updateHiddenBuktiField(bukti);
-        }
-      }
-
-
-      // document.querySelectorAll('[data-modal-toggle]').forEach(button => {
-      //   button.addEventListener('click', () => {
-      //     const modal = document.getElementById(button.getAttribute('data-modal-toggle'));
-      //     modal.classList.toggle('hidden');
-      //   });
-      // });
-
       document.getElementById('my-form').addEventListener('submit', function(e) {
-        const hiddenBuktiField = document.getElementById('hiddenBuktiField').value;
         const confirmSubmit = confirm('Are you sure you want to submit the form?');
         if (!confirmSubmit) {
           e.preventDefault(); // Prevent form submission if user cancels
           return;
         }
-        localStorage.clear();
       });
 
       function preventEnterKey(e) {
@@ -561,8 +312,6 @@
       inputs.forEach(input => {
         input.addEventListener('keydown', preventEnterKey);
       });
-
-      loadFromLocalStorage();
     });
   </script>
 </x-layout>

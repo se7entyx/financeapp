@@ -92,6 +92,7 @@ class BuktiKasController extends Controller
                 'supplier_name' => $tandaTerima->supplier->name,
                 'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo,
                 'tanda_terima_id' => $tandaTerima->id,
+                'invoices' => $tandaTerima->invoices,
                 'currency' => $tandaTerima->currency
             ]);
         }
@@ -111,9 +112,8 @@ class BuktiKasController extends Controller
                 'nomer' => 'required|string',
                 'kas' => 'required|string',
                 'jumlah' => 'integer',
-                'no_cek' => 'string',
-                'berita_transaksi' => 'required|string',
-                'hiddenBuktiField' => 'required|string'
+                'no_cek' => 'nullable|string',
+                'berita_transaksi' => 'required|string'
             ]);
             // dd($validated);
         } catch (ValidationException $e) {
@@ -131,47 +131,9 @@ class BuktiKasController extends Controller
 
         $buktikas->save();
 
-        $buktiArray = json_decode($request->input('hiddenBuktiField'), true);
-
-        foreach ($buktiArray as $buktiItem) {
-            // Example: Save each item to the database
-            KeteranganBuktiKas::create([
-                'bukti_kas_id' => $buktikas->id,
-                'keterangan' => $buktiItem['notes'],
-                'dk' => $buktiItem['dk'],
-                'jumlah' => $buktiItem['nominalValue']
-            ]);
-        }
-
         return redirect()->route('buktikas.index')->with('success', 'Bukti Kas created successfully!');
     }
 
-    public function showAll()
-    {
-        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->get();
-        $currency = Invoices::with(['tanda_terima'])->where('id', $buktiKasRecords->tanda_terima->id)->pluck('currency')->first();
-        return view('alldoc', ['title' => 'All Document', 'buktiKasRecords' => $buktiKasRecords, 'currency' => $currency]);
-    }
-
-    public function getDetails($id)
-    {
-        // Fetch the BuktiKas record along with its related KeteranganBuktiKas records
-        $buktiKas = BuktiKas::with('keterangan_bukti_kas', 'tanda_terima')->findOrFail($id);
-        $ket = $buktiKas->keterangan_bukti_kas;
-
-        // Fetch the currency value from the related TandaTerima model
-        $tandaTerima = TandaTerima::find($buktiKas->tanda_terima_id);
-        $currency = $tandaTerima->currency;
-
-        // Combine the invoices and currency into a single response
-        $response = [
-            'ket' => $ket,
-            'currency' => $currency,
-        ];
-
-        // Return the combined response as JSON
-        return response()->json($response);
-    }
     public function deleteBk($id)
     {
         $x = BuktiKas::find($id);
@@ -229,9 +191,8 @@ class BuktiKasController extends Controller
             'tanggal' => 'nullable|string',
             'kas' => 'required|string',
             'jumlah' => 'integer',
-            'no_cek' => 'string',
-            'berita_transaksi' => 'required|string',
-            'hiddenBuktiField' => 'required|string'
+            'no_cek' => 'nullable|string',
+            'berita_transaksi' => 'required|string'
         ]);
 
         $buktikas = BuktiKas::findOrFail($id);
