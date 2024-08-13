@@ -26,7 +26,7 @@
         </ul>
         <ul class="pt-5 mt-5 space-y-2 border-t border-gray-700">
             <li>
-            <button type="button" class="flex items-center p-2 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700" aria-controls="dropdown-pages3" data-collapse-toggle="dropdown-pages3">
+                <button type="button" class="flex items-center p-2 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700" aria-controls="dropdown-pages3" data-collapse-toggle="dropdown-pages3">
                     <i class="fa-solid fa-pencil"></i>
                     <span class="flex-1 ml-3 text-left whitespace-nowrap">New Document</span>
                     <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -52,10 +52,13 @@
                 </button>
                 <ul id="dropdown-pages" class="hidden py-2 space-y-2">
                     <li>
-                        <a href="/dashboard/all/tanda-terima" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">All Documents</a>
+                        <a href="/dashboard/my/tanda-terima" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Tanda Terima</a>
                     </li>
                     <li>
-                        <a href="/dashboard/my/tanda-terima" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">My Documents</a>
+                        <a href="/dashboard/my/bukti-kas" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Bukti Pengeluaran Kas / Bank</a>
+                    </li>
+                    <li>
+                        <a href="/dashboard/all/tanda-terima" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">All Documents</a>
                     </li>
                 </ul>
             </li>

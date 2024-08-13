@@ -11,7 +11,7 @@ class SupplierController extends Controller
     public function showForm()
     {
         // Fetch all suppliers from the database
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
         // Return the view 'newtanda' with the suppliers and a title
         return view('newtanda', ['suppliers' => $suppliers, 'title' => 'New Tanda Terima']);
     }

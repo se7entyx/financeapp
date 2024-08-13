@@ -25,7 +25,7 @@ class TandaTerimaController extends Controller
         $id = auth()->id();
         $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date']))->latest()->paginate(20)->withQueryString();
         $suppliers = Supplier::orderBy('name', 'asc')->get();
-        $title = 'My Documents';
+        $title = 'My Tanda Terima';
         return view('mydoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'suppliers' => $suppliers]);
     }
     public function store(Request $request)
@@ -47,6 +47,8 @@ class TandaTerimaController extends Controller
             'invoice.*' => 'required|string',
             'nominal' => 'required|array',
             'nominal.*' => 'required|numeric',
+            'keterangan' => 'required|array',
+            'keterangan.*' => 'required|string',
         ]);
 
         // dd($validated);
@@ -72,7 +74,7 @@ class TandaTerimaController extends Controller
             $invoice->tanda_terima_id = $tandaTerima->id;
             $invoice->nomor = $validated['invoice'][$index];
             $invoice->nominal = $validated['nominal'][$index];
-            // $invoice->currency = $validated['currency'][$index];
+            $invoice->keterangan = $validated['keterangan'][$index];
             $invoice->save();
         }
 
@@ -139,6 +141,8 @@ class TandaTerimaController extends Controller
             'invoice.*' => 'required|string',
             'nominal' => 'required|array',
             'nominal.*' => 'required|numeric',
+            'keterangan' => 'required|array',
+            'keterangan.*' => 'required|string',
         ]);
 
         $tandaTerima = TandaTerima::findOrFail($id);
@@ -158,6 +162,7 @@ class TandaTerimaController extends Controller
         foreach ($validated['invoice'] as $index => $invoiceNo) {
             $invoice = $tandaTerima->invoices()->firstOrNew(['nomor' => $invoiceNo]);
             $invoice->nominal = $validated['nominal'][$index];
+            $invoice->nominal = $validated['keterangan'][$index];
             $invoice->save();
         }
 

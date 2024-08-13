@@ -14,29 +14,20 @@
         </div>
 
         <nav class="bg-gray-800 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
-            <div class="flex flex-wrap justify-between items-center">
-                <!-- Left section: Links -->
-                <div class="flex justify-start items-center space-x-4 lg:space-x-8">
-                    <a href="/dashboard/my/tanda-terima" class="text-white hover:text-white" id="tanda-terima-link">Tanda Terima</a>
-                    <a href="/dashboard/my/bukti-kas" class="text-gray-300 hover:text-white" id="bukti-kas-keluar-link">Bukti Kas Keluar</a>
-                </div>
+            <div class="flex flex-wrap justify-end items-center">
 
                 <!-- Middle section: Supplier and Dates -->
-                <div class="flex flex-wrap justify-center items-center space-x-2 lg:space-x-4 mt-2 lg:mt-0">
-                    <form id="filter-form" action="#" method="GET" class="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto m-0 p-0">
-                        <div class="relative mt-1 lg:mt-0">
-                            <label for="supplier" class="sr-only">Supplier</label>
-                            <select id="supplier" name="supplier" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="" selected>Select supplier</option>
-                                @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->name }}">{{ $supplier->name }}</option>
-                                @endforeach
-                            </select>
+                <div class="flex flex-wrap justify-bet items-center space-x-2 lg:space-x-4 mt-2 lg:mt-0">
+                    <form id="filter-form" action="#" method="GET" class="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto m-0 p-0 items-center">
+                        <div class="relative mt-1 lg:mt-0 inline-flex">
+                            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span class="fa-solid fa-filter-circle-xmark"></span> <a href="/dashboard/my/tanda-terima">Clear</a></button>
                         </div>
-
                         <div class="relative mt-1 lg:mt-0">
                             <label for="start-date" class="sr-only">Start Date</label>
                             <input type="date" id="start-date" name="start_date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        </div>
+                        <div class="relative mt-1 lg:mt-0">
+                            <label for="" class="text-white">To</label>
                         </div>
                         <div class="relative mt-1 lg:mt-0">
                             <label for="end-date" class="sr-only">End Date</label>
@@ -216,17 +207,19 @@
                         <table class="w-full bg-white rtl:text-right border border-gray-300">
                             <thead class="bg-gray-200">
                                 <tr class="text-gray-700">
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">No</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Invoice</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Nominal</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">No</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Invoice</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Nominal</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Keterangan</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${invoices.map((kbk, index) => `
                                     <tr>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${index + 1}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${kbk.nomor}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${currency} ${formatter.format(kbk.nominal)}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${index + 1}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.nomor}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${currency} ${formatter.format(kbk.nominal)}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.keterangan}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>

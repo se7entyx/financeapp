@@ -67,16 +67,12 @@ class TandaTerima extends Model
         $query->when(
             $filters['search'] ?? false,
             fn ($query, $search) =>
-            $query->where('increment_id', 'like', '%' . $search . '%')
-        )->when(
-            $filters['supplier'] ?? false,
-            fn ($query, $supplier) => 
-            $query->whereHas('supplier', fn($query) => $query->where('name', $supplier))
+            $query->whereHas('supplier', fn($query) => $query->where('name', 'like', '%' . $search . '%'))
         )->when(
             isset($filters['start_date']) && isset($filters['end_date']),
-            fn ($query) => $query->whereBetween('tanggal', [
-                Carbon::createFromFormat('Y-m-d', $filters['start_date'])->format('d-m-Y'),
-                Carbon::createFromFormat('Y-m-d', $filters['end_date'])->format('d-m-Y')
+            fn ($query) => $query->whereBetween('created_at', [
+                $filters['start_date'],
+                $filters['end_date']
             ])
         ); 
     }

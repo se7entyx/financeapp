@@ -25,22 +25,8 @@
                 <div class="flex flex-wrap justify-center items-center space-x-2 lg:space-x-4 mt-2 lg:mt-0">
                     <form id="filter-form" action="#" method="GET" class="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto m-0 p-0">
                         <div class="relative mt-1 lg:mt-0">
-                            <label for="supplier" class="sr-only">Supplier</label>
-                            <select id="supplier" name="supplier" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="" selected>Select supplier</option>
-                                @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->name }}">{{ $supplier->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="relative mt-1 lg:mt-0">
-                            <label for="start-date" class="sr-only">Start Date</label>
-                            <input type="date" id="start-date" name="start_date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        </div>
-                        <div class="relative mt-1 lg:mt-0">
-                            <label for="end-date" class="sr-only">End Date</label>
-                            <input type="date" id="end-date" name="end_date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <label for="jatuh_tempo" class="sr-only">Jatuh Tempo</label>
+                            <input type="date" id="jatuh_tempo" name="jatuh_tempo" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         </div>
                         <div class="relative mt-1 lg:mt-0 w-2/3">
                             <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">

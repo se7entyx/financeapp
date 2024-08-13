@@ -40,26 +40,18 @@ class BuktiKas extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function form_bank(): BelongsTo{
-        return $this->belongsTo(FormBank::class);
-    }
-
     public function scopeFilter(Builder $query, array $filters): void
     {
         $query->when(
             $filters['search'] ?? false,
             fn ($query, $search) =>
-            $query->where('nomer', 'like', '%' . $search . '%')
+            $query->whereHas('tanda_terima', fn($query) => $query->whereHas('supplier', fn($query) => $query->where('nomer', 'like', '%' . $search . '%')))
         )->when(
-            $filters['supplier'] ?? false,
-            fn ($query, $supplier) => 
-            $query->whereHas('tanda_terima', fn($query) => $query->whereHas('supplier', fn($query) => $query->where('name', $supplier)))
-        )->when(
-            isset($filters['start_date']) && isset($filters['end_date']),
-            fn ($query) => $query->whereBetween('created_at', [
-                Carbon::createFromFormat('Y-m-d', $filters['start_date'])->startOfDay(),
-                Carbon::createFromFormat('Y-m-d', $filters['end_date'])->endOfDay()
-            ])
+            isset($filters['jatuh_tempo']),
+            fn($query) => $query->whereHas('tanda_terima', function ($query) use ($filters) {
+                $date = Carbon::createFromFormat('Y-m-d', $filters['jatuh_tempo'])->format('Y-m-d');
+                $query->whereDate('tanggal_jatuh_tempo', '=', $date);   
+            })
         );
     }
 }

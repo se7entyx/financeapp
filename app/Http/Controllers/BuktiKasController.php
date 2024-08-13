@@ -34,7 +34,7 @@ class BuktiKasController extends Controller
         $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date']))->latest()->paginate(20)->withQueryString();
         $suppliers = Supplier::orderBy('name', 'asc')->get();
 
-        $title = 'My Documents';
+        $title = 'My Bukti Pengeluaran Kas';
         return view('mydoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
     }
 
@@ -117,7 +117,7 @@ class BuktiKasController extends Controller
             ]);
             // dd($validated);
         } catch (ValidationException $e) {
-            dd($validated);
+            // dd($validated);
         }
         $buktikas = new BuktiKas();
         $buktikas->user_id = $userId;
