@@ -20,7 +20,7 @@ class BuktiKas extends Model
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
-        'user_id', 'tanda_terima_id', 'nomer', 'tanggal', 'kas', 'jumlah', 'no_cek'
+        'user_id', 'tanda_terima_id', 'nomer', 'tanggal', 'kas', 'jumlah', 'no_cek', 'status'
     ];
 
     protected static function boot()

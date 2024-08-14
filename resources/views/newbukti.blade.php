@@ -138,7 +138,7 @@
         const part1 = document.getElementById('dropdown-kode').value;
         const part2 = document.getElementById('dropdown-bulan').value;
         const part3 = document.getElementById('dropdown-tahun').value;
-        const nomer = `${part1}/       /${part2}/${part3}`;
+        const nomer = `${part1}/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/${part2}/${part3}`;
         document.getElementById('nomer').value = nomer;
         console.log(nomer);
       }

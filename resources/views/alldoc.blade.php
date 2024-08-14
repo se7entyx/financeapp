@@ -212,17 +212,19 @@
                         <table class="w-full bg-white rtl:text-right border border-gray-300">
                             <thead class="bg-gray-200">
                                 <tr class="text-gray-700">
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">No</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Invoice</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Nominal</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">No</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Invoice</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Nominal</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Keterangan</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${invoices.map((kbk, index) => `
                                     <tr>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${index + 1}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${kbk.nomor}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/3">${currency} ${formatter.format(kbk.nominal)}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${index + 1}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.nomor}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${currency} ${formatter.format(kbk.nominal)}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.keterangan}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>

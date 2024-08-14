@@ -55,7 +55,9 @@
                             <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
                             <th class="py-2 px-4 border-b">Berita Transaksi</th>
                             <th class="py-2 px-4 border-b">Kapan dibuat</th>
+                            <th class="py-2 px-4 border-b">Kapan diupdate</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
+                            <th class="py-2 px-4 border-b">Status</th>
                             <th class="py-2 px-4 border-b">Aksi</th>
                         </tr>
                     </thead>
@@ -68,15 +70,16 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibayarkan-kepada">{{ $bk->tanda_terima->supplier->name }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kas">{{ $bk->kas }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah"> {{$bk->tanda_terima->currency }} {{ number_format($bk->jumlah) }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center no-cek">{{ $bk->no_cek }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center no-cek">{{ $bk->no_cek ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi}}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kapan-dibuat">{{ $bk->created_at->format('d-m-Y')}}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kapan-diupdate">{{ $bk->updated_at->format('d-m-Y')}}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
-                            @if (Auth::check() && Auth::user()->role == 'admin')
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center status">{{ $bk->status }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
                                 <div class="flex justify-center items-center space-x-4">
-                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
+                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas">View Details</a>
                                     <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
                                     <form action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form-bk">
                                         @csrf
@@ -87,11 +90,6 @@
                                     <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
                                 </div>
                             </td>
-                            @else
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
-                                <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->id }}" data-table="bukti-kas">View Details</a>
-                            </td>
-                            @endif
                         </tr>
                         @endforeach
                     </tbody>
@@ -165,13 +163,15 @@
                 const tanggalJatuhTempo = row.querySelector('.jatuh-tempo').textContent;
                 const beritaTransaksi = row.querySelector('.berita-transaksi').textContent;
                 const kapanDibuat = row.querySelector('.kapan-dibuat').textContent;
+                const kapanDiupdate = row.querySelector('.kapan-diupdate').textContent;
                 const dibuatOleh = row.querySelector('.dibuat-oleh').textContent;
+                const status = row.querySelector('.status').textContent;
 
-                fetch(`/bukti-kas/${typeId}/details`)
+                fetch(`/tanda-terima/${typeId}/invoices`)
                     .then(response => response.json())
                     .then(data => {
                         const {
-                            ket,
+                            invoices,
                             currency
                         } = data;
                         const formatter = new Intl.NumberFormat('en-US', {
@@ -184,28 +184,30 @@
                         <div class="mb-4"><strong>Dibayarkan kepada:</strong> ${dibayarkanKepada || 'N/A'}</div>
                         <div class="mb-4"><strong>Kas/Cheque/Bilyet Giro Bank:</strong> ${dibayarkan || 'N/A'}</div>
                         <div class="mb-4"><strong>Jumlah:</strong> ${jumlah || 'N/A'}</div>
-                        <div class="mb-4"><strong>No. Cek:</strong> ${noCek || 'N/A'}</div>
+                        <div class="mb-4"><strong>No. Cek:</strong> ${(noCek || 'N/A' )}</div>
                         <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo || 'N/A'}</div>
                         <div class="mb-4"><strong>Berita Transaksi:</strong> ${beritaTransaksi || 'N/A'}</div>
                         <div class="mb-4"><strong>Kapan dibuat:</strong> ${kapanDibuat || 'N/A'}</div>
+                        <div class="mb-4"><strong>Kapan diupdate:</strong> ${kapanDiupdate || 'N/A'}</div>
                         <div class="mb-4"><strong>Dibuat oleh:</strong> ${dibuatOleh || 'N/A'}</div>
+                        <div class="mb-4"><strong>Status:</strong> ${status || 'N/A'}</div>
                         <div class="mb-4"><strong>Keterangan Bukti Kas:</strong></div>
                         <table class="w-full bg-white rtl:text-right border border-gray-300">
                             <thead class="bg-gray-200">
                                 <tr class="text-gray-700">
-                                    <th scope="col" class="py-2 px-4 border-b w-1/6 text-start">No</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/2 text-start">Keterangan</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/6 text-start">D/K</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Jumlah</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">No</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Invoice</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Nominal</th>
+                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Keterangan</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${ket.map((kbk, index) => `
+                                ${invoices.map((kbk, index) => `
                                     <tr>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${index + 1}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/2">${kbk.keterangan}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${kbk.dk}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/6">${currency} ${formatter.format(kbk.jumlah)}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${index + 1}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.nomor}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${currency} ${formatter.format(kbk.nominal)}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.keterangan}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>

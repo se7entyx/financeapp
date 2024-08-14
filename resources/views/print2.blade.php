@@ -168,7 +168,7 @@
             @foreach ($buktiKas->keterangan_bukti_kas as $kets)
             <tr>
                 <td>{{ $kets->keterangan }}</td>
-                <td class="center-text">{{ $kets->dk }}</td>
+                <td class="center-text"> </td>
                 <td class="right-text">{{ $buktiKas->tanda_terima->currency }} {{ number_format($kets->jumlah, 0, ',', '.') }}</td>
             </tr>
             @endforeach

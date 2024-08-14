@@ -88,7 +88,6 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 jatuh-tempo">{{ $tt->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 text-sm text-gray-500 break-words keterangan">{{ $tt->keterangan ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
-                            @if (Auth::check() && Auth::user()->role == 'admin')
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
@@ -101,11 +100,6 @@
                                     <a href="/dashboard/print/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
                                 </div>
                             </td>
-                            @else
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
-                                <a href="#" class="text-blue-500 mr-4 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
-                            </td>
-                            @endif
                         </tr>
                         @endforeach
                     </tbody>

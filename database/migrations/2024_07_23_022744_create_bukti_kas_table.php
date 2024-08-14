@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->string('no_cek')->nullable();
             $table->string('berita_transaksi');
+            $table->string('status')->default('unfinished');
             $table->timestamps();
     
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

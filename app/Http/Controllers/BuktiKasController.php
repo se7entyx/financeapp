@@ -61,33 +61,21 @@ class BuktiKasController extends Controller
         // Get the current user ID
         $userId = Auth::id();
 
-        // Fetch TandaTerima records that are not assigned to BuktiKas, or are assigned to the current BuktiKas being edited
-        $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
+        // Fetch TandaTerima records with related supplier, invoices, and buktiKas
+        $tandaTerimaQuery = TandaTerima::with(['supplier', 'invoices', 'bukti_kas'])
             ->where('user_id', $userId)
             ->where('increment_id', $tandaTerimaInc);
 
-        // if ($buktiKasId) {
-        //     $buktiKas = BuktiKas::find($buktiKasId);
-
-        //     if ($buktiKas) {
-        //         // Include the TandaTerima associated with the current BuktiKas being edited
-        //         $tandaTerimaQuery->where(function ($query) use ($buktiKas) {
-        //             $query->whereDoesntHave('bukti_kas')
-        //                 ->orWhere('id', $buktiKas->tanda_terima_id);
-        //         });
-        //     } else {
-        //         // If BuktiKas is not found, still exclude those assigned to BuktiKas
-        //         $tandaTerimaQuery->whereDoesntHave('bukti_kas');
-        //     }
-        // } else {
-        //     // Exclude those assigned to BuktiKas
-        //     $tandaTerimaQuery->whereDoesntHave('bukti_kas');
-        // }
-
         $tandaTerima = $tandaTerimaQuery->first();
 
-        // Prepare the response data
+        // Check if TandaTerima is found
         if ($tandaTerima) {
+            // If buktiKasId is provided and TandaTerima is already assigned to a different BuktiKas, return an error
+            if ($tandaTerima->bukti_kas && $tandaTerima->bukti_kas->id !== $buktiKasId) {
+                return response()->json(['error' => 'Tanda Terima already assigned to a different Bukti Kas'], 400);
+            }
+
+            // Prepare the response data
             return response()->json([
                 'supplier_name' => $tandaTerima->supplier->name,
                 'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo,
@@ -98,7 +86,7 @@ class BuktiKasController extends Controller
         }
 
         // Return an error if TandaTerima not found
-        return response()->json(['error' => 'Tanda Terima not found or already used'], 404);
+        return response()->json(['error' => 'Tanda Terima not found'], 404);
     }
 
     public function store(Request $request)
@@ -143,7 +131,7 @@ class BuktiKasController extends Controller
     }
     public function showEditForm($id)
     {
-        $buktikas = BuktiKas::with(['keterangan_bukti_kas', 'tanda_terima.supplier', 'tanda_terima.invoices'])->findOrFail($id);
+        $buktikas = BuktiKas::with(['tanda_terima.supplier', 'tanda_terima.invoices'])->findOrFail($id);
 
         $title = 'Edit Bukti Kas';
         $userId = Auth::id();
@@ -188,7 +176,6 @@ class BuktiKasController extends Controller
         $validated = $request->validate([
             'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',
             'nomer' => 'required|string',
-            'tanggal' => 'nullable|string',
             'kas' => 'required|string',
             'jumlah' => 'integer',
             'no_cek' => 'nullable|string',
@@ -198,49 +185,12 @@ class BuktiKasController extends Controller
         $buktikas = BuktiKas::findOrFail($id);
         $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
         $buktikas->nomer = $validated['nomer'];
-        $buktikas->tanggal = $validated['tanggal'];
+        $buktikas->tanggal = null;
         $buktikas->kas = $validated['kas'];
         $buktikas->jumlah = $validated['jumlah'];
         $buktikas->no_cek = $validated['no_cek'];
         $buktikas->berita_transaksi = $validated['berita_transaksi'];
         $buktikas->save();
-
-        $buktiArray = json_decode($request->input('hiddenBuktiField'), true);
-
-
-        $existingBuktiKasIds = KeteranganBuktiKas::where('bukti_kas_id', $id)->pluck('id')->toArray();
-
-        // Create an array to keep track of processed IDs
-        $processedIds = [];
-
-        foreach ($buktiArray as $buktiItem) {
-            if (isset($buktiItem['id'])) {
-                // Update existing record
-                $updatedKeterangan = KeteranganBuktiKas::findOrFail($buktiItem['id']);
-                $updatedKeterangan->keterangan = $buktiItem['notes'];
-                $updatedKeterangan->dk = $buktiItem['dk'];
-                $updatedKeterangan->jumlah = $buktiItem['nominalValue'];
-                $updatedKeterangan->save();
-
-                // Add the processed ID to the array
-                $processedIds[] = $buktiItem['id'];
-            } else {
-                // Create new record
-                $newKeterangan = new KeteranganBuktiKas();
-                $newKeterangan->bukti_kas_id = $id;
-                $newKeterangan->keterangan = $buktiItem['notes'];
-                $newKeterangan->dk = $buktiItem['dk'];
-                $newKeterangan->jumlah = $buktiItem['nominalValue'];
-                $newKeterangan->save();
-
-                // Add the new ID to the processed IDs
-                $processedIds[] = $newKeterangan->id;
-            }
-        }
-
-        // Find IDs to delete (existing IDs that were not processed)
-        $idsToDelete = array_diff($existingBuktiKasIds, $processedIds);
-        KeteranganBuktiKas::whereIn('id', $idsToDelete)->delete();
 
         return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas Updated successfully.');
     }
