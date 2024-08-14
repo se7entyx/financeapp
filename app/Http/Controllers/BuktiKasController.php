@@ -247,7 +247,7 @@ class BuktiKasController extends Controller
 
     public function printBuktiKas($id)
     {
-        $buktiKas = BuktiKas::with(['tanda_terima', 'keterangan_bukti_kas'])->find($id);
+        $buktiKas = BuktiKas::with(['tanda_terima'])->find($id);
 
         $html = view('print2', compact('buktiKas'))->render();
 
