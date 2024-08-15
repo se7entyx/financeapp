@@ -20,7 +20,7 @@ class BuktiKasController extends Controller
 
     public function getBuktiKas()
     {
-        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->filter(request(['search', 'supplier', 'start_date', 'end_date']))->latest()->paginate(20)->withQueryString();
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->filter(request(['search', 'jatuh_tempo']))->latest()->paginate(20)->withQueryString();
         $suppliers = Supplier::orderBy('name', 'asc')->get();
 
         $title = 'All Document';
@@ -31,7 +31,7 @@ class BuktiKasController extends Controller
     public function getMyBuktiKas()
     {
         $id = auth()->id();
-        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date']))->latest()->paginate(20)->withQueryString();
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->where('user_id', $id)->filter(request(['search', 'jatuh_tempo']))->latest()->paginate(20)->withQueryString();
         $suppliers = Supplier::orderBy('name', 'asc')->get();
 
         $title = 'My Bukti Pengeluaran Kas';
@@ -195,9 +195,25 @@ class BuktiKasController extends Controller
         return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas Updated successfully.');
     }
 
+    public function finish(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'nomer' => 'required|string',
+            'tanggal' => 'required|string'
+        ]);
+
+        $buktikas = BuktiKas::findOrFail($id);
+        $buktikas->nomer = $validated['nomer'];
+        $buktikas->tanggal = $validated['tanggal'];
+        $buktikas->status = "Sudah dibayar";
+        $buktikas->save();
+
+        return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas Updated successfully.');
+    }
+
     public function printBuktiKas($id)
     {
-        $buktiKas = BuktiKas::with(['tanda_terima', 'keterangan_bukti_kas'])->find($id);
+        $buktiKas = BuktiKas::with(['tanda_terima'])->find($id);
 
         $html = view('print2', compact('buktiKas'))->render();
 

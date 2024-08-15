@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/dashboard/edit/tanda-terima/{id}', [TandaTerimaController::class, 'update'])->name('tanda-terima.update');
     Route::get('/dashboard/edit/bukti-kas/{id}', [BuktiKasController::class, 'showEditForm'])->name('bukti-kas.edit');
     Route::put('/dashboard/edit/bukti-kas/{id}', [BuktiKasController::class, 'update'])->name('bukti-kas-update.edit');
+    Route::put('/dashboard/finish/bukti-kas/{id}', [BuktiKasController::class, 'finish'])->name('finish');
     Route::get('/get-supplier-info/{tandaTerimaId}/{buktiKasId?}', [BuktiKasController::class, 'getSupplierInfo']);
     Route::get('/dashboard/print/bukti-kas/{id}', [BuktiKasController::class, 'printBuktiKas']);
     Route::get('/dashboard/print/mandiri/{id}', [BuktiKasController::class, 'printmandiri']);

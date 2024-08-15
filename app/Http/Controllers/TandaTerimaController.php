@@ -7,6 +7,7 @@ use App\Models\Supplier;
 use App\Models\TandaTerima;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class TandaTerimaController extends Controller
@@ -22,7 +23,7 @@ class TandaTerimaController extends Controller
 
     public function getMyTandaTerima()
     {
-        $id = auth()->id();
+        $id = Auth::id();
         $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date']))->latest()->paginate(20)->withQueryString();
         $suppliers = Supplier::orderBy('name', 'asc')->get();
         $title = 'My Tanda Terima';
@@ -30,7 +31,7 @@ class TandaTerimaController extends Controller
     }
     public function store(Request $request)
     {
-        $userId = auth()->id();
+        $userId = Auth::id();
 
         // Validate Tanda Terima data
         $validated = $request->validate([
@@ -162,7 +163,7 @@ class TandaTerimaController extends Controller
         foreach ($validated['invoice'] as $index => $invoiceNo) {
             $invoice = $tandaTerima->invoices()->firstOrNew(['nomor' => $invoiceNo]);
             $invoice->nominal = $validated['nominal'][$index];
-            $invoice->nominal = $validated['keterangan'][$index];
+            $invoice->keterangan = $validated['keterangan'][$index];
             $invoice->save();
         }
 

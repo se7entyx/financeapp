@@ -10,7 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+
+use function Laravel\Prompts\select;
 
 class TandaTerima extends Model
 {
@@ -66,14 +69,21 @@ class TandaTerima extends Model
     {
         $query->when(
             $filters['search'] ?? false,
-            fn ($query, $search) =>
+            fn($query, $search) =>
             $query->whereHas('supplier', fn($query) => $query->where('name', 'like', '%' . $search . '%'))
         )->when(
             isset($filters['start_date']) && isset($filters['end_date']),
-            fn ($query) => $query->whereBetween('created_at', [
-                $filters['start_date'],
-                $filters['end_date']
-            ])
-        ); 
+            function ($query) use ($filters) {
+                // Convert start_date and end_date to d-m-Y format
+                $start = Carbon::createFromFormat('Y-m-d', $filters['start_date'])->format('d-m-Y');
+                $end = Carbon::createFromFormat('Y-m-d', $filters['end_date'])->format('d-m-Y');
+
+                // Apply the filtering conditions directly to the main query using date comparison
+                $query->whereBetween(
+                    DB::raw("STR_TO_DATE(tanggal, '%d-%m-%Y')"),
+                    [DB::raw("STR_TO_DATE('$start', '%d-%m-%Y')"), DB::raw("STR_TO_DATE('$end', '%d-%m-%Y')")]
+                );
+            }
+        );
     }
 }

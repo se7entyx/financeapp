@@ -45,12 +45,16 @@ class BuktiKas extends Model
         $query->when(
             $filters['search'] ?? false,
             fn ($query, $search) =>
-            $query->whereHas('tanda_terima', fn($query) => $query->whereHas('supplier', fn($query) => $query->where('nomer', 'like', '%' . $search . '%')))
+            $query->whereHas('tanda_terima', fn($query) => $query->whereHas('supplier', fn($query) => $query->where('name', 'like', '%' . $search . '%')))
         )->when(
             isset($filters['jatuh_tempo']),
             fn($query) => $query->whereHas('tanda_terima', function ($query) use ($filters) {
-                $date = Carbon::createFromFormat('Y-m-d', $filters['jatuh_tempo'])->format('Y-m-d');
-                $query->whereDate('tanggal_jatuh_tempo', '=', $date);   
+                // Parse the date from the filters array
+                $date = Carbon::createFromFormat('Y-m-d', $filters['jatuh_tempo']);
+                // Format the date to d-m-Y
+                $formattedDate = $date->format('d-m-Y');
+                // Use the formatted date in the query
+                $query->where('tanggal_jatuh_tempo', '=', $formattedDate);   
             })
         );
     }

@@ -161,15 +161,15 @@
             </tr>
             @php
             $totalRows = 7;
-            $ketCount = $buktiKas->keterangan_bukti_kas->count();
+            $ketCount = $buktiKas->tanda_terima->invoices->count();
             $rowsToGenerate = max($totalRows, $ketCount);
             @endphp
 
-            @foreach ($buktiKas->keterangan_bukti_kas as $kets)
+            @foreach ($buktiKas->tanda_terima->invoices as $kets)
             <tr>
                 <td>{{ $kets->keterangan }}</td>
                 <td class="center-text"> </td>
-                <td class="right-text">{{ $buktiKas->tanda_terima->currency }} {{ number_format($kets->jumlah, 0, ',', '.') }}</td>
+                <td class="right-text">{{ $buktiKas->tanda_terima->currency }} {{ number_format($kets->nominal, 0, ',', '.') }}</td>
             </tr>
             @endforeach
 

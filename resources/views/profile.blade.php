@@ -1,5 +1,5 @@
 <x-layout>
-@section('title', 'Profile')
+    @section('title', 'Profile')
     <x-slot:title>{{$title}}</x-slot:title>
     @if (session('status'))
     <div class="alert alert-success">
@@ -48,7 +48,6 @@
                 </div>
             </form>
         </div>
-
 
 
         <script>
