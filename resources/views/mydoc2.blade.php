@@ -29,7 +29,7 @@
                 <div class="flex flex-wrap justify-bet items-center space-x-2 lg:space-x-4 mt-2 lg:mt-0">
                     <form id="filter-form" action="#" method="GET" class="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto m-0 p-0 items-center">
                         <div class="relative mt-1 lg:mt-0 inline-flex">
-                            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span class="fa-solid fa-filter-circle-xmark"></span> <a href="/dashboard/my/bukti-kas">Clear</a></button>
+                            <a href="/dashboard/my/bukti-kas"> <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span class="fa-solid fa-filter-circle-xmark"></span> Clear</button></a>
                         </div>
                         <div class="relative mt-1 lg:mt-0">
                             <label for="jatuh_tempo" class="sr-only">Jatuh Tempo</label>
@@ -85,7 +85,9 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kapan-dibuat">{{ $bk->created_at->format('d-m-Y')}}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kapan-diupdate">{{ $bk->updated_at->format('d-m-Y')}}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibuat-oleh">{{ $bk->user->name }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center status">{{ $bk->status }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-center status {{ $bk->status === 'Belum dibayar' ? 'text-red-500' : ($bk->status === 'Sudah dibayar' ? 'text-green-500' : 'text-gray-500') }}">
+                                {{ $bk->status }}
+                            </td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas">View Details</a>
@@ -184,7 +186,7 @@
                                                 <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                                             </svg>
                                         </div>
-                                        <input name="tanggal" id="datepicker-autohide-tanggal" datepicker datepicker-autohide type="text" datepicker-format="dd-mm-yyyy" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date" required>
+                                        <input name="tanggal" id="datepicker-autohide-tanggal" datepicker datepicker-autohide datepicker-orientation="top left" type="text" datepicker-format="dd-mm-yyyy" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date" required>
                                     </div>
                                 </div>
                                 <div class="flex justify-center">
@@ -317,7 +319,6 @@
                 }
             });
         });
-
         document.querySelectorAll('.delete-form-bk').forEach(function(form) {
             form.addEventListener('submit', function(e) {
                 const confirmSubmit = confirm('Are you sure you want to delete the data?');
