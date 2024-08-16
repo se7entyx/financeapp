@@ -12,12 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use Kyslik\ColumnSortable\Sortable;
 
 use function Laravel\Prompts\select;
 
 class TandaTerima extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids,Sortable;
     protected $table = 'tanda_terima';
     protected $keyType = 'string';
     public $incrementing = false;
@@ -35,6 +36,11 @@ class TandaTerima extends Model
         'keterangan',
     ];
 
+    public $sortable = [
+        'tanggal',
+        'tanggal_jatuh_tempo',
+    ];
+    
     protected static function boot()
     {
         parent::boot();
@@ -83,6 +89,12 @@ class TandaTerima extends Model
                     DB::raw("STR_TO_DATE(tanggal, '%d-%m-%Y')"),
                     [DB::raw("STR_TO_DATE('$start', '%d-%m-%Y')"), DB::raw("STR_TO_DATE('$end', '%d-%m-%Y')")]
                 );
+            }
+        )->when(
+            isset($filters['jatuh_tempo']),
+            function ($query) use ($filters) {
+                $date = Carbon::createFromFormat('Y-m-d', $filters['jatuh_tempo'])->format('d-m-Y');
+                $query->where('tanggal_jatuh_tempo', '=', $date);
             }
         );
     }

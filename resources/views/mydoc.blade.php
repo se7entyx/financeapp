@@ -24,7 +24,7 @@
                         </div>
                         <div class="relative mt-1 lg:mt-0">
                             <label for="start-date" class="sr-only">Start Date</label>
-                            <input type="date" id="start-date" name="start_date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <input type="date" id="start-date" name="start_date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Select a date">
                         </div>
                         <div class="relative mt-1 lg:mt-0">
                             <label for="" class="text-white">To</label>
@@ -32,6 +32,10 @@
                         <div class="relative mt-1 lg:mt-0">
                             <label for="end-date" class="sr-only">End Date</label>
                             <input type="date" id="end-date" name="end_date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        </div>
+                        <div class="relative mt-1 lg:mt-0">
+                            <label for="jatuh_tempo" class="sr-only">Jatuh Tempo</label>
+                            <input type="date" id="jatuh_tempo" name="jatuh_tempo" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         </div>
                         <div class="relative mt-1 lg:mt-0 w-2/3">
                             <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -54,13 +58,13 @@
                         <tr class="text-gray-700">
                             <th class="py-2 px-4 border-b">No</th>
                             <th class="py-2 px-4 border-b">Nomor Tanda Terima</th>
-                            <th class="py-2 px-4 border-b">Tanggal</th>
+                            <th class="py-2 px-4 border-b" >@sortablelink('tanggal','Tanggal')</th>
                             <th class="py-2 px-4 border-b">Supplier</th>
                             <th class="py-2 px-4 border-b text-center">Faktur Pajak</th>
                             <th class="py-2 px-4 border-b text-center">PO</th>
                             <th class="py-2 px-4 border-b text-center">BPB</th>
                             <th class="py-2 px-4 border-b text-center">Surat Jalan</th>
-                            <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
+                            <th class="py-2 px-4 border-b">@sortablelink('tanggal_jatuh_tempo','Tanggal Jatuh Tempo')</th>
                             <th class="py-2 px-4 border-b">Keterangan</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
                             <th class="py-2 px-4 border-b">Aksi</th>

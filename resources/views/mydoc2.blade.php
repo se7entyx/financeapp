@@ -61,7 +61,7 @@
                             <th class="py-2 px-4 border-b text-center">Kas</th>
                             <th class="py-2 px-4 border-b text-center">Jumlah</th>
                             <th class="py-2 px-4 border-b text-center">No Cek</th>
-                            <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
+                            <th class="py-2 px-4 border-b">@sortablelink('tanda_terima.tanggal_jatuh_tempo','Tanggal Jatuh Tempo')</th>
                             <th class="py-2 px-4 border-b">Berita Transaksi</th>
                             <th class="py-2 px-4 border-b">Kapan dibuat</th>
                             <th class="py-2 px-4 border-b">Kapan diupdate</th>

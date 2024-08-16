@@ -7,20 +7,24 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
+use Kyslik\ColumnSortable\Sortable;
 use Ramsey\Uuid\Uuid;
 
 class BuktiKas extends Model
 {
-    use HasFactory, Notifiable,HasUuids;
+    use HasFactory, HasUuids, Sortable;
+
     protected $table = 'bukti_kas';
     protected $keyType = 'string';
     public $incrementing = false;
+
     protected $fillable = [
         'user_id', 'tanda_terima_id', 'nomer', 'tanggal', 'kas', 'jumlah', 'no_cek', 'status'
+    ];
+
+    public $sortable = [
+        'tanggal', 'tanda_terima.tanggal_jatuh_tempo', 'created_at'
     ];
 
     protected static function boot()
@@ -36,7 +40,7 @@ class BuktiKas extends Model
         return $this->belongsTo(TandaTerima::class);
     }
 
-    public function user(): BelongsTo{
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
 
@@ -45,17 +49,22 @@ class BuktiKas extends Model
         $query->when(
             $filters['search'] ?? false,
             fn ($query, $search) =>
-            $query->whereHas('tanda_terima', fn($query) => $query->whereHas('supplier', fn($query) => $query->where('name', 'like', '%' . $search . '%')))
+            $query->whereHas('tanda_terima', fn($query) => 
+                $query->whereHas('supplier', fn($query) => 
+                    $query->where('name', 'like', '%' . $search . '%')
+                )
+            )
         )->when(
             isset($filters['jatuh_tempo']),
-            fn($query) => $query->whereHas('tanda_terima', function ($query) use ($filters) {
-                // Parse the date from the filters array
+            function ($query) use ($filters) {
                 $date = Carbon::createFromFormat('Y-m-d', $filters['jatuh_tempo']);
-                // Format the date to d-m-Y
                 $formattedDate = $date->format('d-m-Y');
-                // Use the formatted date in the query
-                $query->where('tanggal_jatuh_tempo', '=', $formattedDate);   
-            })
+
+                // Ensure that the relationship and table column are correctly referenced
+                $query->whereHas('tanda_terima', function ($query) use ($formattedDate) {
+                    $query->where('tanggal_jatuh_tempo', '=', $formattedDate);
+                });
+            }
         );
     }
 }
