@@ -20,23 +20,27 @@ class BuktiKasController extends Controller
 
     public function getBuktiKas()
     {
-        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->filter(request(['search', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
-        $suppliers = Supplier::orderBy('name', 'asc')->get();
-
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->filter(request(['search', 'jatuh_tempo']))->sortable(['created_at' => 'asc'])->latest()->paginate(20)->withQueryString();
         $title = 'All Document';
-        return view('alldoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
+        return view('alldoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords]);
     }
 
 
     public function getMyBuktiKas()
     {
         $id = Auth::id();
-        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->where('user_id', $id)->filter(request(['search', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
-        $suppliers = Supplier::orderBy('name', 'asc')->get();
-
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])
+            ->where('bukti_kas.user_id', $id)
+            ->sortable(['created_at' => 'asc'])
+            ->filter(request(['search', 'jatuh_tempo']))
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+    
         $title = 'My Bukti Pengeluaran Kas';
-        return view('mydoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords, 'suppliers' => $suppliers]);
+        return view('mydoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords]);
     }
+    
 
     public function index()
     {

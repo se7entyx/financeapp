@@ -58,7 +58,7 @@
                         <tr class="text-gray-700">
                             <th class="py-2 px-4 border-b">No</th>
                             <th class="py-2 px-4 border-b">Nomor Tanda Terima</th>
-                            <th class="py-2 px-4 border-b" >@sortablelink('tanggal','Tanggal')</th>
+                            <th class="py-2 px-4 border-b" >@sortablelink('created_at','Tanggal')</th>
                             <th class="py-2 px-4 border-b">Supplier</th>
                             <th class="py-2 px-4 border-b text-center">Faktur Pajak</th>
                             <th class="py-2 px-4 border-b text-center">PO</th>

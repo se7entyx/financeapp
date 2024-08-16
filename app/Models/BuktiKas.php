@@ -35,7 +35,7 @@ class BuktiKas extends Model
 
     protected $sortable = [
         'tanggal',
-        'tanggal_jatuh_tempo',
+        'tanda_terima.tanggal_jatuh_tempo',
         'created_at',
         'status'
     ];

@@ -38,6 +38,7 @@ class TandaTerima extends Model
 
     public $sortable = [
         'tanggal',
+        'created_at',
         'tanggal_jatuh_tempo',
     ];
 
