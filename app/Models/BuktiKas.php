@@ -56,6 +56,10 @@ class BuktiKas extends Model
                 // Use the formatted date in the query
                 $query->where('tanggal_jatuh_tempo', '=', $formattedDate);   
             })
+        )->when(
+            isset($filters['order']),
+            fn ($query, $order) =>
+            $query
         );
     }
 }
