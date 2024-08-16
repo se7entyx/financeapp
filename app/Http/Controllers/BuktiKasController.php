@@ -20,7 +20,7 @@ class BuktiKasController extends Controller
 
     public function getBuktiKas()
     {
-        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->filter(request(['search', 'jatuh_tempo']))->latest()->paginate(20)->withQueryString();
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->filter(request(['search', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
         $suppliers = Supplier::orderBy('name', 'asc')->get();
 
         $title = 'All Document';
@@ -30,8 +30,8 @@ class BuktiKasController extends Controller
 
     public function getMyBuktiKas()
     {
-        $id = auth()->id();
-        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->where('user_id', $id)->filter(request(['search', 'jatuh_tempo']))->latest()->paginate(20)->withQueryString();
+        $id = Auth::id();
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->where('user_id', $id)->filter(request(['search', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
         $suppliers = Supplier::orderBy('name', 'asc')->get();
 
         $title = 'My Bukti Pengeluaran Kas';
@@ -93,7 +93,7 @@ class BuktiKasController extends Controller
     {
         // dd($request);
         try {
-            $userId = auth()->id();
+            $userId = Auth::id();
             $validated = $request->validate([
                 // 'user_id' => $userId,
                 'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',

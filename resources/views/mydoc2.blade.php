@@ -56,17 +56,17 @@
                         <tr class="text-gray-700">
                             <th class="py-2 px-4 border-b">No</th>
                             <th class="py-2 px-4 border-b">Nomor Bukti Kas Keluar</th>
-                            <th class="py-2 px-4 border-b">Tanggal</th>
+                            <th class="py-2 px-4 border-b">@sortablelink('tanggal','Tanggal')</th>
                             <th class="py-2 px-4 border-b">Dibayarkan kepada</th>
                             <th class="py-2 px-4 border-b text-center">Kas</th>
                             <th class="py-2 px-4 border-b text-center">Jumlah</th>
                             <th class="py-2 px-4 border-b text-center">No Cek</th>
-                            <th class="py-2 px-4 border-b">Tanggal Jatuh Tempo</th>
+                            <th class="py-2 px-4 border-b">@sortablelink('tanda_terima.tanggal_jatuh_tempo','Tanggal Jatuh Tempo')</th>
                             <th class="py-2 px-4 border-b">Berita Transaksi</th>
-                            <th class="py-2 px-4 border-b">Kapan dibuat</th>
+                            <th class="py-2 px-4 border-b">@sortablelink('created_at','Kapan dibuat')</th>
                             <th class="py-2 px-4 border-b">Kapan diupdate</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
-                            <th class="py-2 px-4 border-b">Status</th>
+                            <th class="py-2 px-4 border-b">@sortablelink('status','Status')</th>
                             <th class="py-2 px-4 border-b">Aksi</th>
                         </tr>
                     </thead>
