@@ -7,6 +7,13 @@
   </style>
   <x-slot:title>{{$title}}</x-slot:title>
   <section class="bg-white dark:bg-gray-900 w-full">
+    @if (session('success'))
+    <div class="alert alert-success">
+      <script>
+        alert("Bukti kas berhasil dibuat");
+      </script>
+    </div>
+    @endif
     <div class="py-4 px-8 mx-auto max-w-7xl">
       <form id="my-form" action="/dashboard/new/bukti-pengeluaran" method="post">
         @csrf
@@ -37,7 +44,7 @@
                 $startYear = date('Y');
                 for ($i = 0; $i < 8; $i++) {
                   $year=$startYear + $i;
-                  echo "<option value=\"$year\"".($i==0 ? ' selected' : '' ).">$year</option>";
+                  echo "<option value=\" $year\"".($i==0 ? ' selected' : '' ).">$year</option>";
                   }
                   @endphp
               </select>
