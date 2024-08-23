@@ -16,7 +16,6 @@ return new class extends Migration
             $table->uuid('tanda_terima_id');
             $table->string('nomor');
             $table->integer('nominal');
-            $table->string('keterangan');
             $table->timestamps();
 
             $table->foreign('tanda_terima_id')->references('id')->on('tanda_terima')->onDelete('cascade');

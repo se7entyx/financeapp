@@ -7,6 +7,16 @@
     </style>
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900">
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         @if (session('success'))
         <div class="alert alert-success">
             <script>
@@ -132,6 +142,7 @@
         console.log("Formatted Date:", formattedDate);
 
         const addButton = document.getElementById('addButton');
+        const addButton2 = document.getElementById('addTrans');
         const invoiceFieldsContainer = document.getElementById('invoiceFieldsContainer');
         var form = document.getElementById('addtandaterima');
         let currentEditIndex = null;
@@ -143,42 +154,82 @@
 
 
         // Add new invoice fields dynamically
-        addButton.addEventListener('click', function() {
-            var invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
-            var invoiceCount = invoiceRow.length;
-            console.log(invoiceCount); // Decrement the invoice count after removing the item
-            if (invoiceCount == 6) {
-                alert('Maksimal invoice adalah 6');
-                console.log(invoiceCount); // Decrement the invoice count after removing the item
+        document.getElementById('addButton').addEventListener('click', function() {
+            const invoiceRowCount = document.getElementsByClassName('invoice-row').length;
 
+            if (invoiceRowCount == 6) {
+                alert('Maksimal invoice adalah 6');
                 return;
             }
-            invoiceCount++;
-            console.log(invoiceCount); // Decrement the invoice count after removing the item
 
             const div = document.createElement('div');
-            div.className = 'invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2'; // Flex container with responsive direction
+            div.className = 'invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2';
 
             div.innerHTML = `
+        <input type="hidden" name="trans_count[]" value="0" class="trans-count">
         <div class="flex-1">
             <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor Invoice <span class="required">*</span></label>
             <input type="text" name="invoice[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Invoice" required>
         </div>
         <div class="flex-1">
             <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
-            <input type="number" name="nominal[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nominal" required>
+            <input type="number" name="nominal[]" readonly class="invoice-nominal bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nominal" required>
         </div>
         <div class="flex-1">
-            <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
-            <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Keterangan" required>
-        </div>
-        <div class="flex-1">
-            <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeItem(this)">Delete</button>
+            <div class="flex gap-2">
+                <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeItem(this)">Delete</button>
+                <button type="button" id="addTrans" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900" >Add</button>
+            </div>
         </div>
     `;
 
-            invoiceFieldsContainer.appendChild(div);
+            document.getElementById('invoiceFieldsContainer').appendChild(div);
+
+            div.querySelector('#addTrans').addEventListener('click', function() {
+                const transDiv = document.createElement('div');
+                transDiv.className = 'trans-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2 pl-8'; // Add padding-left for indentation
+
+                transDiv.innerHTML = `
+            <div class="flex-1">
+                <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
+                <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Keterangan">
+            </div>
+            <div class="flex-1">
+                <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
+                <input type="number" name="trans_nominal[]" class="trans-nominal bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Nominal">
+            </div>
+            <div class="flex-1">
+                <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeTransRow(this)">Delete</button>
+            </div>
+        `;
+
+                let lastTransRow = div;
+                while (lastTransRow.nextElementSibling && lastTransRow.nextElementSibling.classList.contains('trans-row')) {
+                    lastTransRow = lastTransRow.nextElementSibling;
+                }
+
+                // Insert the new trans-row after the last trans-row
+                lastTransRow.insertAdjacentElement('afterend', transDiv);
+
+                // Increment trans_count
+                const transCountInput = div.querySelector('.trans-count');
+                transCountInput.value = parseInt(transCountInput.value) + 1;
+                console.log('Trans count after addition:', transCountInput.value);
+
+                transDiv.querySelector('.trans-nominal').addEventListener('input', function() {
+                    updateInvoiceNominal(div);
+                });
+            });
+
+            div.querySelectorAll('.trans-nominal').forEach(function(transInput) {
+                transInput.addEventListener('input', function() {
+                    updateInvoiceNominal(div);
+                });
+            });
         });
+
+
+
         form.addEventListener('submit', function(event) {
             var invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
             var invoiceCount = invoiceRow.length;
@@ -190,16 +241,99 @@
         });
     });
 
-    function removeItem(button) {
-        console.log('button clicked');
-        // Find the closest parent element with the class 'invoice-row' and remove it
-        const row = button.closest('.invoice-row');
-        if (row) {
-            row.remove();
-            invoiceCount--;
-            console.log(invoiceCount); // Decrement the invoice count after removing the item
+    function updateInvoiceNominal(invoiceRow) {
+        let total = 0;
+        let nextSibling = invoiceRow.nextElementSibling;
+
+        // Sum all the nominal values in the associated trans-rows
+        while (nextSibling && nextSibling.classList.contains('trans-row')) {
+            const transNominal = nextSibling.querySelector('.trans-nominal').value;
+            if (transNominal) {
+                total += parseFloat(transNominal);
+            }
+            nextSibling = nextSibling.nextElementSibling;
+        }
+
+        // Update the nominal value in the invoice row
+        if (total == 0) {
+            invoiceRow.querySelector('.invoice-nominal').value = null;
+            return
+        }
+        invoiceRow.querySelector('.invoice-nominal').value = total;
+    }
+
+    function removeTransRow(button) {
+        const transRow = button.closest('.trans-row');
+        if (transRow) {
+            // Find the closest invoice-row that is before this trans-row
+            let invoiceRow = transRow.previousElementSibling;
+            while (invoiceRow && !invoiceRow.classList.contains('invoice-row')) {
+                invoiceRow = invoiceRow.previousElementSibling;
+            }
+
+            if (invoiceRow) {
+                const transCountInput = invoiceRow.querySelector('input[name="trans_count[]"]');
+
+                // Decrease trans_count
+                if (transCountInput) {
+                    transCountInput.value = parseInt(transCountInput.value) - 1;
+                } else {
+                    console.log('trans_count[] input not found');
+                }
+
+                transRow.remove();
+
+                // Update the nominal value for the invoice
+                updateInvoiceNominal(invoiceRow);
+            } else {
+                console.log('invoice-row not found');
+            }
         }
     }
+
+
+
+    function removeItem(button) {
+        console.log('button clicked');
+        // Find the closest parent element with the class 'invoice-row'
+        const row = button.closest('.invoice-row');
+        if (row) {
+            console.log("Removing row:", row);
+
+            // Remove the invoice-row first
+            // row.remove(); 
+            // invoiceCount--; // Decrement the invoice count after removing the item
+            // console.log("Invoice count:", invoiceCount);
+
+            // Remove all subsequent trans-row elements
+            let nextSibling = row.nextElementSibling;
+            if (nextSibling) {
+                console.log('ada');
+            } else {
+                console.log('gada');
+            }
+            while (nextSibling) {
+                if (nextSibling.classList.contains('trans-row')) {
+                    console.log('Removing trans-row:', nextSibling);
+                    const toRemove = nextSibling;
+                    nextSibling = nextSibling.nextElementSibling;
+                    toRemove.remove(); // Remove the trans-row element
+                } else if (nextSibling.classList.contains('invoice-row')) {
+                    // Stop if we find another invoice-row
+                    break;
+                } else {
+                    // Move to the next sibling
+                    nextSibling = nextSibling.nextElementSibling;
+                }
+            }
+            row.remove();
+            invoiceCount--; // Decrement the invoice count after removing the item
+            console.log("Invoice count:", invoiceCount);
+        }
+    }
+
+
+
 
     document.getElementById('datepicker-autohide').addEventListener('change', function() {
         // Get the selected date value

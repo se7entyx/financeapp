@@ -16,11 +16,11 @@ return new class extends Migration
             $table->uuid('invoice_id');
             $table->text('keterangan');
             $table->integer('nominal');
-            $table->integer('nominal_setelah');
-            $table->double('nominal_ppn');
-            $table->double('nominal_pph');
-            $table->uuid('id_ppn');
-            $table->uuid('id_pph');
+            $table->integer('nominal_setelah')->nullable();
+            $table->double('nominal_ppn')->nullable();
+            $table->double('nominal_pph')->nullable();
+            $table->uuid('id_ppn')->nullable();
+            $table->uuid('id_pph')->nullable();
             $table->timestamps();
 
             $table->foreign('id_ppn')->references('id')->on('taxes')->onDelete('cascade');

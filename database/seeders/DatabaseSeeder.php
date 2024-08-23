@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class, SupplierSeeder::class
         ]);
-        $this->call(TandaTerimaSeeder::class);
+        // $this->call(TandaTerimaSeeder::class);
 
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoices;
 use App\Models\Supplier;
 use App\Models\TandaTerima;
+use App\Models\Transaction;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,56 +31,104 @@ class TandaTerimaController extends Controller
     }
     public function store(Request $request)
     {
-        $userId = Auth::id();
-
-        // Validate Tanda Terima data
-        $validated = $request->validate([
-            'tanggal' => 'required|string',
-            'supplier_id' => 'required|exists:suppliers,id',
-            'faktur' => 'nullable|string',
-            'po' => 'nullable|string',
-            'bpb' => 'nullable|string',
-            'sjalan' => 'nullable|string',
-            'jatuh_tempo' => 'required|string',
-            'currency' => 'required|string|in:IDR,USD',
-            'notes' => 'nullable|string',
-            'invoice' => 'required|array',
-            'invoice.*' => 'required|string',
-            'nominal' => 'required|array',
-            'nominal.*' => 'required|numeric',
-            'keterangan' => 'required|array',
-            'keterangan.*' => 'required|string',
-        ]);
-
-        // dd($validated);
-
-        // Create Tanda Terima record
-        $tandaTerima = new TandaTerima();
-        $tandaTerima->user_id = $userId;
-        $tandaTerima->tanggal = $validated['tanggal'];
-        $tandaTerima->supplier_id = $validated['supplier_id'];
-        $tandaTerima->pajak = $validated['faktur'];
-        $tandaTerima->po = $validated['po'];
-        $tandaTerima->bpb = $validated['bpb'];
-        $tandaTerima->surat_jalan = $validated['sjalan'];
-        $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
-        $tandaTerima->currency = $validated['currency'];
-        $tandaTerima->keterangan = $validated['notes'];
-        $tandaTerima->save();
-
-
-        // Create Invoices records
-        foreach ($validated['invoice'] as $index => $invoiceNo) {
-            $invoice = new Invoices();
-            $invoice->tanda_terima_id = $tandaTerima->id;
-            $invoice->nomor = $validated['invoice'][$index];
-            $invoice->nominal = $validated['nominal'][$index];
-            $invoice->keterangan = $validated['keterangan'][$index];
-            $invoice->save();
+        // try {
+        //     dd($request->all()); // Check the incoming data
+        // } catch (\Exception $e) {
+        //     return back()->withErrors(['error' => 'Error in request data: ' . $e->getMessage()]);
+        // }
+    
+        try {
+            $userId = Auth::id();
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Error retrieving user ID: ' . $e->getMessage()]);
         }
-
+    
+        try {
+            // Validate Tanda Terima data
+            $validated = $request->validate([
+                'tanggal' => 'required|string',
+                'supplier_id' => 'required|exists:suppliers,id',
+                'faktur' => 'nullable|string',
+                'po' => 'nullable|string',
+                'bpb' => 'nullable|string',
+                'sjalan' => 'nullable|string',
+                'jatuh_tempo' => 'required|string',
+                'currency' => 'required|string|in:IDR,USD',
+                'notes' => 'nullable|string',
+                'invoice' => 'required|array',
+                'invoice.*' => 'required|string',
+                'nominal' => 'required|array',
+                'nominal.*' => 'required|numeric',
+                'trans_count' => 'required|array',
+                'trans_count.*' => 'required|string',
+                'keterangan' => 'required|array',
+                'keterangan.*' => 'required|string',
+                'trans_nominal' => 'required|array',
+                'trans_nominal.*' => 'required|numeric',
+            ]);
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Validation error: ' . $e->getMessage()]);
+        }
+    
+        try {
+            // Create Tanda Terima record
+            $tandaTerima = new TandaTerima();
+            $tandaTerima->user_id = $userId;
+            $tandaTerima->tanggal = $validated['tanggal'];
+            $tandaTerima->supplier_id = $validated['supplier_id'];
+            $tandaTerima->pajak = $validated['faktur'];
+            $tandaTerima->po = $validated['po'];
+            $tandaTerima->bpb = $validated['bpb'];
+            $tandaTerima->surat_jalan = $validated['sjalan'];
+            $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
+            $tandaTerima->currency = $validated['currency'];
+            $tandaTerima->keterangan = $validated['notes'];
+            $tandaTerima->save();
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Error saving Tanda Terima: ' . $e->getMessage()]);
+        }
+    
+        try {
+            // Initialize a variable to track the transaction index
+            $transIndex = 0;
+    
+            // Create Invoices records
+            foreach ($validated['invoice'] as $index => $invoiceNo) {
+                $invoice = new Invoices();
+                $invoice->tanda_terima_id = $tandaTerima->id;
+                $invoice->nomor = $validated['invoice'][$index];
+                $invoice->nominal = $validated['nominal'][$index];
+                $invoice->save();
+    
+                // Get the number of transactions for this invoice
+                $transCount = $validated['trans_count'][$index];
+                $transCount = intval($transCount);
+    
+                // Create Transaction records for this invoice
+                for ($i = 1; $i <= $transCount; $i++) {
+                    try {
+                        $trans = new Transaction();
+                        $trans->invoice_id = $invoice->id;
+                        $trans->keterangan = $validated['keterangan'][$transIndex];
+                        $trans->nominal = $validated['trans_nominal'][$transIndex];
+                        $trans->save();
+                    } catch (\Exception $e) {
+                        return back()->withErrors(['error' => 'Error saving transaction: ' . $e->getMessage()]);
+                    }
+    
+                    // Increment the transaction index
+                    $transIndex++;
+                }
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Error saving invoices and transactions: ' . $e->getMessage()]);
+        }
+    
         return redirect()->route('new.tanda-terima')->with('success', 'Tanda Terima created successfully.');
     }
+    
+    
+
     public function showAll()
     {
         $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->get();
