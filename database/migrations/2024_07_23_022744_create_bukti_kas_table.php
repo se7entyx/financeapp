@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('no_cek')->nullable();
             $table->string('berita_transaksi');
             $table->string('status')->default('Belum dibayar');
+            $table->string('keterangan');
             $table->timestamps();
     
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

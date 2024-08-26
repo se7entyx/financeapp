@@ -64,7 +64,7 @@ class TandaTerima extends Model
 
     public function invoices(): HasMany
     {
-        return $this->hasMany(Invoices::class, 'tanda_terima_id');
+        return $this->hasMany(Invoices::class);
     }
 
     public function user(): BelongsTo

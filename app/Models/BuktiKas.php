@@ -30,7 +30,8 @@ class BuktiKas extends Model
         'kas',
         'jumlah',
         'no_cek',
-        'status'
+        'status',
+        'keterangan'
     ];
 
     protected $sortable = [

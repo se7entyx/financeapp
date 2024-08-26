@@ -7,12 +7,14 @@ use App\Models\Invoices;
 use App\Models\KeteranganBuktiKas;
 use App\Models\Supplier;
 use App\Models\TandaTerima;
+use App\Models\Tax;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BuktiKasController extends Controller
 {
@@ -36,11 +38,11 @@ class BuktiKasController extends Controller
             ->latest()
             ->paginate(20)
             ->withQueryString();
-    
+
         $title = 'My Bukti Pengeluaran Kas';
         return view('mydoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords]);
     }
-    
+
 
     public function index()
     {
@@ -54,44 +56,71 @@ class BuktiKasController extends Controller
             ->select('tanda_terima.*');
 
         $tandaTerimas = $tandaTerimaQuery->get();
+        $ppn = Tax::where('type', 'ppn')->get();
+        $pph = Tax::where('type', 'pph')->get();
 
         return view('newbukti', [
             'title' => "New Bukti Pengeluaran Kas / Bank",
-            'tandaTerimas' => $tandaTerimas
+            'tandaTerimas' => $tandaTerimas,
+            'ppn' => $ppn,
+            'pph' => $pph
         ]);
     }
+    
     public function getSupplierInfo($tandaTerimaInc, $buktiKasId = null)
     {
-        // Get the current user ID
-        $userId = Auth::id();
+        try {
+            $userId = Auth::id();
 
-        // Fetch TandaTerima records with related supplier, invoices, and buktiKas
-        $tandaTerimaQuery = TandaTerima::with(['supplier', 'invoices', 'bukti_kas'])
-            ->where('user_id', $userId)
-            ->where('increment_id', $tandaTerimaInc);
+            $tandaTerima = TandaTerima::with(['supplier', 'invoices', 'bukti_kas'])
+                ->where('user_id', $userId)
+                ->where('increment_id', $tandaTerimaInc)
+                ->first();
 
-        $tandaTerima = $tandaTerimaQuery->first();
+            if ($tandaTerima) {
+                if ($tandaTerima->bukti_kas && $tandaTerima->bukti_kas->id !== $buktiKasId) {
+                    return response()->json(['error' => 'Tanda Terima already assigned to a different Bukti Kas'], 400);
+                }
 
-        // Check if TandaTerima is found
-        if ($tandaTerima) {
-            // If buktiKasId is provided and TandaTerima is already assigned to a different BuktiKas, return an error
-            if ($tandaTerima->bukti_kas && $tandaTerima->bukti_kas->id !== $buktiKasId) {
-                return response()->json(['error' => 'Tanda Terima already assigned to a different Bukti Kas'], 400);
+                $invoiceData = [];
+                foreach ($tandaTerima->invoices as $invoice) {
+                    foreach ($invoice->transaction as $transaction) {
+                        $invoiceData[] = [
+                            'invoice_id' => $invoice->id,
+                            'invoice_keterangan' => $invoice->nomor,
+                            'transaction_id' => $transaction->id,
+                            'transaction_keterangan' => $transaction->keterangan,
+                            'transaction_nominal' => $transaction->nominal,
+                            'nominal_setelah' => $transaction->nominal_setelah,
+                            'nominal_ppn' => $transaction->nominal_ppn,
+                            'nominal_pph' => $transaction->nominal_pph,
+                            'id_ppn' => $transaction->id_ppn,
+                            'id_pph' => $transaction->id_pph,
+                            'currency' => $tandaTerima->currency,
+                        ];
+                    }
+                }
+
+                $invoiceData = array_reverse($invoiceData);
+
+                // Log the final invoiceData array
+
+                return response()->json([
+                    'supplier_name' => $tandaTerima->supplier->name,
+                    'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo,
+                    'tanda_terima_id' => $tandaTerima->id,
+                    'invoiceData' => $invoiceData
+                ]);
             }
 
-            // Prepare the response data
-            return response()->json([
-                'supplier_name' => $tandaTerima->supplier->name,
-                'tanggal_jatuh_tempo' => $tandaTerima->tanggal_jatuh_tempo,
-                'tanda_terima_id' => $tandaTerima->id,
-                'invoices' => $tandaTerima->invoices,
-                'currency' => $tandaTerima->currency
-            ]);
-        }
+            return response()->json(['error' => 'Tanda Terima not found'], 404);
+        } catch (\Exception $e) {
+            Log::error('Error fetching supplier info: ' . $e->getMessage());
 
-        // Return an error if TandaTerima not found
-        return response()->json(['error' => 'Tanda Terima not found'], 404);
+        }
     }
+
+
 
     public function store(Request $request)
     {
@@ -105,7 +134,8 @@ class BuktiKasController extends Controller
                 'kas' => 'required|string',
                 'jumlah' => 'integer',
                 'no_cek' => 'nullable|string',
-                'berita_transaksi' => 'required|string'
+                'berita_transaksi' => 'required|string',
+                'keterangan' => 'required|string'
             ]);
             // dd($validated);
         } catch (ValidationException $e) {
@@ -120,6 +150,7 @@ class BuktiKasController extends Controller
         $buktikas->jumlah = $validated['jumlah'];
         $buktikas->no_cek = $validated['no_cek'];
         $buktikas->berita_transaksi = $validated['berita_transaksi'];
+        $buktikas->keterangan = $validated['keterangan'];
 
         $buktikas->save();
 
