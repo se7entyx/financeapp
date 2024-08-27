@@ -25,7 +25,7 @@ class Invoices extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->id = Uuid::uuid4()->toString();
+            $model->id = Uuid::uuid7()->toString();
         });
     }
 

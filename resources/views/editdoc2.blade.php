@@ -57,7 +57,7 @@
                                 $startYear = date('Y');
                                 for ($i = 0; $i < 8; $i++) {
                                     $year=$startYear + $i;
-                                    echo "<option value=\"$year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
+                                    echo "<option value=\" $year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
                                     }
                                     @endphp
                                     </select>
@@ -79,6 +79,9 @@
                         <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada <span class="required">*</span></label>
                         <input type="text" id="input-supplier" name="supplier-name" value="{{$buktiKasRecords->tanda_terima->supplier->name}}" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic Input" readonly required>
                         <input type="hidden" id="input-no-tanda-terima-hidden" name="tanda_terima_id_hidden" value="{{$buktiKasRecords->tanda_terima_id}}" readonly>
+                        <input type="hidden" id="ppnData" value="{{ json_encode($ppn) }}">
+                        <input type="hidden" id="pphData" value="{{ json_encode($pph) }}">
+                        <input type="hidden" id="bukti_data" name="bukti_data" value="">
                     </div>
                     <div class="col-span-1">
                         <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal jatuh tempo <span class="required">*</span></label>
@@ -117,6 +120,9 @@
                                         <th scope="col" class="px-6 py-3 border-gray-200 dark:border-gray-700">
                                             Jumlah
                                         </th>
+                                        <th scope="col" class="text-center w-1/7 px-6 py-3 border-gray-200 dark:border-gray-700">
+                                            Aksi
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -124,9 +130,10 @@
                                 </tbody>
                                 <tfoot>
                                     <tr class="font-semibold text-gray-900 dark:text-white">
-                                        <th scope="row" class="px-6 py-3 text-base">Total</th>
-                                        <td></td>
-                                        <td class="px-6 py-3 text-right">
+                                        <th scope="row" class="px-6 py-3 text-base w-1/7">Total</th>
+                                        <td class=" w-3/7"></td>
+                                        <td class="w-2/7"></td>
+                                        <td class="px-6 py-3 text-right w-1/7">
                                             0
                                         </td>
                                     </tr>
@@ -232,14 +239,21 @@
                             // Update the datepicker field
                             document.getElementById('datepicker-autohide-x').value = data.tanggal_jatuh_tempo;
                             let currency = data.currency
-                            bukti = data.invoices.map(item => ({
-                                notes: item.keterangan,
-                                nominalValue: item.nominal,
-                                selectedCurrency: currency
+                            console.log(bukti);
+                            bukti = data.invoiceData.map(item => ({
+                                invoiceKeterangan: item.invoice_keterangan,
+                                transaction_id: item.transaction_id,
+                                transactionKeterangan: item.transaction_keterangan,
+                                nominalValue: item.transaction_nominal,
+                                selectedCurrency: item.currency,
+                                ppnid: item.id_ppn || null,
+                                ppnNominal: item.nominal_ppn || null,
+                                pphid: item.id_pph || null,
+                                pphNominal: item.nominal_pph || null,
+                                nominalSetelah: item.nomila_setelah || null
                             }));
                             console.log(bukti);
                             renderTable();
-
                         } else {
                             console.log(data);
                             alert('Tanda Terima not found');
@@ -305,27 +319,222 @@
                 // Clear existing rows in the table
                 buktiTable.innerHTML = ''; // Clear all rows except for header
 
-                // Render each item in the bukti array
+                // Keep track of the row index
+                let rowIndex = 1;
+
+                // Iterate through the bukti array
                 bukti.forEach((item, index) => {
+                    const isFirstTransaction = index === 0 || bukti[index - 1].invoiceKeterangan !== item.invoiceKeterangan;
+
+                    // Add a new row for each transaction
                     const newRow = buktiTable.insertRow();
                     newRow.className = "bg-white border-b dark:bg-gray-800 dark:border-gray-700";
+                    newRow.dataset.buktiIndex = index;
 
-                    const cellNo = newRow.insertCell(0);
-                    cellNo.className = "px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-200 dark:border-gray-700";
-                    cellNo.textContent = index + 1;
+                    if (isFirstTransaction) {
+                        const cellNo = newRow.insertCell(0);
+                        cellNo.className = "px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-200 dark:border-gray-700";
+                        cellNo.textContent = rowIndex++;
 
-                    const cellNotes = newRow.insertCell(1);
-                    cellNotes.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
-                    cellNotes.textContent = item.notes;
+                        const cellKeterangan = newRow.insertCell(1);
+                        cellKeterangan.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
+                        cellKeterangan.textContent = `${item.transactionKeterangan} (${item.invoiceKeterangan})`;
 
-                    const cellAmount = newRow.insertCell(2);
-                    cellAmount.className = "px-6 py-4 border border-gray-200 dark:border-gray-700 text-right";
-                    cellAmount.textContent = formatCurrency(item.nominalValue, item.selectedCurrency);
+                        const cellAmount = newRow.insertCell(2);
+                        cellAmount.className = "px-6 py-4 border border-gray-200 dark:border-gray-700 text-right";
+                        cellAmount.textContent = formatCurrency(item.nominalValue, item.selectedCurrency);
+                    } else {
+                        // Handle subsequent transactions without index or invoice keterangan
+                        const cellNo = newRow.insertCell(0);
+                        cellNo.className = "px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border border-gray-200 dark:border-gray-700";
+                        cellNo.textContent = '';
+
+                        const cellKeterangan = newRow.insertCell(1);
+                        cellKeterangan.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
+                        cellKeterangan.textContent = item.transactionKeterangan;
+
+                        const cellAmount = newRow.insertCell(2);
+                        cellAmount.className = "px-6 py-4 border border-gray-200 dark:border-gray-700 text-right";
+                        cellAmount.textContent = formatCurrency(item.nominalValue, item.selectedCurrency);
+                    }
+
+                    // Add "Add PPn" and "Add PPh" buttons in the "aksi" column
+                    const cellAksi = newRow.insertCell(3);
+                    cellAksi.className = "px-6 py-4 border border-gray-200 dark:border-gray-700 text-center";
+
+                    const addPPnButton = document.createElement('button');
+                    addPPnButton.textContent = 'Add PPn';
+                    addPPnButton.className = 'ppnButton px-2 py-1 text-blue-500 text-xs rounded';
+                    addPPnButton.type = 'button';
+                    addPPnButton.onclick = () => {
+                        addTaxRow('PPn', item.nominalValue, item.selectedCurrency, newRow);
+                        addPPnButton.style.display = 'none';
+                        updateTotal();
+                    };
+
+                    const addPPhButton = document.createElement('button');
+                    addPPhButton.textContent = 'Add PPh';
+                    addPPhButton.className = 'pphButton px-2 py-1 text-blue-500 text-xs rounded ml-2';
+                    addPPhButton.type = 'button';
+                    addPPhButton.onclick = () => {
+                        addTaxRow('PPh', item.nominalValue, item.selectedCurrency, newRow);
+                        addPPhButton.style.display = 'none';
+                        updateTotal();
+                    };
+
+                    cellAksi.appendChild(addPPnButton);
+                    cellAksi.appendChild(addPPhButton);
+
+                    // If the PPn or PPh has already been added, hide the corresponding button
+                    if (item.ppnid) {
+                        addPPnButton.style.display = 'none';
+                        addTaxRow('PPn', item.nominalValue, item.selectedCurrency, newRow, item.ppnid, item.ppnNominal);
+                    }
+                    if (item.pphid) {
+                        addPPhButton.style.display = 'none';
+                        addTaxRow('PPh', item.nominalValue, item.selectedCurrency, newRow, item.pphid, item.pphNominal);
+                    }
+                });
+                // Update the row numbers and total after rendering
+                updateTotal();
+            }
+
+            function addTaxRow(type, baseAmount, currency, referenceRow, existingTaxId = null, existingTaxAmount = null) {
+                // Fetch all tax rates from your data source
+                const taxRates = getTaxRates(type);
+
+                // Create a new row
+                const newRow = buktiTable.insertRow(referenceRow.rowIndex);
+                newRow.className = "bg-gray-100 border-b dark:bg-gray-900 dark:border-gray-700";
+
+                // Empty cell for index
+                const cellNo = newRow.insertCell(0);
+                cellNo.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
+
+                // Cell for tax description with dropdown
+                const cellKeterangan = newRow.insertCell(1);
+                cellKeterangan.className = "px-6 py-4 border border-gray-200 dark:border-gray-700";
+
+                const select = document.createElement('select');
+                select.className = 'form-select';
+
+                // Create dropdown options for tax rates
+                taxRates.forEach(rate => {
+                    const option = document.createElement('option');
+                    option.value = rate.id; // Assuming each rate has a unique ID
+                    option.textContent = `${rate.name} (${rate.percentage}%)`; // Adjust according to your data
+                    if (existingTaxId && existingTaxId == rate.id) {
+                        option.selected = true; // Pre-select the existing tax rate
+                    }
+                    select.appendChild(option);
                 });
 
-                // Update the row numbers and total after rendering
-                // updateRowNumbers();
-                updateTotal();
+                // Cell for tax amount
+                const cellAmount = newRow.insertCell(2);
+                cellAmount.className = "px-6 py-4 border border-gray-200 dark:border-gray-700 text-right";
+                cellAmount.textContent = formatCurrency(existingTaxAmount || 0, currency);
+
+                // Update tax amount when a rate is selected
+                select.addEventListener('change', (event) => {
+                    const selectedRateId = event.target.value;
+                    const selectedRate = taxRates.find(rate => rate.id === selectedRateId);
+                    if (selectedRate) {
+                        const taxAmount = calculateTaxAmount(baseAmount, selectedRate.percentage, type);
+                        cellAmount.textContent = formatCurrency(taxAmount, currency);
+
+                        const buktiIndex = referenceRow.dataset.buktiIndex;
+                        if (type === 'PPn') {
+                            bukti[buktiIndex].ppnid = selectedRate.id;
+                            bukti[buktiIndex].ppnNominal = taxAmount;
+                        } else if (type === 'PPh') {
+                            bukti[buktiIndex].pphid = selectedRate.id;
+                            bukti[buktiIndex].pphNominal = taxAmount;
+                        }
+                        console.log(bukti);
+                        updateTotal();
+                    }
+                });
+
+                cellKeterangan.appendChild(select);
+
+                // Cell for actions (delete button)
+                const cellAksi = newRow.insertCell(3);
+                cellAksi.className = "px-6 py-4 border border-gray-200 dark:border-gray-700 text-center";
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.className = 'px-4 py-2 bg-red-500 text-white rounded';
+                deleteButton.onclick = () => {
+                    newRow.remove();
+                    const buktiIndex = referenceRow.dataset.buktiIndex;
+                    if (type === 'PPn') {
+                        bukti[buktiIndex].ppnid = null;
+                        bukti[buktiIndex].ppnNominal = null;
+                        referenceRow.querySelector('button.ppnButton').style.display = 'inline-block';
+                    } else if (type === 'PPh') {
+                        bukti[buktiIndex].pphid = null;
+                        bukti[buktiIndex].pphNominal = null;
+                        referenceRow.querySelector('button.pphButton').style.display = 'inline-block';
+                    }
+                    console.log(bukti)
+                    updateTotal();
+                };
+
+                cellAksi.appendChild(deleteButton);
+
+                // If there's an existing tax, update the bukti object
+                if (existingTaxId) {
+                    const buktiIndex = referenceRow.dataset.buktiIndex;
+                    if (type === 'PPn') {
+                        bukti[buktiIndex].ppnid = existingTaxId;
+                        bukti[buktiIndex].ppnNominal = existingTaxAmount;
+                    } else if (type === 'PPh') {
+                        bukti[buktiIndex].pphid = existingTaxId;
+                        bukti[buktiIndex].pphNominal = existingTaxAmount;
+                    }
+                    console.log(bukti);
+                } else {
+                    const selectedRate = taxRates.find(rate => rate.id);
+                    if (selectedRate) {
+                        const taxAmount = calculateTaxAmount(baseAmount, selectedRate.percentage, type);
+                        cellAmount.textContent = formatCurrency(taxAmount, currency);
+                        const buktiIndex = referenceRow.dataset.buktiIndex;
+                        if (type === 'PPn') {
+                            console.log(buktiIndex);
+                            bukti[buktiIndex].ppnid = selectedRate.id;
+                            bukti[buktiIndex].ppnNominal = taxAmount;
+                        } else if (type === 'PPh') {
+                            bukti[buktiIndex].pphid = selectedRate.id;
+                            bukti[buktiIndex].pphNominal = taxAmount;
+                        }
+                        console.log(bukti);
+                    }
+                }
+
+            }
+
+            function getTaxRates(type) {
+                // Get tax data from hidden inputs
+                const ppnData = JSON.parse(document.getElementById('ppnData').value);
+                console.log(ppnData);
+                const pphData = JSON.parse(document.getElementById('pphData').value);
+
+                if (type === 'PPn') {
+                    return ppnData;
+                } else if (type === 'PPh') {
+                    return pphData;
+                }
+                return [];
+            }
+
+            function calculateTaxAmount(baseAmount, rate, type) {
+                let taxAmount;
+                if (type === 'PPn') {
+                    taxAmount = baseAmount * (rate / 100);
+                } else if (type === 'PPh') {
+                    taxAmount = -(baseAmount * (rate / 100));
+                }
+                return taxAmount;
             }
 
             document.getElementById('my-form').addEventListener('submit', function(e) {
@@ -334,6 +543,8 @@
                     e.preventDefault(); // Prevent form submission if user cancels
                     return;
                 }
+                const buktiJson = JSON.stringify(bukti);
+                document.getElementById('bukti_data').value = buktiJson;
             });
 
             function preventEnterKey(e) {

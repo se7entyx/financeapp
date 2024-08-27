@@ -97,6 +97,7 @@
           <input type="hidden" name="jumlah" id="total-amount">
           <input type="hidden" id="ppnData" value="{{ json_encode($ppn) }}">
           <input type="hidden" id="pphData" value="{{ json_encode($pph) }}">
+          <input type="hidden" id="bukti_data" name="bukti_data" value="">
           <div class="col-span-4">
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
               <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400" id="buktiTable">
@@ -224,6 +225,7 @@
 
               bukti = data.invoiceData.map(item => ({
                 invoiceKeterangan: item.invoice_keterangan,
+                transaction_id: item.transaction_id,
                 transactionKeterangan: item.transaction_keterangan,
                 nominalValue: item.transaction_nominal,
                 selectedCurrency: item.currency,
@@ -235,7 +237,6 @@
               }));
               console.log(bukti);
               renderTable();
-
             } else {
               console.log(data);
               alert('Tanda Terima not found');
@@ -304,7 +305,7 @@
         buktiTable.innerHTML = ''; // Clear all rows except for header
 
         // Keep track of the row index
-        let rowIndex = 0;
+        let rowIndex = 1;
 
         // Iterate through the bukti array
         bukti.forEach((item, index) => {
@@ -313,6 +314,7 @@
           // Add a new row for each transaction
           const newRow = buktiTable.insertRow();
           newRow.className = "bg-white border-b dark:bg-gray-800 dark:border-gray-700";
+          newRow.dataset.buktiIndex = index;
 
           if (isFirstTransaction) {
             const cellNo = newRow.insertCell(0);
@@ -349,6 +351,7 @@
           // addPPhButton.className = 'ppnButton';
           addPPnButton.textContent = 'Add PPn';
           addPPnButton.className = 'ppnButton px-2 py-1 text-blue-500 text-xs rounded';
+          addPPnButton.type = 'button';
           addPPnButton.onclick = () => {
             addTaxRow('PPn', item.nominalValue, item.selectedCurrency, newRow);
             addPPnButton.style.display = 'none'; // Hide other button
@@ -358,6 +361,7 @@
           const addPPhButton = document.createElement('button');
           addPPhButton.textContent = 'Add PPh';
           addPPhButton.className = 'pphButton px-2 py-1 text-blue-500 text-xs rounded ml-2';
+          addPPhButton.type = 'button';
           addPPhButton.onclick = () => {
             addTaxRow('PPh', item.nominalValue, item.selectedCurrency, newRow);
             addPPhButton.style.display = 'none'; // Hide button after click
@@ -421,10 +425,27 @@
               bukti[buktiIndex].pphNominal = taxAmount;
             }
           }
+          console.log(bukti);
           updateTotal();
         });
 
         cellKeterangan.appendChild(select);
+
+        const selectedRate = taxRates.find(rate => rate.id);
+        if (selectedRate) {
+          const taxAmount = calculateTaxAmount(baseAmount, selectedRate.percentage, type);
+          cellAmount.textContent = formatCurrency(taxAmount, currency);
+          const buktiIndex = referenceRow.dataset.buktiIndex;
+          if (type === 'PPn') {
+            console.log(buktiIndex);
+            bukti[buktiIndex].ppnid = selectedRate.id;
+            bukti[buktiIndex].ppnNominal = taxAmount;
+          } else if (type === 'PPh') {
+            bukti[buktiIndex].pphid = selectedRate.id;
+            bukti[buktiIndex].pphNominal = taxAmount;
+          }
+          console.log(bukti);
+        }
 
         // Cell for actions (delete button)
         const cellAksi = newRow.insertCell(3);
@@ -436,13 +457,18 @@
         deleteButton.onclick = () => {
           newRow.remove();
           const buktiIndex = referenceRow.dataset.buktiIndex;
-          if (type === 'PPn') {
+          if (taxRates.find(rate => rate.type === 'ppn')) {
             bukti[buktiIndex].ppnid = null;
             bukti[buktiIndex].ppnNominal = null;
-          } else if (type === 'PPh') {
+            const addPPnButton = referenceRow.querySelector('button.ppnButton');
+            addPPnButton.style.display = 'inline-block';
+          } else if (taxRates.find(rate => rate.type === 'pph')) {
             bukti[buktiIndex].pphid = null;
             bukti[buktiIndex].pphNominal = null;
+            const addPPhButton = referenceRow.querySelector('button.pphButton');
+            addPPhButton.style.display = 'inline-block';
           }
+          console.log(bukti);
           updateTotal();
         };
 
@@ -480,6 +506,8 @@
           e.preventDefault(); // Prevent form submission if user cancels
           return;
         }
+        const buktiJson = JSON.stringify(bukti);
+        document.getElementById('bukti_data').value = buktiJson;
       });
 
       function preventEnterKey(e) {

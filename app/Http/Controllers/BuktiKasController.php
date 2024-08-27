@@ -8,6 +8,7 @@ use App\Models\KeteranganBuktiKas;
 use App\Models\Supplier;
 use App\Models\TandaTerima;
 use App\Models\Tax;
+use App\Models\Transaction;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Validation\ValidationException;
@@ -66,7 +67,7 @@ class BuktiKasController extends Controller
             'pph' => $pph
         ]);
     }
-    
+
     public function getSupplierInfo($tandaTerimaInc, $buktiKasId = null)
     {
         try {
@@ -101,8 +102,6 @@ class BuktiKasController extends Controller
                     }
                 }
 
-                $invoiceData = array_reverse($invoiceData);
-
                 // Log the final invoiceData array
 
                 return response()->json([
@@ -116,46 +115,65 @@ class BuktiKasController extends Controller
             return response()->json(['error' => 'Tanda Terima not found'], 404);
         } catch (\Exception $e) {
             Log::error('Error fetching supplier info: ' . $e->getMessage());
-
         }
     }
-
 
 
     public function store(Request $request)
     {
-        // dd($request);
+        // Validate the request
+        $validated = $request->validate([
+            'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',
+            'nomer' => 'required|string',
+            'kas' => 'required|string',
+            'jumlah' => 'integer',
+            'no_cek' => 'nullable|string',
+            'berita_transaksi' => 'required|string',
+            'keterangan' => 'required|string',
+            'bukti_data' => 'required|json'
+        ]);
+
         try {
             $userId = Auth::id();
-            $validated = $request->validate([
-                // 'user_id' => $userId,
-                'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',
-                'nomer' => 'required|string',
-                'kas' => 'required|string',
-                'jumlah' => 'integer',
-                'no_cek' => 'nullable|string',
-                'berita_transaksi' => 'required|string',
-                'keterangan' => 'required|string'
-            ]);
-            // dd($validated);
+
+            // Create and save BuktiKas
+            $buktikas = new BuktiKas();
+            $buktikas->user_id = $userId;
+            $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
+            $buktikas->nomer = $validated['nomer'];
+            $buktikas->tanggal = null;
+            $buktikas->kas = $validated['kas'];
+            $buktikas->jumlah = $validated['jumlah'];
+            $buktikas->no_cek = $validated['no_cek'];
+            $buktikas->berita_transaksi = $validated['berita_transaksi'];
+            $buktikas->keterangan = $validated['keterangan'];
+
+            $buktikas->save();
+
+            // Decode bukti_data and update transactions
+            $buktiArray = json_decode($validated['bukti_data'], true);
+
+            foreach ($buktiArray as $item) {
+                $transaction = Transaction::find($item['transaction_id']);
+                if ($transaction) {
+                    $transaction->id_ppn = $item['ppnid'];
+                    $transaction->nominal_ppn = $item['ppnNominal'];
+                    $transaction->id_pph = $item['pphid'];
+                    $transaction->nominal_pph = $item['pphNominal'];
+                    $transaction->nominal_setelah = $item['nominalSetelah'];
+                    $transaction->save();
+                }
+            }
+
+            return redirect()->route('buktikas.index')->with('success', 'Bukti Kas created successfully!');
         } catch (ValidationException $e) {
             dd($e);
+        } catch (\Exception $e) {
+            Log::error('Error storing Bukti Kas: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'An error occurred while saving the Bukti Kas.']);
         }
-        $buktikas = new BuktiKas();
-        $buktikas->user_id = $userId;
-        $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
-        $buktikas->nomer = $validated['nomer'];
-        $buktikas->tanggal = null;
-        $buktikas->kas = $validated['kas'];
-        $buktikas->jumlah = $validated['jumlah'];
-        $buktikas->no_cek = $validated['no_cek'];
-        $buktikas->berita_transaksi = $validated['berita_transaksi'];
-        $buktikas->keterangan = $validated['keterangan'];
-
-        $buktikas->save();
-
-        return redirect()->route('buktikas.index')->with('success', 'Bukti Kas created successfully!');
     }
+
 
     public function deleteBk($id)
     {
@@ -197,38 +215,69 @@ class BuktiKasController extends Controller
         }
 
         $tandaTerimaOption = $tandaTerimaQuery->select('tanda_terima.*')->get();
+        $ppn = Tax::where('type', 'ppn')->get();
+        $pph = Tax::where('type', 'pph')->get();
 
         return view('editdoc2', [
             'buktiKasRecords' => $buktikas,
             'title' => $title,
-            'tandaTerimas' => $tandaTerimaOption
+            'tandaTerimas' => $tandaTerimaOption,
+            'ppn' => $ppn,
+            'pph' => $pph
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        // Validate Tanda Terima data
+        // Validate the request
         $validated = $request->validate([
             'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',
             'nomer' => 'required|string',
             'kas' => 'required|string',
             'jumlah' => 'integer',
             'no_cek' => 'nullable|string',
-            'berita_transaksi' => 'required|string'
+            'berita_transaksi' => 'required|string',
+            'bukti_data' => 'required|json'
         ]);
 
-        $buktikas = BuktiKas::findOrFail($id);
-        $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
-        $buktikas->nomer = $validated['nomer'];
-        $buktikas->tanggal = null;
-        $buktikas->kas = $validated['kas'];
-        $buktikas->jumlah = $validated['jumlah'];
-        $buktikas->no_cek = $validated['no_cek'];
-        $buktikas->berita_transaksi = $validated['berita_transaksi'];
-        $buktikas->save();
+        try {
+            // Find and update BuktiKas record
+            $buktikas = BuktiKas::findOrFail($id);
+            $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
+            $buktikas->nomer = $validated['nomer'];
+            $buktikas->tanggal = null;
+            $buktikas->kas = $validated['kas'];
+            $buktikas->jumlah = $validated['jumlah'];
+            $buktikas->no_cek = $validated['no_cek'];
+            $buktikas->berita_transaksi = $validated['berita_transaksi'];
+            $buktikas->save();
 
-        return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas Updated successfully.');
+            // Decode bukti_data and update transactions
+            $buktiArray = json_decode($validated['bukti_data'], true);
+
+            foreach ($buktiArray as $item) {
+                $transaction = Transaction::find($item['transaction_id']);
+                if ($transaction) {
+                    $transaction->id_ppn = $item['ppnid'];
+                    $transaction->nominal_ppn = $item['ppnNominal'];
+                    $transaction->id_pph = $item['pphid'];
+                    $transaction->nominal_pph = $item['pphNominal'];
+                    $transaction->nominal_setelah = $item['nominalSetelah'];
+                    $transaction->save();
+                }
+            }
+
+            return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas updated successfully.');
+        } catch (ValidationException $e) {
+            // Handle validation exception
+            dd($e);
+        } catch (\Exception $e) {
+            // Log and handle other exceptions
+            Log::error('Error updating Bukti Kas: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'An error occurred while updating the Bukti Kas.']);
+        }
     }
+
 
     public function finish(Request $request, $id)
     {
