@@ -6,16 +6,25 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Kyslik\ColumnSortable\Sortable;
 use Ramsey\Uuid\Uuid;
 
 class Tax extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids,Sortable;
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
         'name',
-        'percentage'
+        'percentage',
+        'type',
+        'status'
+    ];
+
+    public $sortable = [
+        'name',
+        'type',
+        'status',
     ];
 
     protected static function boot()

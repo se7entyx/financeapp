@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Kyslik\ColumnSortable\Sortable;
 use Laravel\Sanctum\HasApiTokens;
 use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable,HasUuids;
+    use HasFactory, Notifiable,HasUuids,Sortable;
     protected $keyType = 'string'; // UUID is a string
     public $incrementing = false; // Disable auto-incrementing
 
@@ -27,7 +28,12 @@ class User extends Authenticatable
         'name',
         'username',
         'password',
-        'role'
+        'role',
+        'status',
+    ];
+
+    public $sortable = [
+        'status',
     ];
 
     /**

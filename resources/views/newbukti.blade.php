@@ -304,7 +304,7 @@
         buktiTable.innerHTML = ''; // Clear all rows except for header
 
         // Keep track of the row index
-        let rowIndex = 0;
+        let rowIndex = 1;
 
         // Iterate through the bukti array
         bukti.forEach((item, index) => {

@@ -13,6 +13,14 @@
             </div>
         </div>
 
+        @if (session('success'))
+        <div class="alert alert-success">
+            <script>
+                alert("Tanda terima berhasil diubah");
+            </script>
+        </div>
+        @endif
+
         <nav class="bg-gray-800 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
             <div class="flex flex-wrap justify-end items-center">
 
@@ -208,7 +216,6 @@
                                     <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">No</th>
                                     <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Invoice</th>
                                     <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Nominal</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Keterangan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -217,7 +224,6 @@
                                         <td scope="col" class="py-2 px-4 border-b w-1/4">${index + 1}</td>
                                         <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.nomor}</td>
                                         <td scope="col" class="py-2 px-4 border-b w-1/4">${currency} ${formatter.format(kbk.nominal)}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.keterangan}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>

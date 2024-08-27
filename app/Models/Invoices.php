@@ -33,7 +33,7 @@ class Invoices extends Model
         return $this->belongsTo(TandaTerima::class,'tanda_terima_id');
     }
 
-    public function transaction(): HasMany {
+    public function transaction(): HasMany{
         return $this->hasMany(Transaction::class, 'invoice_id');
     }
 }
