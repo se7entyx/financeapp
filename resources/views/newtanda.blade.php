@@ -11,7 +11,11 @@
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
+                <li>
+                    <script>
+                        alert($error);
+                    </script>
+                </li>
                 @endforeach
             </ul>
         </div>
@@ -231,12 +235,44 @@
 
 
         form.addEventListener('submit', function(event) {
-            var invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
-            var invoiceCount = invoiceRow.length;
+            const invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
+            const invoiceCount = invoiceRow.length;
+
+            let hasInvalidRows = false;
+
+            // Get all invoice-rows
+            const invoiceRows = document.querySelectorAll('.invoice-row');
+
+            invoiceRows.forEach(function(invoiceRow) {
+                let hasTransRow = false;
+                let nextSibling = invoiceRow.nextElementSibling;
+
+                // Check if there are trans-rows following the invoice-row
+                while (nextSibling) {
+                    if (nextSibling.classList.contains('trans-row')) {
+                        hasTransRow = true;
+                        break;
+                    } else if (nextSibling.classList.contains('invoice-row')) {
+                        // If another invoice-row is found, stop checking
+                        break;
+                    }
+                    nextSibling = nextSibling.nextElementSibling;
+                }
+
+                // If no trans-row is found for the current invoice-row, set flag
+                if (!hasTransRow) {
+                    hasInvalidRows = true;
+                }
+            });
 
             if (invoiceCount == 0) {
-                alert('Anda harus input minimal 1 invoice');
+                alert('Inputkan minimal 1 invoice');
                 event.preventDefault(); // Prevent the form from submitting
+            }
+
+            if (hasInvalidRows) {
+                alert('Inputkan minimal 1 transaksi dalam 1 invoice');
+                event.preventDefault(); // Prevent form submission
             }
         });
     });

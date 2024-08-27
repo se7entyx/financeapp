@@ -15,7 +15,7 @@ class TandaTerimaController extends Controller
 {
     public function getTandaTerima()
     {
-        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->filter(request(['search', 'supplier', 'start_date', 'end_date','jatuh_tempo']))->sortable(['tanggal' => 'asc'])->latest()->paginate(20)->withQueryString();
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable(['tanggal' => 'asc'])->latest()->paginate(20)->withQueryString();
 
         $title = 'All Document';
         return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title]);
@@ -24,25 +24,18 @@ class TandaTerimaController extends Controller
     public function getMyTandaTerima()
     {
         $id = Auth::id();
-        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date','jatuh_tempo']))->sortable(['tanggal' => 'asc'])->latest()->paginate(20)->withQueryString();
-        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable(['tanggal' => 'asc'])->latest()->paginate(20)->withQueryString();
         $title = 'My Tanda Terima';
-        return view('mydoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title, 'suppliers' => $suppliers]);
+        return view('mydoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title]);
     }
     public function store(Request $request)
     {
-        // try {
-        //     dd($request->all()); // Check the incoming data
-        // } catch (\Exception $e) {
-        //     return back()->withErrors(['error' => 'Error in request data: ' . $e->getMessage()]);
-        // }
-    
         try {
             $userId = Auth::id();
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Error retrieving user ID: ' . $e->getMessage()]);
         }
-    
+
         try {
             // Validate Tanda Terima data
             $validated = $request->validate([
@@ -69,7 +62,7 @@ class TandaTerimaController extends Controller
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Validation error: ' . $e->getMessage()]);
         }
-    
+
         try {
             // Create Tanda Terima record
             $tandaTerima = new TandaTerima();
@@ -87,11 +80,11 @@ class TandaTerimaController extends Controller
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Error saving Tanda Terima: ' . $e->getMessage()]);
         }
-    
+
         try {
             // Initialize a variable to track the transaction index
             $transIndex = 0;
-    
+
             // Create Invoices records
             foreach ($validated['invoice'] as $index => $invoiceNo) {
                 $invoice = new Invoices();
@@ -99,11 +92,11 @@ class TandaTerimaController extends Controller
                 $invoice->nomor = $validated['invoice'][$index];
                 $invoice->nominal = $validated['nominal'][$index];
                 $invoice->save();
-    
+
                 // Get the number of transactions for this invoice
                 $transCount = $validated['trans_count'][$index];
                 $transCount = intval($transCount);
-    
+
                 // Create Transaction records for this invoice
                 for ($i = 1; $i <= $transCount; $i++) {
                     try {
@@ -115,7 +108,7 @@ class TandaTerimaController extends Controller
                     } catch (\Exception $e) {
                         return back()->withErrors(['error' => 'Error saving transaction: ' . $e->getMessage()]);
                     }
-    
+
                     // Increment the transaction index
                     $transIndex++;
                 }
@@ -123,11 +116,11 @@ class TandaTerimaController extends Controller
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Error saving invoices and transactions: ' . $e->getMessage()]);
         }
-    
+
         return redirect()->route('new.tanda-terima')->with('success', 'Tanda Terima created successfully.');
     }
-    
-    
+
+
 
     public function showAll()
     {
@@ -183,17 +176,22 @@ class TandaTerimaController extends Controller
             'po' => 'nullable|string',
             'bpb' => 'nullable|string',
             'sjalan' => 'nullable|string',
-            'currency' => 'required|string|in:IDR,USD',
             'jatuh_tempo' => 'required|string',
+            'currency' => 'required|string|in:IDR,USD',
             'notes' => 'nullable|string',
             'invoice' => 'required|array',
             'invoice.*' => 'required|string',
             'nominal' => 'required|array',
             'nominal.*' => 'required|numeric',
+            'trans_count' => 'required|array',
+            'trans_count.*' => 'required|string',
             'keterangan' => 'required|array',
             'keterangan.*' => 'required|string',
+            'trans_nominal' => 'required|array',
+            'trans_nominal.*' => 'required|numeric',
         ]);
-
+    
+        // Update Tanda Terima record
         $tandaTerima = TandaTerima::findOrFail($id);
         $tandaTerima->supplier_id = $validated['supplier_id'];
         $tandaTerima->pajak = $validated['faktur'];
@@ -204,26 +202,40 @@ class TandaTerimaController extends Controller
         $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
         $tandaTerima->keterangan = $validated['notes'];
         $tandaTerima->save();
-
+    
+        // Delete invoices and transactions not in the request
         $tandaTerima->invoices()->whereNotIn('nomor', $validated['invoice'])->delete();
-
-        // Update or create invoices
+        
+        // Initialize a variable to track the transaction index
+        $transIndex = 0;
+    
+        // Update or create invoices and transactions
         foreach ($validated['invoice'] as $index => $invoiceNo) {
-            $invoice = $tandaTerima->invoices()->firstOrNew(['nomor' => $invoiceNo]);
-            $invoice->nominal = $validated['nominal'][$index];
-            $invoice->keterangan = $validated['keterangan'][$index];
-            $invoice->save();
+            $invoice = $tandaTerima->invoices()->updateOrCreate(
+                ['nomor' => $invoiceNo],
+                ['nominal' => $validated['nominal'][$index]]
+            );
+    
+            // Get the number of transactions for this invoice
+            $transCount = intval($validated['trans_count'][$index]);
+    
+            // Remove any transactions not included in the request for this invoice
+            $invoice->transaction()->whereNotIn('keterangan', array_slice($validated['keterangan'], $transIndex, $transCount))->delete();
+    
+            // Update or create transactions for this invoice
+            for ($i = 0; $i < $transCount; $i++) {
+                $invoice->transaction   ()->updateOrCreate(
+                    ['keterangan' => $validated['keterangan'][$transIndex]],
+                    ['nominal' => $validated['trans_nominal'][$transIndex]]
+                );
+    
+                // Increment the transaction index
+                $transIndex++;
+            }
         }
-
-        return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima created successfully.');
+    
+        return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
     }
-
-    // public function showPrintTemplate($id)
-    // {
-    //     $tandaTerimaRecords = TandaTerima::with(['supplier', 'invoices'])->find($id);
-
-    //     return view('print', ['tandaTerimaRecords' => $tandaTerimaRecords]);
-    // }
 
     public function printTandaTerima($id)
     {

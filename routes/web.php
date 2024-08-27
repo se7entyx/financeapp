@@ -9,6 +9,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TandaTerimaController;
+use App\Http\Controllers\TaxController;
 use App\Models\BuktiKas;
 use App\Models\Supplier;
 use App\Models\TandaTerima;
@@ -84,6 +85,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/dasboard/admin/users', [AuthenticationController::class, 'store'])->name('users.store');
     Route::put('/dashboard/admin/users/{id}', [AuthenticationController::class, 'updateUser'])->name('users.updateUser');
     Route::delete('/dashboard/admin/users/{id}', [AuthenticationController::class, 'destroy'])->name('users.destroy');
+    Route::get('/dashboard/admin/tax', [TaxController::class, 'getTax'])->name('tax.getTax');
+    Route::post('/dashboard/admin/tax', [TaxController::class, 'store'])->name('tax.store');
+    Route::put('/dashboard/admin/tax/{id}', [TaxController::class, 'updateTax'])->name('tax.update');
+    Route::delete('/dashboard/admin/tax/{id}', [TaxController::class, 'destroy'])->name('tax.destroy');
 });
 
 // Invoice Routes (uncomment if needed)

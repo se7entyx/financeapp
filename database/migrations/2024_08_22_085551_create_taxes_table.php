@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->double('percentage');
             $table->string('type');
+            $table->string('status')->default('active');
             $table->timestamps();
         });
     }

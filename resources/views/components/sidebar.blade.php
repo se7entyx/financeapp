@@ -78,6 +78,9 @@
                     <li>
                         <a href="/dashboard/admin/suppliers" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Supplier</a>
                     </li>
+                    <li>
+                        <a href="/dashboard/admin/tax" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Tax</a>
+                    </li>
                 </ul>
             </li>
             @endif

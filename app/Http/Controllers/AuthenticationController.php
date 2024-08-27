@@ -38,6 +38,13 @@ class AuthenticationController extends Controller
             'password' => 'required|min:8|max:255'
         ]);
 
+        $user = User::where('username', $credentials['username'])->first();
+
+        // Check if the user exists and is active
+        if ($user && $user->status === 'inactive') {
+            return back()->with('error2', 'Your account is inactive. Please contact the administrator.');
+        }
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             // dd('berhasil');
@@ -66,9 +73,9 @@ class AuthenticationController extends Controller
         return back()->with('status', 'Password successfully changed.');
     }
 
-    public function getUsers(Request $request)
+    public function getUsers()
     {
-        $users = User::latest()->paginate(20);
+        $users = User::sortable()->latest()->paginate(10)->withQueryString();;
         return view('user', ['title' => 'All Users', 'users' => $users]);
     }
 
@@ -101,6 +108,7 @@ class AuthenticationController extends Controller
                 'string',
                 Rule::unique('users')->ignore($id),
             ],
+            'status' => 'required|string|in:active,inactive',
             'password' => 'nullable|string|min:8',
             'role' => 'required|string'
         ]);
@@ -116,6 +124,7 @@ class AuthenticationController extends Controller
             $user->username = $credentials['username'];
             $user->password = $credentials['password'];
             $user->role = $credentials['role'];
+            $user->status = $credentials['status'];
             $user->save();
             return redirect('/dashboard/admin/users')->with('success', 'Update successfull!');
         } else {
