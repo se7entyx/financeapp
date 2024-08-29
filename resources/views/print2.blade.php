@@ -23,7 +23,7 @@
 
         .container {
             width: 100%;
-            height: 54%;
+            height: 55.5%;
             margin: 0 auto;
             border: 3px double black;
             box-sizing: border-box;
@@ -115,12 +115,11 @@
 
 <body>
     @php
-    $totalRowsPerPage = 9; // Total rows per page
+    $totalRowsPerPage = 10; // Total rows per page
     $currentRow = 0;
     $grandTotal = 0;
+    $accumulate = 0;
     $carryOverRow = null;
-    $carryOverPPn = null;
-    $carryOverPPh = null;
     @endphp
 
     @foreach ($invoiceData as $index => $trans)
@@ -186,44 +185,30 @@
                 <td class="center-text"></td>
                 <td class="right-text">{{ $carryOverRow['currency'] }} {{ number_format($carryOverRow['transaction_nominal'], 0, ',', '.') }}</td>
             </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{ $carryOverRow['name_ppn'] }}</td>
+                <td class="center-text"></td>
+                <td class="right-text">{{ $carryOverRow['currency'] }} {{ number_format($carryOverRow['nominal_ppn'], 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{ $carryOverRow['name_pph'] }}</td>
+                <td class="center-text"></td>
+                <td class="right-text">{{ $carryOverRow['currency'] }} {{ number_format($carryOverRow['nominal_pph'], 0, ',', '.') }}</td>
+            </tr>
             @php 
-            $currentRow++;
+            $currentRow += 3;
+            $accumulate += $carryOverRow['transaction_nominal'] + $carryOverRow['nominal_ppn'] + $carryOverRow['nominal_pph'];
             $carryOverRow = null;
             @endphp
             @endif
 
-            <!-- Handle carry over PPn from previous page -->
-            @if($carryOverPPn && $currentRow < $totalRowsPerPage)
-            <tr>
-                <td></td>
-                <td></td>
-                <td>{{ $carryOverPPn['name_ppn'] }}</td>
-                <td class="center-text"></td>
-                <td class="right-text">{{ $carryOverPPn['currency'] }} {{ number_format($carryOverPPn['nominal_ppn'], 0, ',', '.') }}</td>
-            </tr>
-            @php 
-            $currentRow++;
-            $carryOverPPn = null;
-            @endphp
-            @endif
-
-            <!-- Handle carry over PPh from previous page -->
-            @if($carryOverPPh && $currentRow < $totalRowsPerPage)
-            <tr>
-                <td></td>
-                <td></td>
-                <td>{{ $carryOverPPh['name_pph'] }}</td>
-                <td class="center-text"></td>
-                <td class="right-text">{{ $carryOverPPh['currency'] }} {{ number_format($carryOverPPh['nominal_pph'], 0, ',', '.') }}</td>
-            </tr>
-            @php 
-            $currentRow++;
-            $carryOverPPh = null;
-            @endphp
-            @endif
-
             <!-- Transaction Row -->
-            @if($trans['transaction_keterangan'] && $currentRow < $totalRowsPerPage - 1)
+            @if($trans['transaction_keterangan'] && $trans['name_ppn'] && $trans['name_pph'])
+            @if ($currentRow < $totalRowsPerPage - 3)
             <tr>
                 <td></td>
                 <td></td>
@@ -231,18 +216,6 @@
                 <td class="center-text"></td>
                 <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
             </tr>
-            @php 
-            $currentRow++;
-            $grandTotal += $trans['transaction_nominal'];
-            @endphp
-            @elseif($currentRow >= $totalRowsPerPage - 1)
-            @php 
-            $carryOverRow = $trans; 
-            @endphp
-            @endif
-
-            <!-- PPn Row -->
-            @if($trans['name_ppn'] && $currentRow < $totalRowsPerPage - 1)
             <tr>
                 <td></td>
                 <td></td>
@@ -250,18 +223,6 @@
                 <td class="center-text"></td>
                 <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['nominal_ppn'], 0, ',', '.') }}</td>
             </tr>
-            @php 
-            $currentRow++; 
-            $grandTotal += $trans['nominal_ppn'];
-            @endphp
-            @elseif($currentRow >= $totalRowsPerPage - 1)
-            @php 
-            $carryOverPPn = $trans;
-            @endphp
-            @endif
-
-            <!-- PPh Row -->
-            @if($trans['name_pph'] && $currentRow < $totalRowsPerPage - 1)
             <tr>
                 <td></td>
                 <td></td>
@@ -270,22 +231,147 @@
                 <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['nominal_pph'], 0, ',', '.') }}</td>
             </tr>
             @php 
-            $currentRow++;
-            $grandTotal += $trans['nominal_pph'];
+            $currentRow += 3;
+            $accumulate += $trans['transaction_nominal'] + $trans['nominal_ppn'] + $trans['nominal_pph'];
             @endphp
-            @elseif($currentRow >= $totalRowsPerPage - 1)
+            @else
+            @while($currentRow < $totalRowsPerPage - 1)
+            <tr>
+                <td></td>
+                <td style="color: white;">.</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @php $currentRow++; @endphp
+            @endwhile
+            @php $carryOverRow = $trans; @endphp
+            @endif
+            @elseif($trans['transaction_keterangan'] && $trans['name_ppn'] && !$trans['name_pph'])
+            @if ($currentRow < $totalRowsPerPage - 2)
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{ $trans['transaction_keterangan'] }}</td>
+                <td class="center-text"></td>
+                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{ $trans['name_ppn'] }}</td>
+                <td class="center-text"></td>
+                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['nominal_ppn'], 0, ',', '.') }}</td>
+            </tr>
             @php 
-            $carryOverPPh = $trans;
+            $currentRow += 2;
+            $accumulate += $trans['transaction_nominal'] + $trans['nominal_ppn'];
             @endphp
+            @else
+            @while($currentRow < $totalRowsPerPage - 1)
+            <tr>
+                <td></td>
+                <td style="color: white;">.</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @php $currentRow++; @endphp
+            @endwhile
+            @php $carryOverRow = $trans; @endphp
+            @endif
+            @elseif($trans['transaction_keterangan'] && !$trans['name_ppn'] && $trans['name_pph'])
+            @if ($currentRow < $totalRowsPerPage - 2)
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{ $trans['transaction_keterangan'] }}</td>
+                <td class="center-text"></td>
+                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{ $trans['name_pph'] }}</td>
+                <td class="center-text"></td>
+                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['nominal_pph'], 0, ',', '.') }}</td>
+            </tr>
+            @php 
+            $currentRow += 2;
+            $accumulate += $trans['transaction_nominal'] + $trans['nominal_pph'];
+            @endphp
+            @else
+            @while($currentRow < $totalRowsPerPage - 1)
+            <tr>
+                <td></td>
+                <td style="color: white;">.</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @php $currentRow++; @endphp
+            @endwhile
+            @php $carryOverRow = $trans; @endphp
+            @endif
+            @elseif($trans['transaction_keterangan'] && !$trans['name_ppn'] && !$trans['name_pph'])
+            @if ($currentRow < $totalRowsPerPage - 1)
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{ $trans['transaction_keterangan'] }}</td>
+                <td class="center-text"></td>
+                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
+            </tr>
+            @php 
+            $currentRow += 1;
+            $accumulate += $trans['transaction_nominal'];
+            @endphp
+            @else
+            @while($currentRow < $totalRowsPerPage - 1)
+            <tr>
+                <td></td>
+                <td style="color: white;">.</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @php $currentRow++; @endphp
+            @endwhile
+            @php $carryOverRow = $trans; @endphp
+            @endif
+            @endif
+
+            @if($currentRow < $totalRowsPerPage && $index == count($invoiceData) - 1)
+            @while($currentRow < $totalRowsPerPage - 2)
+            <tr>
+                <td></td>
+                <td style="color: white;">.</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @php $currentRow++; @endphp
+            @endwhile
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{$buktiKas->keterangan ?? ''}}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            @php $currentRow++; @endphp
             @endif
 
             @if($currentRow % $totalRowsPerPage == $totalRowsPerPage - 1 || $index == count($invoiceData) - 1)
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="center-text"></td>
-                <td class="right-text">{{$buktiKas->tanda_terima->currency}} {{number_format($grandTotal, 0, ',', '.')}}</td>
+                @php
+                $grandTotal += $accumulate;
+                @endphp
+                <td style="width: 90px"></td>
+                <td style="width: 90px"></td>
+                <td style="width: 400px"></td>
+                <td style="width: 50px" class="center-text"></td>
+                <td style="width: 130px" class="right-text">{{$buktiKas->tanda_terima->currency}} {{number_format($grandTotal, 0, ',', '.')}}</td>
             </tr>
         </table>
 
@@ -300,12 +386,12 @@
                 <th>Diterima oleh:</th>
             </tr>
             <tr>
-                <td>Kadept AdmKeu</td>
-                <td>Kadept Ybs</td>
-                <td>Direktur</td>
+                <td class="center-text">Kadept AdmKeu</td>
+                <td class="center-text">Kadept Ybs</td>
+                <td class="center-text">Direktur</td>
                 <td class="no-border"></td>
-                <td>Ledger</td>
-                <td>Sub Ledger</td>
+                <td class="center-text">Ledger</td>
+                <td class="center-text">Sub Ledger</td>
                 <td class="no-border"></td>
                 <td class="no-border-block"></td>
                 <td class="no-border-block"></td>
@@ -331,7 +417,7 @@
     </div>
     @php 
     $currentRow = 0;
-    $grandTotal = 0;
+    $accumulate = 0;
     @endphp
     @endif
     @endforeach
