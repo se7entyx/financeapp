@@ -160,7 +160,6 @@ class BuktiKasController extends Controller
                     $transaction->nominal_ppn = $item['ppnNominal'];
                     $transaction->id_pph = $item['pphid'];
                     $transaction->nominal_pph = $item['pphNominal'];
-                    $transaction->nominal_setelah = $item['nominalSetelah'];
                     $transaction->save();
                 }
             }
@@ -262,7 +261,6 @@ class BuktiKasController extends Controller
                     $transaction->nominal_ppn = $item['ppnNominal'];
                     $transaction->id_pph = $item['pphid'];
                     $transaction->nominal_pph = $item['pphNominal'];
-                    $transaction->nominal_setelah = $item['nominalSetelah'];
                     $transaction->save();
                 }
             }

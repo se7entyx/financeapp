@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('tanda_terima_id');
             $table->string('nomor');
-            $table->integer('nominal');
+            $table->double('nominal');
             $table->timestamps();
 
             $table->foreign('tanda_terima_id')->references('id')->on('tanda_terima')->onDelete('cascade');
