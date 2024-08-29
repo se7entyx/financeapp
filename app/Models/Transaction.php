@@ -18,7 +18,6 @@ class Transaction extends Model
     protected $fillable = [
         'keterangan',
         'nominal',
-        'nominal_setelah',
         'nominal_ppn',
         'nominal_pph',
         'id_ppn',

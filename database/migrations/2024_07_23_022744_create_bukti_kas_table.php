@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nomer');
             $table->string('tanggal')->nullable();
             $table->string('kas');
-            $table->integer('jumlah');
+            $table->double('jumlah');
             $table->string('no_cek')->nullable();
             $table->string('berita_transaksi');
             $table->string('status')->default('Belum dibayar');

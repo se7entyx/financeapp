@@ -15,8 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('invoice_id');
             $table->text('keterangan');
-            $table->integer('nominal');
-            $table->integer('nominal_setelah')->nullable();
+            $table->double('nominal');
             $table->double('nominal_ppn')->nullable();
             $table->double('nominal_pph')->nullable();
             $table->uuid('id_ppn')->nullable();

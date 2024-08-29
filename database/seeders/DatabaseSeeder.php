@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
 
         $this->call([
-            UserSeeder::class, SupplierSeeder::class
+            UserSeeder::class, SupplierSeeder::class, TaxSeeder::class
         ]);
         // $this->call(TandaTerimaSeeder::class);
 
