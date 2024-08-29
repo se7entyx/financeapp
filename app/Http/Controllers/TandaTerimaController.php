@@ -16,7 +16,7 @@ class TandaTerimaController extends Controller
 {
     public function getTandaTerima()
     {
-        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable(['tanggal' => 'asc'])->latest()->paginate(20)->withQueryString();
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
 
         $title = 'All Document';
         return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title]);
@@ -25,7 +25,7 @@ class TandaTerimaController extends Controller
     public function getMyTandaTerima()
     {
         $id = Auth::id();
-        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable(['tanggal' => 'asc'])->latest()->paginate(20)->withQueryString();
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
         $title = 'My Tanda Terima';
         return view('mydoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title]);
     }
@@ -135,6 +135,7 @@ class TandaTerimaController extends Controller
                 $invoiceData[] = [
                     'invoice_id' => $invoice->id,
                     'invoice_keterangan' => $invoice->nomor,
+                    'invoice_nominal' => $invoice->nominal,
                     'transaction_id' => $transaction->id,
                     'transaction_keterangan' => $transaction->keterangan,
                     'transaction_nominal' => $transaction->nominal,
@@ -149,6 +150,21 @@ class TandaTerimaController extends Controller
         }
     
         // Return the combined response as JSON
+        return response()->json($invoiceData);
+    }
+
+    public function getInvoicesDetail($tandaTerimaId) 
+    {
+        $tandaTerima = TandaTerima::find($tandaTerimaId);
+        $invoiceData = [];
+        foreach ($tandaTerima->invoices as $invoice) {
+            $invoiceData[] = [
+                'invoice_keterangan' => $invoice->nomor,
+                'invoice_nominal' => $invoice->nominal,
+                'currency' => $tandaTerima->currency,
+            ];
+        }
+
         return response()->json($invoiceData);
     }
     

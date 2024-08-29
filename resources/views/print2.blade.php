@@ -228,7 +228,7 @@
                 <td></td>
                 <td>{{ $trans['name_pph'] }}</td>
                 <td class="center-text"></td>
-                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['nominal_pph'], 0, ',', '.') }}</td>
+                <td class="right-text" style="color: red;">({{ $trans['currency'] }} {{ number_format($trans['nominal_pph'], 0, ',', '.') }})</td>
             </tr>
             @php 
             $currentRow += 3;
@@ -294,7 +294,7 @@
                 <td></td>
                 <td>{{ $trans['name_pph'] }}</td>
                 <td class="center-text"></td>
-                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['nominal_pph'], 0, ',', '.') }}</td>
+                <td class="right-text" style="color: red;">({{ $trans['currency'] }} {{ number_format($trans['nominal_pph'], 0, ',', '.') }})</td>
             </tr>
             @php 
             $currentRow += 2;
@@ -355,7 +355,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>{{$buktiKas->keterangan ?? ''}}</td>
+                <td>({{$buktiKas->keterangan ?? ''}})</td>
                 <td></td>
                 <td></td>
             </tr>

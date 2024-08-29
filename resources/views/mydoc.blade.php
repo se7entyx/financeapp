@@ -190,10 +190,6 @@
                 fetch(`/tanda-terima/${typeId}/invoices`)
                     .then(response => response.json())
                     .then(data => {
-                        const {
-                            invoices,
-                            currency
-                        } = data;
                         const formatter = new Intl.NumberFormat('en-US', {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
@@ -219,11 +215,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${invoices.map((kbk, index) => `
+                                ${data.map((kbk, index) => `
                                     <tr>
                                         <td scope="col" class="py-2 px-4 border-b w-1/4">${index + 1}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.nomor}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${currency} ${formatter.format(kbk.nominal)}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.invoice_keterangan}</td>
+                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.currency} ${formatter.format(kbk.invoice_nominal)}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>

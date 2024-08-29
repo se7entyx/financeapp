@@ -23,7 +23,7 @@ class BuktiKasController extends Controller
 
     public function getBuktiKas()
     {
-        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->filter(request(['search', 'jatuh_tempo']))->sortable(['created_at' => 'asc'])->latest()->paginate(20)->withQueryString();
+        $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])->filter(request(['search', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
         $title = 'All Document';
         return view('alldoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords]);
     }
@@ -34,7 +34,7 @@ class BuktiKasController extends Controller
         $id = Auth::id();
         $buktiKasRecords = BuktiKas::with(['tanda_terima', 'user'])
             ->where('bukti_kas.user_id', $id)
-            ->sortable(['created_at' => 'asc'])
+            ->sortable()
             ->filter(request(['search', 'jatuh_tempo']))
             ->latest()
             ->paginate(20)
@@ -246,7 +246,6 @@ class BuktiKasController extends Controller
             $buktikas = BuktiKas::findOrFail($id);
             $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
             $buktikas->nomer = $validated['nomer'];
-            $buktikas->tanggal = null;
             $buktikas->kas = $validated['kas'];
             $buktikas->jumlah = $validated['jumlah'];
             $buktikas->no_cek = $validated['no_cek'];

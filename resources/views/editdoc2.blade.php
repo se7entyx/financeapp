@@ -21,6 +21,7 @@
         $parts = explode('/', $nomer);
 
         $kode = $parts[0];
+        $nomor = $parts[1];
         $bulan = $parts[2];
         $tahun = $parts[3];
         @endphp
@@ -57,7 +58,7 @@
                                 $startYear = date('Y');
                                 for ($i = 0; $i < 8; $i++) {
                                     $year=$startYear + $i;
-                                    echo "<option value=\" $year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
+                                    echo "<option value=\"$year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
                                     }
                                     @endphp
                                     </select>
@@ -82,6 +83,7 @@
                         <input type="hidden" id="ppnData" value="{{ json_encode($ppn) }}">
                         <input type="hidden" id="pphData" value="{{ json_encode($pph) }}">
                         <input type="hidden" id="bukti_data" name="bukti_data" value="">
+                        <input type="hidden" id="nomorPart" value={{$nomor}}>
                     </div>
                     <div class="col-span-1">
                         <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal jatuh tempo <span class="required">*</span></label>
@@ -168,12 +170,18 @@
             });
 
             function updateNomer() {
+                const nomer =document.getElementById('nomer')
                 const part1 = document.getElementById('dropdown-kode').value;
                 const part2 = document.getElementById('dropdown-bulan').value;
                 const part3 = document.getElementById('dropdown-tahun').value;
-                const nomer = `${part1}/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/${part2}/${part3}`;
-                document.getElementById('nomer').value = nomer;
-                console.log(nomer);
+                const partNomor = document.getElementById('nomorPart').value;
+                console.log(partNomor);
+                if (partNomor === '' || partNomor.replace(/\u00A0/g, '').trim() === '') {
+                    nomer.value = `${part1}/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/${part2}/${part3}`;
+                } else {
+                    nomer.value = `${part1}/${partNomor}/${part2}/${part3}`;
+                }
+                console.log(nomer.value);
             }
 
             const searchInput = document.getElementById('dropdown-search');

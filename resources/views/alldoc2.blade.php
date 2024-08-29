@@ -263,7 +263,7 @@
                 const dibuatOleh = row.querySelector('.dibuat-oleh').textContent;
                 const status = row.querySelector('.status').textContent;
 
-                fetch(`/tanda-terima/${typeId}/invoices`)
+                fetch(`/bukti-kas/${typeId}/invoices`)
                     .then(response => response.json())
                     .then(data => {
                         const formatter = new Intl.NumberFormat('en-US', {

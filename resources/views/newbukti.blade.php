@@ -44,7 +44,7 @@
                 $startYear = date('Y');
                 for ($i = 0; $i < 8; $i++) {
                   $year=$startYear + $i;
-                  echo "<option value=\" $year\"".($i==0 ? ' selected' : '' ).">$year</option>";
+                  echo "<option value=\"$year\"".($i==0 ? ' selected' : '' ).">$year</option>";
                   }
                   @endphp
               </select>
