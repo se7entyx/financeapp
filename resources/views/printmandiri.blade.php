@@ -251,7 +251,7 @@
 
                         $jumlah = $buktiKas->jumlah;
                         $terbilang = numberToWords($jumlah);
-                        if($buktiKas->tanda_terima->currency == 'IDR'){
+                        if($buktiKas->tanda_terima->currency == 'Rp'){
                         $currency = 'Rupiah';
                         }else{
                         $currency = 'Dollar';

@@ -47,7 +47,7 @@ class TandaTerimaController extends Controller
                 'bpb' => 'nullable|string',
                 'sjalan' => 'nullable|string',
                 'jatuh_tempo' => 'required|string',
-                'currency' => 'required|string|in:IDR,USD',
+                'currency' => 'required|string|in:Rp,USD',
                 'notes' => 'nullable|string',
                 'invoice' => 'required|array',
                 'invoice.*' => 'required|string',
@@ -121,15 +121,6 @@ class TandaTerimaController extends Controller
         return redirect()->route('new.tanda-terima')->with('success', 'Tanda Terima created successfully.');
     }
 
-
-
-    public function showAll()
-    {
-        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->get();
-
-        return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => 'All Documents']);
-    }
-
     public function getInvoices($tandaTerimaId)
     {
         // Fetch the currency value from the related TandaTerima model
@@ -191,7 +182,7 @@ class TandaTerimaController extends Controller
             'bpb' => 'nullable|string',
             'sjalan' => 'nullable|string',
             'jatuh_tempo' => 'required|string',
-            'currency' => 'required|string|in:IDR,USD',
+            'currency' => 'required|string|in:Rp,USD',
             'notes' => 'nullable|string',
             'invoice' => 'required|array',
             'invoice.*' => 'required|string',

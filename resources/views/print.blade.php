@@ -102,22 +102,22 @@
                 </tr>
                 <tr>
                     <td>Terima dari</td>
-                    <td colspan="3">{{ $tandaTerima->supplier->name }}</td>
+                    <td colspan="3">: {{ $tandaTerima->supplier->name }}</td>
                 </tr>
                 <tr>
                     <td>Faktur Pajak</td>
-                    <td class="icon">{{ $tandaTerima->faktur_pajak ? '✔' : '✘' }}</td>
+                    <td class="icon">: {{ $tandaTerima->pajak ? '✔' : '✘' }}</td>
                     <td>PO</td>
-                    <td class="icon">{{ $tandaTerima->po ? '✔' : '✘' }}</td>
+                    <td class="icon">: {{ $tandaTerima->po ? '✔' : '✘' }}</td>
                 </tr>
                 <tr>
                     <td>BPB</td>
-                    <td class="icon">{{ $tandaTerima->bpb ? '✔' : '✘' }}</td>
+                    <td class="icon">: {{ $tandaTerima->bpb ? '✔' : '✘' }}</td>
                     <td>Surat Jalan</td>
-                    <td class="icon">{{ $tandaTerima->surat_jalan ? '✔' : '✘' }}</td>
+                    <td class="icon">: {{ $tandaTerima->surat_jalan ? '✔' : '✘' }}</td>
                 </tr>
                 <tr>
-                    <td>Kwitansi/Nota</td>
+                    <td>Kwitansi/Nota :</td>
                 </tr>
             </table>
 
@@ -155,12 +155,12 @@
 
             <table class="footer-table">
                 <tr>
-                    <td>Tanggal Jatuh Tempo</td>
+                    <td>Tanggal Jatuh Tempo :</td>
                     <td colspan="2">{{ $tandaTerima->tanggal_jatuh_tempo }}</td>
                     <td class="center">Yang Menerima,</td>
                 </tr>
                 <tr>
-                    <td>Keterangan</td>
+                    <td>Keterangan :</td>
                     <td colspan="2"></td>
                 </tr>
                 <tr>
