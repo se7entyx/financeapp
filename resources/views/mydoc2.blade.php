@@ -243,60 +243,125 @@
                 fetch(`/tanda-terima/${typeId}/invoices`)
                     .then(response => response.json())
                     .then(data => {
-                        const {
-                            invoices,
-                            currency
-                        } = data;
                         const formatter = new Intl.NumberFormat('en-US', {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
                         });
+
+                        // Fill the details in the modal
                         detailsContent.innerHTML = `
-                        <div class="mb-4"><strong>Nomer:</strong> ${nomer}</div>
-                        <div class="mb-4"><strong>Tanggal:</strong> ${tanggal || 'N/A'}</div>
-                        <div class="mb-4"><strong>Dibayarkan kepada:</strong> ${dibayarkanKepada || 'N/A'}</div>
-                        <div class="mb-4"><strong>Kas/Cheque/Bilyet Giro Bank:</strong> ${dibayarkan || 'N/A'}</div>
-                        <div class="mb-4"><strong>Jumlah:</strong> ${jumlah || 'N/A'}</div>
-                        <div class="mb-4"><strong>No. Cek:</strong> ${(noCek || 'N/A' )}</div>
-                        <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo || 'N/A'}</div>
-                        <div class="mb-4"><strong>Berita Transaksi:</strong> ${beritaTransaksi || 'N/A'}</div>
-                        <div class="mb-4"><strong>Kapan dibuat:</strong> ${kapanDibuat || 'N/A'}</div>
-                        <div class="mb-4"><strong>Kapan diupdate:</strong> ${kapanDiupdate || 'N/A'}</div>
-                        <div class="mb-4"><strong>Dibuat oleh:</strong> ${dibuatOleh || 'N/A'}</div>
-                        <div class="mb-4"><strong>Status:</strong> ${status || 'N/A'}</div>
-                        <div class="mb-4"><strong>Keterangan Bukti Kas:</strong></div>
-                        <table class="w-full bg-white rtl:text-right border border-gray-300">
-                            <thead class="bg-gray-200">
-                                <tr class="text-gray-700">
-                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">No</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Invoice</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Nominal</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${invoices.map((kbk, index) => `
-                                    <tr>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${index + 1}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.nomor}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${currency} ${formatter.format(kbk.nominal)}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.keterangan}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    `;
+                    <div class="mb-4"><strong>Nomer:</strong> ${nomer}</div>
+                    <div class="mb-4"><strong>Tanggal:</strong> ${tanggal || 'N/A'}</div>
+                    <div class="mb-4"><strong>Dibayarkan kepada:</strong> ${dibayarkanKepada || 'N/A'}</div>
+                    <div class="mb-4"><strong>Kas/Cheque/Bilyet Giro Bank:</strong> ${dibayarkan || 'N/A'}</div>
+                    <div class="mb-4"><strong>Jumlah:</strong> ${jumlah || 'N/A'}</div>
+                    <div class="mb-4"><strong>No. Cek:</strong> ${noCek || 'N/A'}</div>
+                    <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo || 'N/A'}</div>
+                    <div class="mb-4"><strong>Berita Transaksi:</strong> ${beritaTransaksi || 'N/A'}</div>
+                    <div class="mb-4"><strong>Kapan dibuat:</strong> ${kapanDibuat || 'N/A'}</div>
+                    <div class="mb-4"><strong>Kapan diupdate:</strong> ${kapanDiupdate || 'N/A'}</div>
+                    <div class="mb-4"><strong>Dibuat oleh:</strong> ${dibuatOleh || 'N/A'}</div>
+                    <div class="mb-4"><strong>Status:</strong> ${status || 'N/A'}</div>
+                    <div class="mb-4"><strong>Keterangan Bukti Kas:</strong></div>
+                    <table class="w-full bg-white rtl:text-right border border-gray-300">
+                        <thead class="bg-gray-200">
+                            <tr class="text-gray-700">
+                                <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">No</th>
+                                <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Keterangan</th>
+                                <th scope="col" class="py-2 px-4 border-b w-1/3 text-start">Nominal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="buktiTable"></tbody>
+                    </table>
+                `;
+
+                        // Populate the table using renderTable function
+                        renderTable(data, formatter);
 
                         // Show the modal
                         detailModal.classList.remove('hidden');
                     })
-                    .catch(error => console.error('Error fetching KeteranganBuktiKas details:', error))
+                    .catch(error => console.error('Error fetching Keterangan Bukti Kas details:', error))
                     .finally(() => {
                         // Hide the loading animation
                         loadingContainer.classList.add('hidden');
                     });
             });
         });
+
+        function renderTable(bukti, formatter) {
+            const buktiTable = document.getElementById('buktiTable');
+            buktiTable.innerHTML = ''; // Clear existing rows
+
+            let rowIndex = 1;
+            bukti.forEach((item, index) => {
+                const isFirstTransaction = index === 0 || bukti[index - 1].invoice_keterangan !== item.invoice_keterangan;
+
+                const newRow = buktiTable.insertRow();
+                newRow.className = "bg-white border-b";
+
+                if (isFirstTransaction) {
+                    const cellNo = newRow.insertCell(0);
+                    cellNo.className = "px-6 py-4 font-medium text-gray-900 whitespace-nowrap";
+                    cellNo.textContent = rowIndex++;
+
+                    const cellKeterangan = newRow.insertCell(1);
+                    cellKeterangan.className = "px-6 py-4";
+                    cellKeterangan.textContent = `${item.transaction_keterangan} (${item.invoice_keterangan})`;
+
+                    const cellAmount = newRow.insertCell(2);
+                    cellAmount.className = "px-6 py-4 text-right";
+                    cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                } else {
+                    const cellNo = newRow.insertCell(0);
+                    cellNo.className = "px-6 py-4 font-medium text-gray-900 whitespace-nowrap";
+                    cellNo.textContent = '';
+
+                    const cellKeterangan = newRow.insertCell(1);
+                    cellKeterangan.className = "px-6 py-4";
+                    cellKeterangan.textContent = item.transaction_keterangan;
+
+                    const cellAmount = newRow.insertCell(2);
+                    cellAmount.className = "px-6 py-4 text-right";
+                    cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                }
+
+                // Add tax rows if PPn or PPh exists
+                if (item.nominal_ppn) {
+                    addTaxRow('PPn', item.transaction_nominal, item.currency, newRow, item.name_ppn, item.nominal_ppn);
+                }
+                if (item.nominal_pph) {
+                    addTaxRow('PPh', item.transaction_nominal, item.currency, newRow, item.name_pph, item.nominal_pph);
+                }
+            });
+        }
+
+        function addTaxRow(type, baseAmount, currency, referenceRow, existingTaxName = null, existingTaxAmount = null) {
+            const buktiTable = document.getElementById('buktiTable');
+
+            // Calculate the index for the new row
+            let newIndex = referenceRow.rowIndex + 1;
+
+            // Ensure the index is within the valid range
+            if (newIndex > buktiTable.rows.length) {
+                newIndex = -1; // Insert at the end of the table
+            }
+
+            const newRow = buktiTable.insertRow(newIndex);
+            newRow.className = "bg-gray-100 border-b";
+
+            const cellNo = newRow.insertCell(0);
+            cellNo.className = "px-6 py-4";
+
+            const cellKeterangan = newRow.insertCell(1);
+            cellKeterangan.className = "px-6 py-4";
+            cellKeterangan.textContent = `${existingTaxName || 'Auto'}`;
+
+            const cellAmount = newRow.insertCell(2);
+            cellAmount.className = "px-6 py-4 text-right";
+            cellAmount.textContent = currency + ' ' + formatter.format(existingTaxAmount || 0);
+        }
+
 
         closeModalButton.addEventListener('click', function() {
             // Hide the modal

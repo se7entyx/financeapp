@@ -237,6 +237,7 @@ class BuktiKasController extends Controller
             'jumlah' => 'integer',
             'no_cek' => 'nullable|string',
             'berita_transaksi' => 'required|string',
+            'keterangan' => 'required|string',
             'bukti_data' => 'required|json'
         ]);
 
@@ -298,8 +299,31 @@ class BuktiKasController extends Controller
     public function printBuktiKas($id)
     {
         $buktiKas = BuktiKas::with(['tanda_terima'])->find($id);
+        $tandaTerima = TandaTerima::find($buktiKas->tanda_terima_id);
+        $invoiceData = [];
 
-        $html = view('print2', compact('buktiKas'))->render();
+        foreach ($tandaTerima->invoices as $invoice) {
+            foreach ($invoice->transaction as $transaction) {
+                $taxPpn = Tax::where('id', $transaction->id_ppn)->first();
+                $taxPph = Tax::where('id', $transaction->id_pph)->first();
+
+                $invoiceData[] = [
+                    'invoice_id' => $invoice->id,
+                    'invoice_keterangan' => $invoice->nomor,
+                    'transaction_id' => $transaction->id,
+                    'transaction_keterangan' => $transaction->keterangan,
+                    'transaction_nominal' => $transaction->nominal,
+                    'nominal_setelah' => $transaction->nominal_setelah,
+                    'nominal_ppn' => $transaction->nominal_ppn,
+                    'nominal_pph' => $transaction->nominal_pph,
+                    'name_ppn' => $taxPpn ? $taxPpn->name : null,
+                    'name_pph' => $taxPph ? $taxPph->name : null,
+                    'currency' => $tandaTerima->currency,
+                ];
+            }
+        }
+        
+        $html = view('print2', compact('buktiKas', 'invoiceData'))->render();
 
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);

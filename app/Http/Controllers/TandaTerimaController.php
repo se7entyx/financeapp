@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoices;
 use App\Models\Supplier;
 use App\Models\TandaTerima;
+use App\Models\Tax;
 use App\Models\Transaction;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
@@ -131,22 +132,35 @@ class TandaTerimaController extends Controller
 
     public function getInvoices($tandaTerimaId)
     {
-        // Fetch all invoices related to the specified tanda_terima_id
-        $invoices = Invoices::where('tanda_terima_id', $tandaTerimaId)->get();
-
         // Fetch the currency value from the related TandaTerima model
         $tandaTerima = TandaTerima::find($tandaTerimaId);
-        $currency = $tandaTerima->currency;
-
-        // Combine the invoices and currency into a single response
-        $response = [
-            'invoices' => $invoices,
-            'currency' => $currency,
-        ];
-
+        $invoiceData = [];
+        
+        foreach ($tandaTerima->invoices as $invoice) {
+            foreach ($invoice->transaction as $transaction) {
+                $taxPpn = Tax::where('id', $transaction->id_ppn)->first();
+                $taxPph = Tax::where('id', $transaction->id_pph)->first();
+    
+                $invoiceData[] = [
+                    'invoice_id' => $invoice->id,
+                    'invoice_keterangan' => $invoice->nomor,
+                    'transaction_id' => $transaction->id,
+                    'transaction_keterangan' => $transaction->keterangan,
+                    'transaction_nominal' => $transaction->nominal,
+                    'nominal_setelah' => $transaction->nominal_setelah,
+                    'nominal_ppn' => $transaction->nominal_ppn,
+                    'nominal_pph' => $transaction->nominal_pph,
+                    'name_ppn' => $taxPpn ? $taxPpn->name : null,
+                    'name_pph' => $taxPph ? $taxPph->name : null,
+                    'currency' => $tandaTerima->currency,
+                ];
+            }
+        }
+    
         // Return the combined response as JSON
-        return response()->json($response);
+        return response()->json($invoiceData);
     }
+    
 
     public function deleteTt($id)
     {
@@ -190,7 +204,7 @@ class TandaTerimaController extends Controller
             'trans_nominal' => 'required|array',
             'trans_nominal.*' => 'required|numeric',
         ]);
-    
+
         // Update Tanda Terima record
         $tandaTerima = TandaTerima::findOrFail($id);
         $tandaTerima->supplier_id = $validated['supplier_id'];
@@ -202,38 +216,38 @@ class TandaTerimaController extends Controller
         $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
         $tandaTerima->keterangan = $validated['notes'];
         $tandaTerima->save();
-    
+
         // Delete invoices and transactions not in the request
         $tandaTerima->invoices()->whereNotIn('nomor', $validated['invoice'])->delete();
-        
+
         // Initialize a variable to track the transaction index
         $transIndex = 0;
-    
+
         // Update or create invoices and transactions
         foreach ($validated['invoice'] as $index => $invoiceNo) {
             $invoice = $tandaTerima->invoices()->updateOrCreate(
                 ['nomor' => $invoiceNo],
                 ['nominal' => $validated['nominal'][$index]]
             );
-    
+
             // Get the number of transactions for this invoice
             $transCount = intval($validated['trans_count'][$index]);
-    
+
             // Remove any transactions not included in the request for this invoice
             $invoice->transaction()->whereNotIn('keterangan', array_slice($validated['keterangan'], $transIndex, $transCount))->delete();
-    
+
             // Update or create transactions for this invoice
             for ($i = 0; $i < $transCount; $i++) {
-                $invoice->transaction   ()->updateOrCreate(
+                $invoice->transaction()->updateOrCreate(
                     ['keterangan' => $validated['keterangan'][$transIndex]],
                     ['nominal' => $validated['trans_nominal'][$transIndex]]
                 );
-    
+
                 // Increment the transaction index
                 $transIndex++;
             }
         }
-    
+
         return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
     }
 
