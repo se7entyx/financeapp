@@ -117,8 +117,8 @@
     @php
     $totalRowsPerPage = 10; // Total rows per page
     $currentRow = 0;
-    $grandTotal = 0;
-    $accumulate = 0;
+    $grandTotal = 0.0;
+    $accumulate = 0.0;
     $x = 0;
     $y = '';
     $yrow = '';
@@ -224,7 +224,7 @@
                 <td></td>
                 <td>{{ $carryOverRow['name_pph'] }}</td>
                 <td class="center-text"></td>
-                <td class="right-text">{{ $carryOverRow['currency'] }} {{ number_format($carryOverRow['nominal_pph'], 0, ',', '.') }}</td>
+                <td class="right-text" style="color: red;">({{ $carryOverRow['currency'] }} {{ number_format($carryOverRow['nominal_pph'], 0, ',', '.') }})</td>
             </tr>
             @php
             $currentRow += 1;
@@ -249,7 +249,7 @@
 
             <!-- Transaction Row -->
             @if($trans['transaction_keterangan'] && $trans['name_ppn'] && $trans['name_pph'])
-            @if ($currentRow < $totalRowsPerPage - 3)
+            @if ($currentRow < $totalRowsPerPage - 4)
             <tr>
                 <td></td>
                 <td></td>
@@ -289,7 +289,7 @@
             @php $carryOverRow = $trans; @endphp
             @endif
             @elseif($trans['transaction_keterangan'] && $trans['name_ppn'] && !$trans['name_pph'])
-            @if ($currentRow < $totalRowsPerPage - 2)
+            @if ($currentRow < $totalRowsPerPage - 3)
             <tr>
                 <td></td>
                 <td></td>
@@ -322,7 +322,7 @@
             @php $carryOverRow = $trans; @endphp
             @endif
             @elseif($trans['transaction_keterangan'] && !$trans['name_ppn'] && $trans['name_pph'])
-            @if ($currentRow < $totalRowsPerPage - 2)
+            @if ($currentRow < $totalRowsPerPage - 3)
             <tr>
                 <td></td>
                 <td></td>
@@ -355,7 +355,7 @@
             @php $carryOverRow = $trans; @endphp
             @endif
             @elseif($trans['transaction_keterangan'] && !$trans['name_ppn'] && !$trans['name_pph'])
-            @if ($currentRow < $totalRowsPerPage - 1)
+            @if ($currentRow < $totalRowsPerPage - 2)
             <tr>
                 <td></td>
                 <td></td>
@@ -382,17 +382,7 @@
             @endif
             @endif
 
-            @if($currentRow < $totalRowsPerPage && $index == count($invoiceData) - 1 && !$carryOverRow)
-            @while($currentRow < $totalRowsPerPage - 2)
-            <tr>
-                <td></td>
-                <td style="color: white;">.</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            @php $currentRow++; @endphp
-            @endwhile
+            @if($currentRow == $totalRowsPerPage - 2 && $index == count($invoiceData) - 1 && !$carryOverRow)
             <tr>
                 <td></td>
                 <td></td>
@@ -403,7 +393,7 @@
             @php $currentRow++; @endphp
             @endif
 
-            @if($currentRow % $totalRowsPerPage == $totalRowsPerPage - 1 || $index == count($invoiceData) - 1 && !$carryOverRow)
+            @if($currentRow % $totalRowsPerPage == $totalRowsPerPage - 1)
             <tr>
                 @php
                 $grandTotal += $accumulate;
@@ -450,19 +440,17 @@
             </tr>
         </table>
     </div>
-
-        @if($index < count($invoiceData) - 1 && !$carryOverRow)
+        @if($index < count($invoiceData) - 1)
         <div class="page-break"></div>
         @endif
     @php 
     $currentRow = 0;
     $accumulate = 0;
-    $x = $index;
     @endphp
     @endif
     @endforeach
 
-    @if($x == count($invoiceData) - 1 && $carryOverRow)
+    @if($carryOverRow != null)
         @if (is_array($carryOverRow) && isset($carryOverRow['invoice_keterangan']) && $y != '(' . $carryOverRow['invoice_keterangan'] . ')')
         @php
             $y = '(' . $carryOverRow['invoice_keterangan'] . ')';
@@ -640,7 +628,7 @@
                 </tr>
             </table>
         </div>
-    @endif  
+    @endif
 </body>
 
 </html>
