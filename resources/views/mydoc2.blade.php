@@ -91,7 +91,9 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas">View Details</a>
+                                    @if ($bk->status == 'Belum dibayar')
                                     <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
+                                    @endif                               
                                     <form action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form-bk">
                                         @csrf
                                         @method('DELETE')

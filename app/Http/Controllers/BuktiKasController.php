@@ -240,7 +240,6 @@ class BuktiKasController extends Controller
             'bukti_data' => 'required|json'
         ]);
 
-        try {
             // Find and update BuktiKas record
             $buktikas = BuktiKas::findOrFail($id);
             $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
@@ -266,14 +265,6 @@ class BuktiKasController extends Controller
             }
 
             return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas updated successfully.');
-        } catch (ValidationException $e) {
-            // Handle validation exception
-            dd($e);
-        } catch (\Exception $e) {
-            // Log and handle other exceptions
-            Log::error('Error updating Bukti Kas: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'An error occurred while updating the Bukti Kas.']);
-        }
     }
 
 

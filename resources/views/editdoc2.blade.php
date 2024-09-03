@@ -7,6 +7,13 @@
     </style>
     <x-slot:title>{{$title}}</x-slot:title>
     <section class="bg-white dark:bg-gray-900 w-full">
+        @if (session('success'))
+        <div class="alert alert-success">
+            <script>
+                alert("Bukti kas berhasil diedit");
+            </script>
+        </div>
+        @endif
         <div id="loading-container" class="hidden fixed inset-0 flex items-center justify-center bg-transparent">
             <div role="status">
                 <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,7 +65,7 @@
                                 $startYear = date('Y');
                                 for ($i = 0; $i < 8; $i++) {
                                     $year=$startYear + $i;
-                                    echo "<option value=\"$year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
+                                    echo "<option value=\" $year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
                                     }
                                     @endphp
                                     </select>
@@ -110,7 +117,7 @@
                     </div>
                     <div class="col-span-1">
                         <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan</label>
-                        <input type="text" id="keterangan" name="keterangan" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan keterangan" value="{{ $buktiKasRecords->keterangan }}" >
+                        <input type="text" id="keterangan" name="keterangan" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan keterangan" value="{{ $buktiKasRecords->keterangan }}">
                     </div>
                     <div class="col-span-4">
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -170,7 +177,7 @@
             });
 
             function updateNomer() {
-                const nomer =document.getElementById('nomer')
+                const nomer = document.getElementById('nomer')
                 const part1 = document.getElementById('dropdown-kode').value;
                 const part2 = document.getElementById('dropdown-bulan').value;
                 const part3 = document.getElementById('dropdown-tahun').value;
@@ -546,6 +553,7 @@
                 } else if (type === 'PPh') {
                     taxAmount = -(baseAmount * (rate / 100));
                 }
+                taxAmount = Math.round(taxAmount);
                 return taxAmount;
             }
 

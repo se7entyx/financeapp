@@ -16,7 +16,7 @@ class TandaTerimaController extends Controller
 {
     public function getTandaTerima()
     {
-        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user','bukti_kas'])->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
 
         $title = 'All Document';
         return view('alldoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title]);
@@ -25,7 +25,7 @@ class TandaTerimaController extends Controller
     public function getMyTandaTerima()
     {
         $id = Auth::id();
-        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
+        $tandaTerimaRecords = TandaTerima::with(['supplier', 'user','bukti_kas'])->where('user_id', $id)->filter(request(['search', 'supplier', 'start_date', 'end_date', 'jatuh_tempo']))->sortable()->latest()->paginate(20)->withQueryString();
         $title = 'My Tanda Terima';
         return view('mydoc', ['tandaTerimaRecords' => $tandaTerimaRecords, 'title' => $title]);
     }
@@ -273,6 +273,8 @@ class TandaTerimaController extends Controller
                 }
     
                 // Add PPN and subtract PPH from the total
+                $ppnAmount = round($ppnAmount);
+                $pphAmount = round($pphAmount);
                 $total = $total + $ppnAmount - $pphAmount;
     
                 // Update the transaction with PPN and PPH amounts
