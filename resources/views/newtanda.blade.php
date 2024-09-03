@@ -155,8 +155,6 @@
         function formatCurrency(value, currency) {
             return `${currency} ${new Intl.NumberFormat('id-ID').format(value)}`;
         }
-
-
         // Add new invoice fields dynamically
         document.getElementById('addButton').addEventListener('click', function() {
             const invoiceRowCount = document.getElementsByClassName('invoice-row').length;

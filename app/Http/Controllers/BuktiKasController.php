@@ -57,8 +57,8 @@ class BuktiKasController extends Controller
             ->select('tanda_terima.*');
 
         $tandaTerimas = $tandaTerimaQuery->get();
-        $ppn = Tax::where('type', 'ppn')->get();
-        $pph = Tax::where('type', 'pph')->get();
+        $ppn = Tax::where('type', 'ppn')->where('status','active')->get();
+        $pph = Tax::where('type', 'pph')->where('status','active')->get();
 
         return view('newbukti', [
             'title' => "New Bukti Pengeluaran Kas / Bank",
@@ -129,7 +129,7 @@ class BuktiKasController extends Controller
             'jumlah' => 'numeric',
             'no_cek' => 'nullable|string',
             'berita_transaksi' => 'required|string',
-            'keterangan' => 'required|string',
+            'keterangan' => 'nullable|string',
             'bukti_data' => 'required|json'
         ]);
 
@@ -214,8 +214,8 @@ class BuktiKasController extends Controller
         }
 
         $tandaTerimaOption = $tandaTerimaQuery->select('tanda_terima.*')->get();
-        $ppn = Tax::where('type', 'ppn')->get();
-        $pph = Tax::where('type', 'pph')->get();
+        $ppn = Tax::where('type', 'ppn')->where('status','active')->get();
+        $pph = Tax::where('type', 'pph')->where('status','active')->get();
 
         return view('editdoc2', [
             'buktiKasRecords' => $buktikas,
@@ -236,7 +236,7 @@ class BuktiKasController extends Controller
             'jumlah' => 'numeric',
             'no_cek' => 'nullable|string',
             'berita_transaksi' => 'required|string',
-            'keterangan' => 'required|string',
+            'keterangan' => 'nullable|string',
             'bukti_data' => 'required|json'
         ]);
 
