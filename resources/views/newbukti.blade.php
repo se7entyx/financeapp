@@ -494,9 +494,11 @@
         let taxAmount;
         if (type === 'PPn') {
           taxAmount = baseAmount * (rate / 100);
+
         } else if (type === 'PPh') {
           taxAmount = -(baseAmount * (rate / 100));
         }
+        taxAmount = Math.round(taxAmount);
         return taxAmount;
       }
 

@@ -103,7 +103,13 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
+                                    @if ($tt->bukti_kas)
+                                        @if ($tt->bukti_kas->status == 'Belum dibayar')
+                                        <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                        @endif
+                                    @else
                                     <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                    @endif
                                     <form action="/tanda-terima/{{$tt->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form">
                                         @csrf
                                         @method('DELETE')
