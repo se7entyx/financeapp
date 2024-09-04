@@ -57,8 +57,8 @@ class BuktiKasController extends Controller
             ->select('tanda_terima.*');
 
         $tandaTerimas = $tandaTerimaQuery->get();
-        $ppn = Tax::where('type', 'ppn')->where('status','active')->get();
-        $pph = Tax::where('type', 'pph')->where('status','active')->get();
+        $ppn = Tax::where('type', 'ppn')->where('status', 'active')->get();
+        $pph = Tax::where('type', 'pph')->where('status', 'active')->get();
 
         return view('newbukti', [
             'title' => "New Bukti Pengeluaran Kas / Bank",
@@ -73,7 +73,7 @@ class BuktiKasController extends Controller
         try {
             $userId = Auth::id();
 
-            $tandaTerima = TandaTerima::with(['supplier', 'invoices', 'bukti_kas'])
+            $tandaTerima = TandaTerima::with(['supplier', 'invoices.transaction', 'bukti_kas'])
                 ->where('user_id', $userId)
                 ->where('increment_id', $tandaTerimaInc)
                 ->first();
@@ -86,6 +86,9 @@ class BuktiKasController extends Controller
                 $invoiceData = [];
                 foreach ($tandaTerima->invoices as $invoice) {
                     foreach ($invoice->transaction as $transaction) {
+                        $ppn = Tax::find($transaction->id_ppn);
+                        $pph = Tax::find($transaction->id_pph);
+
                         $invoiceData[] = [
                             'invoice_id' => $invoice->id,
                             'invoice_keterangan' => $invoice->nomor,
@@ -97,6 +100,10 @@ class BuktiKasController extends Controller
                             'nominal_pph' => $transaction->nominal_pph,
                             'id_ppn' => $transaction->id_ppn,
                             'id_pph' => $transaction->id_pph,
+                            'ppn_name' => $ppn ? $ppn->name : null,
+                            'pph_name' => $pph ? $pph->name : null,
+                            'ppn_percentage' => $ppn ? $ppn->percentage : null,
+                            'pph_percentage' => $pph ? $pph->percentage : null,
                             'currency' => $tandaTerima->currency,
                         ];
                     }
@@ -214,8 +221,8 @@ class BuktiKasController extends Controller
         }
 
         $tandaTerimaOption = $tandaTerimaQuery->select('tanda_terima.*')->get();
-        $ppn = Tax::where('type', 'ppn')->where('status','active')->get();
-        $pph = Tax::where('type', 'pph')->where('status','active')->get();
+        $ppn = Tax::where('type', 'ppn')->where('status', 'active')->get();
+        $pph = Tax::where('type', 'pph')->where('status', 'active')->get();
 
         return view('editdoc2', [
             'buktiKasRecords' => $buktikas,
@@ -319,7 +326,7 @@ class BuktiKasController extends Controller
                 ];
             }
         }
-        
+
         $html = view('print2', compact('buktiKas', 'invoiceData'))->render();
 
         $dompdf = new Dompdf();

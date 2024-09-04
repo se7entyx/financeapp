@@ -58,7 +58,7 @@
                                 $startYear = date('Y');
                                 for ($i = 0; $i < 8; $i++) {
                                     $year=$startYear + $i;
-                                    echo "<option value=\"$year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
+                                    echo "<option value=\" $year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
                                     }
                                     @endphp
                                     </select>
@@ -110,7 +110,7 @@
                     </div>
                     <div class="col-span-1">
                         <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan</label>
-                        <input type="text" id="keterangan" name="keterangan" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan keterangan" value="{{ $buktiKasRecords->keterangan }}" >
+                        <input type="text" id="keterangan" name="keterangan" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan keterangan" value="{{ $buktiKasRecords->keterangan }}">
                     </div>
                     <div class="col-span-4">
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -170,7 +170,7 @@
             });
 
             function updateNomer() {
-                const nomer =document.getElementById('nomer')
+                const nomer = document.getElementById('nomer')
                 const part1 = document.getElementById('dropdown-kode').value;
                 const part2 = document.getElementById('dropdown-bulan').value;
                 const part3 = document.getElementById('dropdown-tahun').value;
@@ -262,7 +262,11 @@
                                 ppnNominal: item.nominal_ppn || null,
                                 pphid: item.id_pph || null,
                                 pphNominal: item.nominal_pph || null,
-                                nominalSetelah: item.nomila_setelah || null
+                                nominalSetelah: item.nomila_setelah || null,
+                                ppnName: item.ppn_name || null,
+                                pphName: item.pph_name || null,
+                                ppnpercentage: item.ppn_percentage || null,
+                                pphpercentage: item.pph_percentage || null
                             }));
                             console.log(bukti);
                             renderTable();
@@ -400,18 +404,18 @@
                     // If the PPn or PPh has already been added, hide the corresponding button
                     if (item.ppnid) {
                         addPPnButton.style.display = 'none';
-                        addTaxRow('PPn', item.nominalValue, item.selectedCurrency, newRow, item.ppnid, item.ppnNominal);
+                        addTaxRow('PPn', item.nominalValue, item.selectedCurrency, newRow, item.ppnid, item.ppnNominal, item.ppnName, item.ppnpercentage);
                     }
                     if (item.pphid) {
                         addPPhButton.style.display = 'none';
-                        addTaxRow('PPh', item.nominalValue, item.selectedCurrency, newRow, item.pphid, item.pphNominal);
+                        addTaxRow('PPh', item.nominalValue, item.selectedCurrency, newRow, item.pphid, item.pphNominal, item.pphName, item.pphpercentage);
                     }
                 });
                 // Update the row numbers and total after rendering
                 updateTotal();
             }
 
-            function addTaxRow(type, baseAmount, currency, referenceRow, existingTaxId = null, existingTaxAmount = null) {
+            function addTaxRow(type, baseAmount, currency, referenceRow, existingTaxId = null, existingTaxAmount = null, existingName = null, existingPercentage = null) {
                 // Fetch all tax rates from your data source
                 const taxRates = getTaxRates(type);
 
@@ -441,6 +445,21 @@
                     select.appendChild(option);
                 });
 
+                if (existingName && existingPercentage) {
+                    const existingTax = taxRates.find(tax =>
+                        tax.name === existingName && tax.percentage === existingPercentage
+                    );
+
+                    if (!existingTax) {
+                        const customOption = document.createElement('option');
+                        customOption.value = ''; // No value, just for display
+                        customOption.textContent = `${existingName} (${existingPercentage}%)`;
+                        customOption.selected = true; // Select this custom option
+                        customOption.disabled = true; // Disable this option to prevent selection
+                        select.appendChild(customOption);
+                    }
+                }
+
                 // Cell for tax amount
                 const cellAmount = newRow.insertCell(2);
                 cellAmount.className = "px-6 py-4 border border-gray-200 dark:border-gray-700 text-right";
@@ -464,6 +483,10 @@
                         }
                         console.log(bukti);
                         updateTotal();
+                    }
+                    const customOption = select.querySelector('option[value=""]');
+                    if (customOption) {
+                        select.removeChild(customOption); // Remove the custom option after selecting a valid tax rate
                     }
                 });
 
