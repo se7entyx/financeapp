@@ -9,9 +9,9 @@
     <section class="bg-white dark:bg-gray-900 w-full">
         @if (session('success'))
         <div class="alert alert-success">
-            <script>
-                alert("Bukti kas berhasil diedit");
-            </script>
+        <script>
+            alert("Bukti kas berhasil dibuat");
+        </script>
         </div>
         @endif
         <div id="loading-container" class="hidden fixed inset-0 flex items-center justify-center bg-transparent">

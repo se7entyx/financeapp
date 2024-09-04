@@ -386,7 +386,11 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>({{$buktiKas->keterangan ?? ''}})</td>
+                @if ($buktiKas->keterangan)
+                <td>({{ $buktiKas->keterangan }})</td>
+                @else
+                <td style="color: white;">.</td>
+                @endif
                 <td></td>
                 <td></td>
             </tr>
@@ -574,7 +578,11 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td>({{$buktiKas->keterangan ?? ''}})</td>
+                    @if ($buktiKas->keterangan)
+                    <td>({{ $buktiKas->keterangan }})</td>
+                    @else
+                    <td style="color: white;">.</td>
+                    @endif
                     <td></td>
                     <td></td>
                 </tr>

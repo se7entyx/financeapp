@@ -247,31 +247,32 @@ class BuktiKasController extends Controller
             'bukti_data' => 'required|json'
         ]);
 
-            // Find and update BuktiKas record
-            $buktikas = BuktiKas::findOrFail($id);
-            $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
-            $buktikas->nomer = $validated['nomer'];
-            $buktikas->kas = $validated['kas'];
-            $buktikas->jumlah = $validated['jumlah'];
-            $buktikas->no_cek = $validated['no_cek'];
-            $buktikas->berita_transaksi = $validated['berita_transaksi'];
-            $buktikas->save();
+        // Find and update BuktiKas record
+        $buktikas = BuktiKas::findOrFail($id);
+        $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
+        $buktikas->nomer = $validated['nomer'];
+        $buktikas->kas = $validated['kas'];
+        $buktikas->jumlah = $validated['jumlah'];
+        $buktikas->no_cek = $validated['no_cek'];
+        $buktikas->berita_transaksi = $validated['berita_transaksi'];
+        $buktikas->keterangan = $validated['keterangan'];
+        $buktikas->save();
 
-            // Decode bukti_data and update transactions
-            $buktiArray = json_decode($validated['bukti_data'], true);
+        // Decode bukti_data and update transactions
+        $buktiArray = json_decode($validated['bukti_data'], true);
 
-            foreach ($buktiArray as $item) {
-                $transaction = Transaction::find($item['transaction_id']);
-                if ($transaction) {
-                    $transaction->id_ppn = $item['ppnid'];
-                    $transaction->nominal_ppn = $item['ppnNominal'];
-                    $transaction->id_pph = $item['pphid'];
-                    $transaction->nominal_pph = $item['pphNominal'];
-                    $transaction->save();
-                }
+        foreach ($buktiArray as $item) {
+            $transaction = Transaction::find($item['transaction_id']);
+            if ($transaction) {
+                $transaction->id_ppn = $item['ppnid'];
+                $transaction->nominal_ppn = $item['ppnNominal'];
+                $transaction->id_pph = $item['pphid'];
+                $transaction->nominal_pph = $item['pphNominal'];
+                $transaction->save();
             }
+        }
 
-            return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas updated successfully.');
+        return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas updated successfully.');
     }
 
 
