@@ -52,7 +52,8 @@ class BuktiKasController extends Controller
         // Fetch TandaTerima records that are not assigned to BuktiKas
         $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
             ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
-            ->where('tanda_terima.user_id', $userId) // Specify table name to avoid ambiguity
+            ->where('tanda_terima.user_id', $userId)
+            ->where('po', 'true') // Specify table name to avoid ambiguity
             ->whereNull('bukti_kas.tanda_terima_id') // Ensure there's no corresponding bukti_kas record
             ->select('tanda_terima.*');
 
@@ -76,6 +77,7 @@ class BuktiKasController extends Controller
             $tandaTerima = TandaTerima::with(['supplier', 'invoices.transaction', 'bukti_kas'])
                 ->where('user_id', $userId)
                 ->where('increment_id', $tandaTerimaInc)
+                ->where('po','true')
                 ->first();
 
             if ($tandaTerima) {

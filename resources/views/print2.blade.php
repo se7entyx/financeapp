@@ -23,13 +23,13 @@
 
         .container {
             width: 100%;
-            height: 55.5%;
+            height: 50.2%;
             margin: 0 auto;
             border: 3px double black;
             box-sizing: border-box;
             padding: 10px;
             position: relative;
-            transform: translate(-5mm, -7mm);
+            transform: translate(-5mm, -5.5mm);
         }
 
         table.x {
@@ -88,7 +88,7 @@
 
         table.signature {
             padding-inline: 20px;
-            padding-top: 25px;
+            padding-top: 15px;
             border-collapse: collapse;
             font-size: 11px;
             transform: translateX(5mm);
@@ -115,7 +115,7 @@
 
 <body>
     @php
-    $totalRowsPerPage = 10; // Total rows per page
+    $totalRowsPerPage = 8; // Total rows per page
     $currentRow = 0;
     $grandTotal = 0.0;
     $accumulate = 0.0;
