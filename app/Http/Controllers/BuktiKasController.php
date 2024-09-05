@@ -275,6 +275,19 @@ class BuktiKasController extends Controller
         return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas updated successfully.');
     }
 
+    public function getBuktiKasByPoNumber($poNumber)
+    {
+        // Fetch Tanda Terima records with the given PO number
+        $tandaTerimaRecords = TandaTerima::where('nomor_po', $poNumber)
+            ->with('bukti_kas') 
+            ->get();
+
+        // Extract Bukti Kas IDs
+        $buktiKasIds = $tandaTerimaRecords->pluck('bukti_kas.id');
+
+        // Return the IDs as a JSON response
+        return response()->json($buktiKasIds);
+    }
 
     public function finish(Request $request, $id)
     {

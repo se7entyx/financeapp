@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Supplier;
+use App\Models\TandaTerima;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -12,8 +13,9 @@ class SupplierController extends Controller
     {
         // Fetch all suppliers from the database
         $suppliers = Supplier::orderBy('name', 'asc')->get();
+        $usedPONumbers = TandaTerima::pluck('nomor_po')->toArray();
         // Return the view 'newtanda' with the suppliers and a title
-        return view('newtanda', ['suppliers' => $suppliers, 'title' => 'New Tanda Terima']);
+        return view('newtanda', ['suppliers' => $suppliers, 'usedPONumbers' => $usedPONumbers , 'title' => 'New Tanda Terima']);
     }
 
     public function store(Request $request)
@@ -70,11 +72,4 @@ class SupplierController extends Controller
         $supplier->delete();
         return redirect('/dashboard/admin/suppliers')->with('successdel', 'Delete successfull!');
     }
-
-    // public function showAll(){
-    //     // Fetch all suppliers from the database
-    //     $suppliers = Supplier::all();
-    //     dd($suppliers);// Return the view 'alldoc' with the suppliers
-    //     return view('alldoc', ['suppliers1' => $suppliers]);
-    // }
 }

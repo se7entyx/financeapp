@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/all', function () {
         return redirect('/dashboard/all/tanda-terima');
     });
+    Route::get('/bukti-kas/for-po/{poNumber}', [BuktiKasController::class, 'getBuktiKasByPoNumber']);
     // Route::get(
     //     '/dashboard/all/tanda-terima/{tandaTerima:id}',
     //     function (TandaTerima $tandaTerima) {

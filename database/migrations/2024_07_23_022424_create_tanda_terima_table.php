@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('po');
             $table->string('bpb');
             $table->string('surat_jalan');
+            $table->string('nomor_po')->nullable();            
             $table->string('tanggal_jatuh_tempo');
             $table->string('currency');
             $table->text('keterangan')->nullable();
