@@ -55,10 +55,21 @@
                             </li>
                             <li class="border-b border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center px-3 py-2">
-                                    <input id="po-checkbox" name="po" type="checkbox" value="true" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" @if ($tandaTerimaRecords->po == "true")
-                                    checked
-                                    @endif>
+                                    <input id="po-checkbox" name="po" type="checkbox" value="true"
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 
+        {{ $tandaTerimaRecords->po === 'true' ? 'cursor-not-allowed' : '' }}"
+                                        @if ($tandaTerimaRecords->po == "true") checked disabled @endif>
                                     <label for="po-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">PO</label>
+                                </div>
+                                <div id="po-input-container" class="mt-2">
+                                    <input type="text" id="po-number-input" class="@if ($tandaTerimaRecords->po == 'false')
+                                        hidden
+                                    @endif w-full px-3 py-2 text-sm border rounded-lg focus:ring-blue-500 focus:border-blue-500" name="po_number" placeholder="Masukkan Nomor PO" value="{{$tandaTerimaRecords->nomor_po}}">
+                                    <a href="#" id="check-po-button" class="@if ($tandaTerimaRecords->po == 'false')
+                                        hidden
+                                    @endif text-blue-500 hover:text-blue-700 my-2">
+                                        Cek
+                                    </a>
                                 </div>
                             </li>
                             <li class="border-b border-gray-200 dark:border-gray-600">
@@ -162,7 +173,84 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('dom');
+        const usedPONumbers = @json($usedPONumbers);
+        document.getElementById('po-number-input').addEventListener('blur', function() {
+            const poNumber = this.value;
+
+            if (poNumber) {
+                checkPoNumber(poNumber);
+            } else {
+                alert('Inputkan nomer PO');
+            }
+        });
+
+        document.getElementById('po-checkbox').addEventListener('change', function() {
+            const poNumberInput = document.getElementById('po-number-input');
+
+            if (this.checked) {
+                // Show the input field
+                poNumberInput.classList.remove('hidden');
+            } else {
+                // Hide the input field
+                poNumberInput.classList.add('hidden');
+                poNumberInput.value = null;
+            }
+        });
+
+        function checkPoNumber(poNumber) {
+            // Check if the entered PO number is in the array of used PO numbers
+            if (usedPONumbers.includes(poNumber)) {
+                alert('Nomor PO sudah digunakan');
+                const btn = document.getElementById('check-po-button');
+                btn.classList.remove('hidden');
+            } else {
+                const btn = document.getElementById('check-po-button');
+                btn.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('check-po-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            const poNumberInput = document.getElementById('po-number-input');
+            const poNumber = poNumberInput.value;
+
+            if (poNumber) {
+                fetchBuktiKasIDs(poNumber);
+                console.log(poNumber);
+            }
+        });
+
+
+        function fetchBuktiKasIDs(poNumber) {
+            const url = `/bukti-kas/for-po/${poNumber}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const validIds = data.filter(id => id !== null);
+
+                    if (validIds.length === 0) {
+                        alert('Bukti pengeluaran kas belum dibuat');
+                    } else {
+                        openBuktiKasTabs(validIds);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching Bukti Kas IDs:', error);
+                    alert('An error occurred while fetching Bukti Kas IDs.');
+                });
+        }
+
+        function openBuktiKasTabs(ids) {
+            console.log(ids);
+            ids.forEach((id, index) => {
+                setTimeout(() => {
+                    const url = `/dashboard/print/bukti-kas/${id}`;
+                    window.open(url, '_blank');
+                }, index * 1000);
+            });
+        }
 
         function synchronizeRows() {
             // Select all invoice rows
@@ -356,6 +444,7 @@
             transInput.addEventListener('input', handleTransNominalInput);
         });
     }
+
     function handleTransNominalInput() {
         const transRow = this.closest('.trans-row');
         const invoiceRow = findInvoiceRow(transRow);
