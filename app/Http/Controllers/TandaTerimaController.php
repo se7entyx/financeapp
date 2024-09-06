@@ -185,6 +185,7 @@ class TandaTerimaController extends Controller
         $usedPONumbers = TandaTerima::pluck('nomor_po')->toArray();
         $z = Supplier::orderBy('name', 'asc')->get();
         $title = 'Edit Tanda Terima';
+        // dd($tandaTerima);
 
         // dd($tandaTerima->invoices);
         return view('editdoc', ['tandaTerimaRecords' => $tandaTerima,'usedPONumbers' => $usedPONumbers , 'title' => $title, 'suppliers' => $z]);
@@ -218,12 +219,18 @@ class TandaTerimaController extends Controller
 
         // Update Tanda Terima record
         $tandaTerima = TandaTerima::findOrFail($id);
+        // dd($validated);
         $tandaTerima->supplier_id = $validated['supplier_id'];
         $tandaTerima->pajak = $validated['faktur'];
-        $tandaTerima->po = $validated['po'];
+        // $tandaTerima->po = $validated['po'];
         $tandaTerima->bpb = $validated['bpb'];
         $tandaTerima->currency = $validated['currency'];
         $tandaTerima->surat_jalan = $validated['sjalan'];
+        if($tandaTerima->po == 'true'){
+            $tandaTerima->po = 'true';
+        }else{
+            $tandaTerima->po = $validated['po'];
+        }
         $tandaTerima->nomor_po = $validated['po_number'];
         $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
         $tandaTerima->keterangan = $validated['notes'];
@@ -299,8 +306,8 @@ class TandaTerimaController extends Controller
         }
 
         return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
-    }
 
+    }
 
     public function printTandaTerima($id)
     {

@@ -55,10 +55,10 @@
                             </li>
                             <li class="border-b border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center px-3 py-2">
-                                    <input id="po-checkbox" name="po" type="checkbox" value="true"
+                                    <input id="po-checkbox" required name="po" type="checkbox" value="true"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 
         {{ $tandaTerimaRecords->po === 'true' ? 'cursor-not-allowed' : '' }}"
-                                        @if ($tandaTerimaRecords->po == "true") checked disabled @endif>
+                                        @if ($tandaTerimaRecords->po == "true") disabled checked  @endif>
                                     <label for="po-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">PO</label>
                                 </div>
                                 <div id="po-input-container" class="mt-2">
@@ -186,7 +186,6 @@
 
         document.getElementById('po-checkbox').addEventListener('change', function() {
             const poNumberInput = document.getElementById('po-number-input');
-
             if (this.checked) {
                 // Show the input field
                 poNumberInput.classList.remove('hidden');
@@ -384,13 +383,15 @@
 
             if (invoiceCount == 0) {
                 alert('Inputkan minimal 1 invoice');
-                event.preventDefault(); // Prevent the form from submitting
+                event.preventDefault();
             }
 
             if (hasInvalidRows) {
                 alert('Inputkan minimal 1 transaksi dalam 1 invoice');
-                event.preventDefault(); // Prevent form submission
+                event.preventDefault();
             }
+
+            
         });
     });
 
