@@ -25,7 +25,7 @@
         @if (session('success'))
         <div class="alert alert-success">
         <script>
-            alert("Bukti kas berhasil dibuat");
+            alert("Bukti kas berhasil diedit");
         </script>
         </div>
         @endif
