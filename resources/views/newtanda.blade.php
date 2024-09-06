@@ -127,7 +127,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log(document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
         var invoiceCount = 0;
         // Toggle checkbox values between 'true' and 'false'
         function toggleCheckboxValue(checkboxId) {

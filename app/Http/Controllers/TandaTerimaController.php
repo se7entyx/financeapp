@@ -182,11 +182,12 @@ class TandaTerimaController extends Controller
     public function showEditForm($id)
     {
         $tandaTerima = TandaTerima::with('invoices')->findOrFail($id);
-        $z = Supplier::all();
+        $usedPONumbers = TandaTerima::pluck('nomor_po')->toArray();
+        $z = Supplier::orderBy('name', 'asc')->get();
         $title = 'Edit Tanda Terima';
 
         // dd($tandaTerima->invoices);
-        return view('editdoc', ['tandaTerimaRecords' => $tandaTerima, 'title' => $title, 'suppliers' => $z]);
+        return view('editdoc', ['tandaTerimaRecords' => $tandaTerima,'usedPONumbers' => $usedPONumbers , 'title' => $title, 'suppliers' => $z]);
     }
 
     public function update(Request $request, $id)
@@ -199,6 +200,7 @@ class TandaTerimaController extends Controller
             'po' => 'nullable|string',
             'bpb' => 'nullable|string',
             'sjalan' => 'nullable|string',
+            'po_number' => 'nullable|string',
             'jatuh_tempo' => 'required|string',
             'currency' => 'required|string|in:Rp,USD',
             'notes' => 'nullable|string',
@@ -222,6 +224,7 @@ class TandaTerimaController extends Controller
         $tandaTerima->bpb = $validated['bpb'];
         $tandaTerima->currency = $validated['currency'];
         $tandaTerima->surat_jalan = $validated['sjalan'];
+        $tandaTerima->nomor_po = $validated['po_number'];
         $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
         $tandaTerima->keterangan = $validated['notes'];
         $tandaTerima->save();
