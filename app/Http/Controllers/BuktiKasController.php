@@ -188,7 +188,7 @@ class BuktiKasController extends Controller
         $x = BuktiKas::find($id);
         $x->delete();
 
-        return back()->with('success', 'Action completed successfully!');
+        return back()->with('successs', 'Delete successfuly!');
     }
     public function showEditForm($id)
     {
@@ -200,6 +200,7 @@ class BuktiKasController extends Controller
         // Create a base query for TandaTerima
         $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
             ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
+            ->where('po', 'true')
             ->where('tanda_terima.user_id', $userId);
 
         // Check if $id is provided

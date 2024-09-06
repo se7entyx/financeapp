@@ -22,6 +22,14 @@
             </div>
         </div>
 
+        @if (session('successs'))
+        <div class="alert alert-success">
+        <script>
+            alert("Bukti kas berhasil dihapus");
+        </script>
+        </div>
+        @endif
+
         <nav class="bg-gray-800 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
             <div class="flex flex-wrap justify-between items-center">
                 <!-- Left section: Links -->
