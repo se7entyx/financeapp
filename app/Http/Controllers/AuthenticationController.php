@@ -23,6 +23,10 @@ class AuthenticationController extends Controller
         ]);
     }
 
+    public function indexProfile(){
+        return view('profile',['title' => 'Profile']);
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();

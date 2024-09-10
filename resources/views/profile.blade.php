@@ -32,7 +32,7 @@
     <div id="passwordModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg shadow-md p-6 w-full max-w-md">
             <h2 class="text-2xl font-bold mb-4">Change Password</h2>
-            <form id="changePasswordForm" method="post" action="/profile" onsubmit="return validatePassword()">
+            <form id="changePasswordForm" method="post" action="{{route('changePassword')}}" onsubmit="return validatePassword()">
                 @csrf
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="new_password">New Password:</label>

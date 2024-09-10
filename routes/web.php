@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Auth;
 // Authentication routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticationController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthenticationController::class, 'authenticate']);
+    Route::post('/login', [AuthenticationController::class, 'authenticate'])->name('login');
 });
 
 // Redirect root to login
@@ -38,33 +38,33 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/new/tanda-terima', [SupplierController::class, 'showForm'])->name('new.tanda-terima');
     Route::post('/dashboard/new/tanda-terima2', [TandaTerimaController::class, 'store'])->name('newtanda');
-    Route::get('/bukti-kas/{id}/invoices', [TandaTerimaController::class, 'getInvoices']);
+    Route::get('/bukti-kas/{id}/invoices', [TandaTerimaController::class, 'getInvoices'])->name('getInvoices');
     Route::get('/tanda-terima/{id}/invoices', [TandaTerimaController::class, 'getInvoicesDetail']);
     Route::get('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'index'])->name('buktikas.index');
     Route::post('/dashboard/new/bukti-pengeluaran', [BuktiKasController::class, 'store'])->name('buktikas.store');
     Route::get('/bukti-kas/{id}/details', [BuktiKasController::class, 'getDetails']);
     Route::get('/dashboard/edit/tanda-terima/{id}', [TandaTerimaController::class, 'showEditForm'])->name('tanda-terima.edit');
-    Route::get('/dashboard/print/tanda-terima/{id}', [TandaTerimaController::class, 'printTandaTerima']);
+    Route::get('/dashboard/print/tanda-terima/{id}', [TandaTerimaController::class, 'printTandaTerima'])->name('tanda-terima.print');
     Route::put('/dashboard/edit/tanda-terima/{id}', [TandaTerimaController::class, 'update'])->name('tanda-terima.update');
     Route::get('/dashboard/edit/bukti-kas/{id}', [BuktiKasController::class, 'showEditForm'])->name('bukti-kas.edit');
     Route::put('/dashboard/edit/bukti-kas/{id}', [BuktiKasController::class, 'update'])->name('bukti-kas-update.edit');
     Route::put('/dashboard/finish/bukti-kas/{id}', [BuktiKasController::class, 'finish'])->name('finish');
-    Route::get('/get-supplier-info/{tandaTerimaId}/{buktiKasId?}', [BuktiKasController::class, 'getSupplierInfo']);
-    Route::get('/dashboard/print/bukti-kas/{id}', [BuktiKasController::class, 'printBuktiKas']);
-    Route::get('/dashboard/print/mandiri/{id}', [BuktiKasController::class, 'printmandiri']);
+    Route::get('/get-supplier-info/{tandaTerimaId}/{buktiKasId?}', [BuktiKasController::class, 'getSupplierInfo'])->name('get-supplier-info');
+    Route::get('/dashboard/print/bukti-kas/{id}', [BuktiKasController::class, 'printBuktiKas'])->name('bukti-kas.print');
+    Route::get('/dashboard/print/mandiri/{id}', [BuktiKasController::class, 'printmandiri'])->name('mandiri.print');
     Route::post('/post-bukti-info', [BuktiKasController::class, 'saveKeterangan'])->name('buktikas.saveKeterangan');
     Route::get('/dashboard/all', function () {
         return redirect('/dashboard/all/tanda-terima');
     });
-    Route::get('/bukti-kas/for-po/{poNumber}', [BuktiKasController::class, 'getBuktiKasByPoNumber']);
+    Route::get('/bukti-kas/for-po/{poNumber}', [BuktiKasController::class, 'getBuktiKasByPoNumber'])->name('bukti.kas.for-po');
     // Route::get(
     //     '/dashboard/all/tanda-terima/{tandaTerima:id}',
     //     function (TandaTerima $tandaTerima) {
     //         return view('alldocs',[CombinedController::class,'getDetailTandaTerima']);   
     //     }
     // )->middleware('auth');
-    Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware('auth');
-    Route::post('/profile', [AuthenticationController::class, 'updatePassword'])->middleware('auth');
+    Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware('auth')->name('logout');
+    Route::post('/profile', [AuthenticationController::class, 'updatePassword'])->middleware('auth')->name('changePassword');
     Route::get('/dashboard/all/tanda-terima', [TandaTerimaController::class, 'getTandaTerima'])->name('all.tanda-terima');
     Route::delete('/tanda-terima/{id}/delete', [TandaTerimaController::class, 'deleteTt'])->name('delete.tanda-terima');
     Route::delete('/bukti-kas/{id}/delete', [BuktiKasController::class, 'deleteBk'])->name('delete.bukti-kas');
@@ -72,7 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/my/tanda-terima', [TandaTerimaController::class, 'getMyTandaTerima'])->name('my.tanda-terima');
     Route::get('/dashboard/my/bukti-kas', [BuktiKasController::class, 'getMyBuktiKas'])->name('my.bukti-kas');
     // Route::view('dashboard/my', 'mydoc', ['title' => 'My Docs']);
-    Route::view('profile', 'profile', ['title' => 'Profile']);
+    Route::get('/profile', [AuthenticationController::class, 'indexProfile'])->name('indexProfile');
 
     // Route::view('dashboard/new/tanda-terima', 'newtanda', ['title' => 'New Tanda Terima']);
     // Route::view('dashboard/new/bukti-pengeluaran', 'newbukti', ['title' => 'New Bukti Pengeluaran Kas / Bank']);
@@ -84,7 +84,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/dasboard/admin/suppliers', [SupplierController::class, 'store'])->name('supplier.store');
     Route::put('/dashboard/admin/supplier/{id}', [SupplierController::class, 'updateSupplier'])->name('supplier.updateSupplier');
     Route::delete('/dashboard/admin/supplier/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
-    Route::post('/dasboard/admin/users', [AuthenticationController::class, 'store'])->name('users.store');
+    Route::post('/dashboard/admin/users', [AuthenticationController::class, 'store'])->name('users.store');
     Route::put('/dashboard/admin/users/{id}', [AuthenticationController::class, 'updateUser'])->name('users.updateUser');
     Route::delete('/dashboard/admin/users/{id}', [AuthenticationController::class, 'destroy'])->name('users.destroy');
     Route::get('/dashboard/admin/tax', [TaxController::class, 'getTax'])->name('tax.getTax');

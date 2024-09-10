@@ -241,7 +241,7 @@
                 // Populate the update modal with user data
                 const updateForm = document.getElementById('edit-form');
                 if (updateForm) {
-                    updateForm.action = '/dashboard/admin/tax/' + id;
+                    updateForm.action ="{{ route('tax.update', ':id') }}".replace(':id', id);
                     console.log(updateForm.action);
                     document.getElementById('editname').value = name;
                     document.getElementById('editpercentage').value = percentage;
@@ -276,7 +276,7 @@
                 console.log(id);
                 const deleteForm = document.getElementById('delete-form');
                 if (deleteForm) {
-                    deleteForm.action = '/dashboard/admin/tax/' + id;
+                    deleteForm.action ="{{ route('tax.destroy', ':id') }}".replace(':id', id);
                 }
             });
         });

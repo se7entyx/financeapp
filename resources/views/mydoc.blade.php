@@ -105,17 +105,17 @@
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
                                     @if ($tt->bukti_kas)
                                         @if ($tt->bukti_kas->status == 'Belum dibayar')
-                                        <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                        <a href="{{ route('tanda-terima.edit', $tt->id) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
                                         @endif
                                     @else
-                                    <a href="/dashboard/edit/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                    <a href="{{ route('tanda-terima.edit', $tt->id) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
                                     @endif
-                                    <form action="/tanda-terima/{{$tt->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form">
+                                    <form action="{{ route('delete.tanda-terima', $tt->id) }}" method="POST" class="inline-block m-0 p-0 delete-form">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
                                     </form>
-                                    <a href="/dashboard/print/tanda-terima/{{$tt->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                    <a href="{{ route('tanda-terima.print', $tt->id) }}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
                                 </div>
                             </td>
                         </tr>

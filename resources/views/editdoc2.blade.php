@@ -9,9 +9,9 @@
     <section class="bg-white dark:bg-gray-900 w-full">
         @if (session('success'))
         <div class="alert alert-success">
-        <script>
-            alert("Bukti kas berhasil dibuat");
-        </script>
+            <script>
+                alert("Bukti kas berhasil dibuat");
+            </script>
         </div>
         @endif
         <div id="loading-container" class="hidden fixed inset-0 flex items-center justify-center bg-transparent">
@@ -33,7 +33,7 @@
         $tahun = $parts[3];
         @endphp
         <div class="py-4 px-8 mx-auto max-w-7xl">
-            <form id="my-form" action="/dashboard/edit/bukti-kas/{{$buktiKasRecords->id}}" method="post">
+            <form id="my-form" action="{{ route('bukti-kas.edit', $buktiKasRecords->id) }}" method="post">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-x-8 gap-y-4 mb-6 custom-lg:grid-cols-4">
@@ -242,13 +242,17 @@
 
             function updateSupplierInfo(id) {
                 const tandaTerimaId = id;
-                const buktiKasId = "{{ $buktiKasRecords->id }}";
+                const buktiKasId = "{{ $buktiKasRecords->id }}"; // If `buktiKasRecords` is passed to the Blade template
                 const loadingContainer = document.getElementById('loading-container');
 
                 // Show the loading animation
                 loadingContainer.classList.remove('hidden');
 
-                fetch(`/get-supplier-info/${tandaTerimaId}/${buktiKasId}?`) // Ensure the correct parameter name
+                // Dynamically generate the URL using Laravel's route helper
+                const url = "{{ route('get-supplier-info', [':tandaTerimaId', ':buktiKasId']) }}";
+                const finalUrl = url.replace(':tandaTerimaId', tandaTerimaId).replace(':buktiKasId', buktiKasId);
+
+                fetch(finalUrl)
                     .then(response => response.json())
                     .then(data => {
                         if (data.supplier_name) {

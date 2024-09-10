@@ -29,7 +29,7 @@
         </div>
         @endif
         <div class="py-8 px-4 mx-auto max-w-7xl">
-            <form id="addtandaterima" action="/dashboard/new/tanda-terima2" method="post">
+            <form id="addtandaterima" action="{{route('newtanda')}}" method="post">
                 @csrf
                 <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
                     <div class="sm:col-span-2 md:col-span-1">
@@ -185,7 +185,7 @@
 
 
         function fetchBuktiKasIDs(poNumber) {
-            const url = `/bukti-kas/for-po/${poNumber}`;
+            const url = "{{ route('bukti.kas.for-po', ':poNumber') }}".replace(':poNumber', poNumber);
 
             fetch(url)
                 .then(response => response.json())
@@ -206,9 +206,10 @@
 
         function openBuktiKasTabs(ids) {
             console.log(ids);
+            const baseUrl = "{{ route('bukti-kas.print', ':id') }}";
             ids.forEach((id, index) => {
                 setTimeout(() => {
-                    const url = `/dashboard/print/bukti-kas/${id}`;
+                    const url = baseUrl.replace(':id', id);
                     window.open(url, '_blank');
                 }, index * 1000);
             });

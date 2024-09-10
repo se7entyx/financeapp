@@ -108,9 +108,9 @@
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas">View Details</a>
                                     @if ($bk->status == 'Belum dibayar')
-                                    <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
+                                    <a href="{{ route('bukti-kas.edit', $bk->id) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
                                     @endif                               
-                                    <form action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form-bk">
+                                    <form action="{{ route('delete.bukti-kas', $bk->id) }}" method="POST" class="inline-block m-0 p-0 delete-form-bk">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
@@ -118,8 +118,8 @@
                                     <button id='finish-button' type="button" data-modal-target="finishModal" data-modal-toggle="finishModal" class="flex w-full items-center dark:hover:bg-gray-600 dark:hover:text-white text-blue-500 hover:text-blue-700 dark:text-gray-200" data-nomer="{{ $bk->nomer }}" data-tanggal="{{ $bk->tanggal }}" data-user-id="{{ $bk->id }}">
                                         Finish
                                     </button>
-                                    <a href="/dashboard/print/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
-                                    <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
+                                    <a href="{{ route('bukti-kas.print', $bk->id) }}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                    <a href="{{ route('mandiri.print', $bk->id) }}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
                                 </div>
                             </td>
                         </tr>
@@ -258,7 +258,7 @@
                 const dibuatOleh = row.querySelector('.dibuat-oleh').textContent;
                 const status = row.querySelector('.status').textContent;
 
-                fetch(`/bukti-kas/${typeId}/invoices`)
+                fetch(`{{ route('getInvoices', ':id') }}`.replace(':id', typeId))
                     .then(response => response.json())
                     .then(data => {
                         const formatter = new Intl.NumberFormat('en-US', {
@@ -422,8 +422,8 @@
                 // Populate the update modal with user data
                 const finishForm = document.getElementById('finish-form');
                 if (finishForm) {
-                    finishForm.action = '/dashboard/finish/bukti-kas/' + id;
-                    // Split the 'nomer' value
+                    const urlTemplate = "{{ route('finish', ':id') }}";
+                    finishForm.action = urlTemplate.replace(':id', id);                    // Split the 'nomer' value
                     const nomerParts = nomer.split(/\s*\/\s*/);
                     const kode = nomerParts[0];
                     const nomor = nomerParts[1];

@@ -10,7 +10,7 @@
     <div class="flex flex-col overflow-y-auto py-5 px-3 h-full bg-gray-800 border-gray-700">
         <ul class="space-y-2">
             <li>
-                <a href="/dashboard" class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700 group">
+                <a href="{{route('dashboard')}}" class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700 group">
                     <i class="fa-solid fa-home"></i>
                     <span class="ml-3">Dashboard</span>
                 </a>
@@ -18,7 +18,7 @@
         </ul>
         <ul class="pt-5 mt-5 space-y-2 border-t border-gray-700">
             <li>
-                <a href="/profile" class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700 group">
+                <a href="{{route('indexProfile')}}" class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-700 group">
                     <i class="fa-solid fa-user"></i>
                     <span class="ml-3">{{Auth::user()->name}} </span>
                 </a>
@@ -35,10 +35,10 @@
                 </button>
                 <ul id="dropdown-pages3" class="hidden py-2 space-y-2">
                     <li>
-                        <a href="/dashboard/new/tanda-terima" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Tanda Terima</a>
+                        <a href="{{route('new.tanda-terima')}} " class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Tanda Terima</a>
                     </li>
                     <li>
-                        <a href="/dashboard/new/bukti-pengeluaran" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Bukti Pengeluaran Kas / Bank</a>
+                        <a href="{{route('buktikas.index')}}" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Bukti Pengeluaran Kas / Bank</a>
                     </li>
                 </ul>
             </li>
@@ -52,13 +52,13 @@
                 </button>
                 <ul id="dropdown-pages" class="hidden py-2 space-y-2">
                     <li>
-                        <a href="/dashboard/my/tanda-terima" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Tanda Terima</a>
+                        <a href="{{route('my.tanda-terima')}}" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Tanda Terima</a>
                     </li>
                     <li>
-                        <a href="/dashboard/my/bukti-kas" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Bukti Pengeluaran Kas / Bank</a>
+                        <a href="{{route('my.bukti-kas')}}" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Bukti Pengeluaran Kas / Bank</a>
                     </li>
                     <li>
-                        <a href="/dashboard/all/tanda-terima" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">All Documents</a>
+                        <a href="{{route('all.tanda-terima')}}" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">All Documents</a>
                     </li>
                 </ul>
             </li>
@@ -73,13 +73,13 @@
                 </button>
                 <ul id="dropdown-pages2" class="hidden py-2 space-y-2">
                     <li>
-                        <a href="/dashboard/admin/users" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">User</a>
+                        <a href="{{route('users.getUsers')}}" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">User</a>
                     </li>
                     <li>
-                        <a href="/dashboard/admin/suppliers" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Supplier</a>
+                        <a href="{{route('suppliers.getSuppliers')}}" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Supplier</a>
                     </li>
                     <li>
-                        <a href="/dashboard/admin/tax" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Tax</a>
+                        <a href="{{route('tax.getTax')}}" class="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">Tax</a>
                     </li>
                 </ul>
             </li>
@@ -87,7 +87,7 @@
         </ul>
         <ul class="mt-auto space-y-2">
             <li>
-                <form action="/logout" method="post">
+                <form action="{{route('logout')}}" method="post">
                     @csrf
                     <button type="submit" class="flex items-center p-2 text-base w-full font-normal rounded-lg text-white hover:bg-gray-700 group">
                         <i class="fa-solid fa-sign-out-alt"></i>

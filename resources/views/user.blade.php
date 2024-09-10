@@ -250,7 +250,8 @@
                     // Populate the update modal with user data
                     const updateForm = document.getElementById('edit-form');
                     if (updateForm) {
-                        updateForm.action = '/dashboard/admin/users/' + id;
+                        url = "{{ route('users.updateUser', ':id') }}".replace(':id', id);
+                        updateForm.action = url; 
                         console.log(updateForm.action);
                         document.getElementById('editname').value = name;
                         document.getElementById('editusername').value = username;
@@ -285,7 +286,7 @@
                     console.log(id);
                     const deleteForm = document.getElementById('delete-form');
                     if (deleteForm) {
-                        deleteForm.action = '/dashboard/admin/users/' + id;
+                        deleteForm.action = "{{ route('users.destroy', ':id') }}".replace(':id', id);
                     }
                 });
             });

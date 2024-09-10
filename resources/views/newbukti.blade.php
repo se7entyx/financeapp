@@ -15,7 +15,7 @@
     </div>
     @endif
     <div class="py-4 px-8 mx-auto max-w-7xl min-h-screen">
-      <form id="my-form" action="/dashboard/new/bukti-pengeluaran" method="post">
+      <form id="my-form" action=" {{route('buktikas.store')}} " method="post">
         @csrf
         <div class="grid gap-x-8 gap-y-4 mb-6 custom-lg:grid-cols-4">
           <div class="custom-lg:col-span-1 custom-md:col-span-2 custom-sm:col-span-4">
@@ -212,8 +212,8 @@
 
       function updateSupplierInfo(id) {
         const tandaTerimaId = id;
-
-        fetch(`/get-supplier-info/${tandaTerimaId}`) // Ensure the correct parameter name
+        const url = "{{ route('get-supplier-info', [':tandaTerimaId']) }}".replace(':tandaTerimaId', tandaTerimaId);
+        fetch(url) // Ensure the correct parameter name
           .then(response => response.json())
           .then(data => {
             if (data.supplier_name) {
