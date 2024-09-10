@@ -36,8 +36,8 @@
             <form id="my-form" action="/dashboard/edit/bukti-kas/{{$buktiKasRecords->id}}" method="post">
                 @csrf
                 @method('PUT')
-                <div class="grid gap-x-8 gap-y-4 mb-6 lg:grid-cols-4 md:grid-cols-1 sm:grid-cols-1">
-                    <div class="col-span-1">
+                <div class="grid gap-x-8 gap-y-4 mb-6 custom-lg:grid-cols-4">
+                    <div class="custom-lg:col-span-1 custom-md:col-span-2 custom-sm:col-span-4">
                         <label for="nomer-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomer <span class="required">*</span></label>
                         <div class="flex space-x-2">
                             <select id="dropdown-kode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm block rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/3 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
@@ -72,7 +72,7 @@
                         </div>
                         <input type="hidden" id="nomer" name="nomer" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                     </div>
-                    <div class="col-span-1">
+                    <div class="custom-lg:col-span-1 custom-md:col-span-2 custom-sm:col-span-4">
                         <label for="dropdown-no-tanda-terima" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Tanda Terima <span class="required">*</span></label>
                         <div class="relative">
                             <input type="text" id="dropdown-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Masukan nomor tanda terima" autocomplete="off" value="{{$buktiKasRecords->tanda_terima->increment_id}}" required>
@@ -83,7 +83,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-span-1">
+                    <div class="custom-lg:col-span-1 custom-md:col-span-2 custom-sm:col-span-4">
                         <label for="input-part3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dibayarkan kepada <span class="required">*</span></label>
                         <input type="text" id="input-supplier" name="supplier-name" value="{{$buktiKasRecords->tanda_terima->supplier->name}}" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic Input" readonly required>
                         <input type="hidden" id="input-no-tanda-terima-hidden" name="tanda_terima_id_hidden" value="{{$buktiKasRecords->tanda_terima_id}}" readonly>
@@ -92,9 +92,9 @@
                         <input type="hidden" id="bukti_data" name="bukti_data" value="">
                         <input type="hidden" id="nomorPart" value={{$nomor}}>
                     </div>
-                    <div class="col-span-1">
+                    <div class="custom-lg:col-span-1 custom-md:col-span-2 custom-sm:col-span-4">
                         <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal jatuh tempo <span class="required">*</span></label>
-                        <div class="relative max-w-sm">
+                        <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
@@ -103,19 +103,19 @@
                             <input id="datepicker-autohide-x" datepicker-format="dd-mm-yyyy" datepicker-autohide type="text" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 cursor-not-allowed focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Automatic input" value="{{$buktiKasRecords->tanda_terima->tanggal_jatuh_tempo}}" readonly required>
                         </div>
                     </div>
-                    <div class="col-start-1">
+                    <div class="custom-lg:col-span-1 custom-md:col-span-2 custom-sm:col-span-4">
                         <label for="input-part4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kas/Cheque/Bilyet Giro Bank <span class="required">*</span></label>
                         <input type="text" id="input-bank" name="kas" value="Mandiri" class=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" readonly>
                     </div>
-                    <div class="col-span-1">
+                    <div class="custom-lg:col-span-1 custom-md:col-span-2 custom-sm:col-span-4">
                         <label for="berita_transaksi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Berita Transaksi <span class="required">*</span></label>
                         <input type="text" id="berita_transaksi" name="berita_transaksi" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan berita" value="{{ $buktiKasRecords->berita_transaksi }}" required>
                     </div>
-                    <div class="col-span-1">
+                    <div class="custom-lg:col-span-1 custom-md:col-span-2 custom-sm:col-span-4">
                         <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. cek</label>
                         <input type="number" id="number-input" name="no_cek" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan nomor" value="{{$buktiKasRecords->no_cek}}">
                     </div>
-                    <div class="col-span-1">
+                    <div class="custom-lg:col-span-1 custom-md:col-span-2 custom-sm:col-span-4">
                         <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan</label>
                         <input type="text" id="keterangan" name="keterangan" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan keterangan" value="{{ $buktiKasRecords->keterangan }}">
                     </div>
