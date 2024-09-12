@@ -179,19 +179,31 @@ class TandaTerimaController extends Controller
         return back()->with('success', 'Action completed successfully!');
     }
 
-    public function showEditForm($id)
+    public function showEditForm($id, $from)
     {
         $tandaTerima = TandaTerima::with('invoices')->findOrFail($id);
+        if(Auth::user()->role != 'admin' && $tandaTerima->user_id != Auth::id()) {
+            return redirect()->route('my.tanda-terima')->with('false', 'error encounter');
+        }
+
+        if(Auth::user()->role != 'admin' && $from == 'all') {
+            return redirect()->route('my.tanda-terima')->with('false', 'error encounter');
+        }
+
+        if(Auth::user()->role == 'admin' && $from == 'my' && $tandaTerima->user_id != Auth::id()) {
+            return redirect()->route('all.tanda-terima')->with('false', 'error encounter');
+        }
+
         $usedPONumbers = TandaTerima::pluck('nomor_po')->toArray();
         $z = Supplier::orderBy('name', 'asc')->get();
         $title = 'Edit Tanda Terima';
         // dd($tandaTerima);
 
         // dd($tandaTerima->invoices);
-        return view('editdoc', ['tandaTerimaRecords' => $tandaTerima,'usedPONumbers' => $usedPONumbers , 'title' => $title, 'suppliers' => $z]);
+        return view('editdoc', ['tandaTerimaRecords' => $tandaTerima,'usedPONumbers' => $usedPONumbers , 'title' => $title, 'suppliers' => $z, 'from' => $from]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $from)
     {
         // Validate Tanda Terima data
         $validated = $request->validate([
@@ -304,9 +316,12 @@ class TandaTerimaController extends Controller
                 $transIndex++;
             }
         }
-
-        return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
-
+        if($from == 'my') {
+            return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
+        }
+        elseif($from == 'all') {
+            return redirect()->route('all.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
+        }
     }
 
     public function printTandaTerima($id)

@@ -22,6 +22,14 @@
             </div>
         </div>
 
+        @if (session('success'))
+        <div class="alert alert-success">
+        <script>
+            alert("Bukti kas berhasil diedit");
+        </script>
+        </div>
+        @endif
+
         @if (session('successs'))
         <div class="alert alert-success">
         <script>
@@ -34,8 +42,8 @@
             <div class="flex flex-wrap justify-between items-center">
                 <!-- Left section: Links -->
                 <div class="flex justify-start items-center space-x-4 lg:space-x-8">
-                    <a href="/dashboard/all/tanda-terima" class="text-gray-300 hover:text-white" id="tanda-terima-link">Tanda Terima</a>
-                    <a href="/dashboard/all/bukti-kas" class="text-white hover:text-white" id="bukti-kas-keluar-link">Bukti Kas Keluar</a>
+                    <a href="{{route('all.tanda-terima')}}" class="text-gray-300 hover:text-white" id="tanda-terima-link">Tanda Terima</a>
+                    <a href="{{route('all.bukti-kas')}}" class="text-white hover:text-white" id="bukti-kas-keluar-link">Bukti Kas Keluar</a>
                 </div>
 
 
@@ -44,7 +52,7 @@
                 <div class="flex flex-wrap justify-center items-center space-x-2 lg:space-x-4 mt-2 lg:mt-0">
                     <form id="filter-form" action="#" method="GET" class="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto m-0 p-0">
                         <div class="relative mt-1 lg:mt-0 inline-flex">
-                            <a href="/dashboard/all/bukti-kas"> <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span class="fa-solid fa-filter-circle-xmark"></span> Clear</button>
+                            <a href="{{route('all.bukti-kas')}}"> <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span class="fa-solid fa-filter-circle-xmark"></span> Clear</button>
                             </a>
                         </div>
                         <div class="relative mt-1 lg:mt-0">
@@ -109,9 +117,9 @@
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas">View Details</a>
                                     @if ($bk->status == 'Belum dibayar')
-                                    <a href="/dashboard/edit/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
+                                    <a href="{{ route('bukti-kas.edit', ['id' => $bk->id, 'from' => 'all']) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
                                     @endif                    
-                                    <form action="/bukti-kas/{{$bk->id}}/delete" method="POST" class="inline-block m-0 p-0 delete-form-bk">
+                                    <form action="{{ route('delete.bukti-kas', ['id' => $bk->id, 'from' => 'all']) }}" method="POST" class="inline-block m-0 p-0 delete-form-bk">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
@@ -119,8 +127,8 @@
                                     <button id='finish-button' type="button" data-modal-target="finishModal" data-modal-toggle="finishModal" class="flex w-full items-center dark:hover:bg-gray-600 dark:hover:text-white text-blue-500 hover:text-blue-700 dark:text-gray-200" data-nomer="{{ $bk->nomer }}" data-tanggal="{{ $bk->tanggal }}" data-user-id="{{ $bk->id }}">
                                         Finish
                                     </button>
-                                    <a href="/dashboard/print/bukti-kas/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
-                                    <a href="/dashboard/print/mandiri/{{$bk->id}}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
+                                    <a href="{{ route('bukti-kas.print', ['id' => $bk->id]) }}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                    <a href="{{ route('mandiri.print', ['id' => $bk->id]) }}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
                                 </div>
                             </td>
                             @else

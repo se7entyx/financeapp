@@ -33,7 +33,7 @@
         $tahun = $parts[3];
         @endphp
         <div class="py-4 px-8 mx-auto max-w-7xl">
-            <form id="my-form" action="{{ route('bukti-kas.edit', $buktiKasRecords->id) }}" method="post">
+            <form id="my-form" action="{{ route('bukti-kas.edit', ['id' => $buktiKasRecords->id, 'from' => $from ]) }}" method="post">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-x-8 gap-y-4 mb-6 custom-lg:grid-cols-4">
@@ -243,14 +243,15 @@
             function updateSupplierInfo(id) {
                 const tandaTerimaId = id;
                 const buktiKasId = "{{ $buktiKasRecords->id }}"; // If `buktiKasRecords` is passed to the Blade template
+                const from = "{{ $from }}";
                 const loadingContainer = document.getElementById('loading-container');
 
                 // Show the loading animation
                 loadingContainer.classList.remove('hidden');
 
                 // Dynamically generate the URL using Laravel's route helper
-                const url = "{{ route('get-supplier-info', [':tandaTerimaId', ':buktiKasId']) }}";
-                const finalUrl = url.replace(':tandaTerimaId', tandaTerimaId).replace(':buktiKasId', buktiKasId);
+                const url = "{{ route('get-supplier-info', [':tandaTerimaId', ':buktiKasId', ':from']) }}";
+                const finalUrl = url.replace(':tandaTerimaId', tandaTerimaId).replace(':buktiKasId', buktiKasId).replace(':from', from);
 
                 fetch(finalUrl)
                     .then(response => response.json())

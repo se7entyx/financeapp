@@ -69,16 +69,25 @@ class BuktiKasController extends Controller
         ]);
     }
 
-    public function getSupplierInfo($tandaTerimaInc, $buktiKasId = null)
+    public function getSupplierInfo($tandaTerimaInc, $buktiKasId = null, $from = null)
     {
         try {
             $userId = Auth::id();
+            $role = Auth::user()->role;
 
-            $tandaTerima = TandaTerima::with(['supplier', 'invoices.transaction', 'bukti_kas'])
+            if($role == 'admin' && $from == 'all') {
+                $tandaTerima = TandaTerima::with(['supplier', 'invoices.transaction', 'bukti_kas'])
+                ->where('increment_id', $tandaTerimaInc)
+                ->where('po','true')
+                ->first();
+            }
+            else {
+                $tandaTerima = TandaTerima::with(['supplier', 'invoices.transaction', 'bukti_kas'])
                 ->where('user_id', $userId)
                 ->where('increment_id', $tandaTerimaInc)
                 ->where('po','true')
                 ->first();
+            }
 
             if ($tandaTerima) {
                 if ($tandaTerima->bukti_kas && $tandaTerima->bukti_kas->id !== $buktiKasId) {
@@ -190,18 +199,36 @@ class BuktiKasController extends Controller
 
         return back()->with('successs', 'Delete successfuly!');
     }
-    public function showEditForm($id)
+    public function showEditForm($id, $from)
     {
         $buktikas = BuktiKas::with(['tanda_terima.supplier', 'tanda_terima.invoices'])->findOrFail($id);
+        $role = Auth::user()->role;
+        if(Auth::user()->role != 'admin' && $buktikas->user_id != Auth::id()) {
+            return redirect()->route('my.bukti-kas')->with('false', 'error encounter');
+        }
+
+        if(Auth::user()->role != 'admin' && $from == 'all') {
+            return redirect()->route('my.bukti-kas')->with('false', 'error encounter');
+        }
+
+        if(Auth::user()->role == 'admin' && $from == 'my' && $buktikas->user_id != Auth::id()) {
+            return redirect()->route('all.bukti-kas')->with('false', 'error encounter');
+        }
 
         $title = 'Edit Bukti Kas';
         $userId = Auth::id();
 
-        // Create a base query for TandaTerima
-        $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
+        if($role == 'admin' && $from == 'all') {
+            $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
+            ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
+            ->where('po', 'true');
+        }
+        else {
+            $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
             ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
             ->where('po', 'true')
             ->where('tanda_terima.user_id', $userId);
+        }
 
         // Check if $id is provided
         if ($id) {
@@ -232,11 +259,12 @@ class BuktiKasController extends Controller
             'title' => $title,
             'tandaTerimas' => $tandaTerimaOption,
             'ppn' => $ppn,
-            'pph' => $pph
+            'pph' => $pph,
+            'from' => $from
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $from)
     {
         // Validate the request
         $validated = $request->validate([
@@ -275,7 +303,12 @@ class BuktiKasController extends Controller
             }
         }
 
-        return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas updated successfully.');
+        if($from == 'my') {
+            return redirect()->route('my.bukti-kas')->with('success', 'Tanda Terima updated successfully.');
+        }
+        elseif($from == 'all') {
+            return redirect()->route('all.bukti-kas')->with('success', 'Tanda Terima updated successfully.');
+        }
     }
 
     public function getBuktiKasByPoNumber($poNumber)
@@ -348,7 +381,7 @@ class BuktiKasController extends Controller
 
         // Send PDF to printer
         $fileUrl = asset('storage/bukti_kas.pdf');
-        return redirect($fileUrl);
+        return $dompdf->stream($filePath, ['Attachment' => 0]);
     }
 
     public function printMandiri($id)

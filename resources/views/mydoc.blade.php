@@ -28,7 +28,7 @@
                 <div class="flex flex-wrap justify-bet items-center space-x-2 lg:space-x-4 mt-2 lg:mt-0">
                     <form id="filter-form" action="#" method="GET" class="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto m-0 p-0 items-center">
                         <div class="relative mt-1 lg:mt-0 inline-flex">
-                            <a href="/dashboard/my/tanda-terima"> <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span class="fa-solid fa-filter-circle-xmark"></span> Clear</button></a>
+                            <a href="{{route('my.tanda-terima')}}"> <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span class="fa-solid fa-filter-circle-xmark"></span> Clear</button></a>
                         </div>
                         <div class="relative mt-1 lg:mt-0">
                             <label for="start-date" class="sr-only">Start Date</label>
@@ -105,10 +105,10 @@
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
                                     @if ($tt->bukti_kas)
                                         @if ($tt->bukti_kas->status == 'Belum dibayar')
-                                        <a href="{{ route('tanda-terima.edit', $tt->id) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                        <a href="{{ route('tanda-terima.edit', ['id' => $tt->id, 'from' => 'my']) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
                                         @endif
                                     @else
-                                    <a href="{{ route('tanda-terima.edit', $tt->id) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                    <a href="{{ route('tanda-terima.edit', ['id' => $tt->id, 'from' => 'my']) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
                                     @endif
                                     <form action="{{ route('delete.tanda-terima', $tt->id) }}" method="POST" class="inline-block m-0 p-0 delete-form">
                                         @csrf
@@ -193,7 +193,7 @@
                 const keterangan = row.querySelector('.keterangan').textContent;
                 const pembuat = row.querySelector('.dibuat-oleh').textContent;
 
-                fetch(`/tanda-terima/${typeId}/invoices`)
+                fetch(`{{ route('getTandaInvoices', ':id') }}`.replace(':id', typeId))
                     .then(response => response.json())
                     .then(data => {
                         const formatter = new Intl.NumberFormat('en-US', {

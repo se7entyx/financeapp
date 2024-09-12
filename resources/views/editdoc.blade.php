@@ -15,7 +15,7 @@
         </div>
         @endif
         <div class="py-8 px-4 mx-auto max-w-7xl">
-            <form id="edittandaterima" action="{{ route('tanda-terima.update', $tandaTerimaRecords->id) }}" method="post">
+            <form id="edittandaterima" action="{{ route('tanda-terima.update', ['id' => $tandaTerimaRecords->id, 'from' => $from]) }}" method="post">
                 @csrf
                 @method('PUT')
                 <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">

@@ -45,7 +45,7 @@
                 <div class="flex flex-wrap justify-bet items-center space-x-2 lg:space-x-4 mt-2 lg:mt-0">
                     <form id="filter-form" action="#" method="GET" class="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto m-0 p-0 items-center">
                         <div class="relative mt-1 lg:mt-0 inline-flex">
-                            <a href="/dashboard/my/bukti-kas"> <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span class="fa-solid fa-filter-circle-xmark"></span> Clear</button></a>
+                            <a href="{{route('my.bukti-kas')}}"> <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><span class="fa-solid fa-filter-circle-xmark"></span> Clear</button></a>
                         </div>
                         <div class="relative mt-1 lg:mt-0">
                             <label for="jatuh_tempo" class="sr-only">Jatuh Tempo</label>
@@ -108,7 +108,7 @@
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas">View Details</a>
                                     @if ($bk->status == 'Belum dibayar')
-                                    <a href="{{ route('bukti-kas.edit', $bk->id) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
+                                    <a href="{{ route('bukti-kas.edit', ['id' => $bk->id, 'from' => 'my']) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
                                     @endif                               
                                     <form action="{{ route('delete.bukti-kas', $bk->id) }}" method="POST" class="inline-block m-0 p-0 delete-form-bk">
                                         @csrf
