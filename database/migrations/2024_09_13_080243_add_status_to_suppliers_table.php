@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('suppliers', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('no_rek')->nullable();
-            $table->string('bank')->nullable();
-            $table->timestamps();
+        Schema::table('suppliers', function (Blueprint $table) {
+            $table->string('status')->default('active');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('suppliers');
+        Schema::table('suppliers', function (Blueprint $table) {
+            //
+        });
     }
 };

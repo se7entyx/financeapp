@@ -63,6 +63,7 @@
                                                     Edit
                                                 </button>
                                             </li>
+											@if (Auth::user()->role == 'superadmin')
                                             <li>
                                                 <button type="button" data-modal-target="deleteModal" data-modal-toggle="deleteModal" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400" data-delete-id="{{ $tax->id }}">
                                                     <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -71,6 +72,7 @@
                                                     Delete
                                                 </button>
                                             </li>
+											@endif
                                         </ul>
                                     </div>
                                 </td>

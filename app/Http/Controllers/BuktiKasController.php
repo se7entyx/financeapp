@@ -75,7 +75,7 @@ class BuktiKasController extends Controller
             $userId = Auth::id();
             $role = Auth::user()->role;
 
-            if($role == 'admin' && $from == 'all') {
+            if($role != 'user' && $from == 'all') {
                 $tandaTerima = TandaTerima::with(['supplier', 'invoices.transaction', 'bukti_kas'])
                 ->where('increment_id', $tandaTerimaInc)
                 ->where('po','true')
@@ -146,7 +146,7 @@ class BuktiKasController extends Controller
             'kas' => 'required|string',
             'jumlah' => 'numeric',
             'no_cek' => 'nullable|string',
-            'berita_transaksi' => 'required|string',
+            'berita_transaksi' => 'nullable|string',
             'keterangan' => 'nullable|string',
             'bukti_data' => 'required|json'
         ]);
@@ -203,22 +203,22 @@ class BuktiKasController extends Controller
     {
         $buktikas = BuktiKas::with(['tanda_terima.supplier', 'tanda_terima.invoices'])->findOrFail($id);
         $role = Auth::user()->role;
-        if(Auth::user()->role != 'admin' && $buktikas->user_id != Auth::id()) {
+        if(Auth::user()->role == 'user' && $buktikas->user_id != Auth::id()) {
             return redirect()->route('my.bukti-kas')->with('false', 'error encounter');
         }
 
-        if(Auth::user()->role != 'admin' && $from == 'all') {
+        if(Auth::user()->role == 'user' && $from == 'all') {
             return redirect()->route('my.bukti-kas')->with('false', 'error encounter');
         }
 
-        if(Auth::user()->role == 'admin' && $from == 'my' && $buktikas->user_id != Auth::id()) {
+        if(Auth::user()->role != 'user' && $from == 'my' && $buktikas->user_id != Auth::id()) {
             return redirect()->route('all.bukti-kas')->with('false', 'error encounter');
         }
 
         $title = 'Edit Bukti Kas';
         $userId = Auth::id();
 
-        if($role == 'admin' && $from == 'all') {
+        if($role != 'user' && $from == 'all') {
             $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
             ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
             ->where('po', 'true');
@@ -273,7 +273,7 @@ class BuktiKasController extends Controller
             'kas' => 'required|string',
             'jumlah' => 'numeric',
             'no_cek' => 'nullable|string',
-            'berita_transaksi' => 'required|string',
+            'berita_transaksi' => 'nullable|string',
             'keterangan' => 'nullable|string',
             'bukti_data' => 'required|json'
         ]);

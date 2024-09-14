@@ -8,6 +8,7 @@
   <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
   <title>Login</title>
   @vite('resources/css/app.css')
+  <!-- <link rel="stylesheet" href="{{ asset('public/build/assets/app-BRbn0B88.css') }}"> -->
 </head>
 
 <body class="h-full">
@@ -37,7 +38,7 @@
   @endif
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img class="mx-auto h-20 w-auto" src="img/logo.png" alt="PT IMLI">
+      <img class="mx-auto h-20 w-auto" src="{{ asset('public/img/logo.png') }}" alt="PT IMLI">
       <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Log in</h2>
     </div>
 

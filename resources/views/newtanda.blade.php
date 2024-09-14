@@ -142,10 +142,13 @@
             if (this.checked) {
                 // Show the input field
                 poNumberInput.classList.remove('hidden');
+				poNumberInput.required = true;
             } else {
                 // Hide the input field
                 poNumberInput.classList.add('hidden');
                 poNumberInput.value = null;
+				poNumberInput.required = false;
+
             }
         });
 
@@ -207,12 +210,16 @@
         function openBuktiKasTabs(ids) {
             console.log(ids);
             const baseUrl = "{{ route('bukti-kas.print', ':id') }}";
-            ids.forEach((id, index) => {
-                setTimeout(() => {
-                    const url = baseUrl.replace(':id', id);
-                    window.open(url, '_blank');
-                }, index * 1000);
-            });
+           ids.forEach((id, index) => {
+console.log('test');
+               //setTimeout(() => {
+                    //const url = baseUrl.replace(':id', id);
+                   //window.open(url);
+              //}, index * 1000);
+const url = baseUrl.replace(':id', id);
+                   window.open(url);
+           });
+		
         }
 
         toggleCheckboxValue('faktur-checkbox');

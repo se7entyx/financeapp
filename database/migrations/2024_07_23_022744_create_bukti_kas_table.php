@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('kas');
             $table->double('jumlah');
             $table->string('no_cek')->nullable();
-            $table->string('berita_transaksi');
+            $table->string('berita_transaksi')->nullable();
             $table->string('status')->default('Belum dibayar');
             $table->string('keterangan')->nullable();
             $table->timestamps();

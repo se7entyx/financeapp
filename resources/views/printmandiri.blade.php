@@ -177,12 +177,12 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td colspan="3" style="text-align:right;" id="nominal">{{$buktiKas->tanda_terima->currency}}. {{number_format($buktiKas->jumlah)}}</td>
+                    <td colspan="3" style="text-align:center;" id="nominal">{{$buktiKas->tanda_terima->currency}}. {{number_format($buktiKas->jumlah)}}</td>
                     <!-- <input type="hidden" id="jumlah" value="{{$buktiKas->jumlah}}"> -->
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td colspan="4" style="text-align: center;">{{$buktiKas->tanda_terima->supplier->name}}</td>
+                    <td colspan="4" style="text-align: center;">{{$buktiKas->tanda_terima->supplier->alias}}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -286,10 +286,7 @@
                 </tr>
                 <tr>
                     <td> &nbsp; </td>
-                    <td> &nbsp; </td>
-                    <td> &nbsp; </td>
-                    <td> &nbsp; </td>
-                    <td> &nbsp; </td>
+                    <td colspan="4">{{$buktiKas->berita_transaksi}}</td>
                     <td> &nbsp; </td>
                     <td> &nbsp; </td>
                     <td> &nbsp; </td>
@@ -298,7 +295,10 @@
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td colspan="4">{{$buktiKas->berita_transaksi}}</td>
+                    <td>&nbsp;</td>
+	<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>

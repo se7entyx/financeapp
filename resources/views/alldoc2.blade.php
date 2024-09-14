@@ -112,7 +112,7 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-center status {{ $bk->status === 'Belum dibayar' ? 'text-red-500' : ($bk->status === 'Sudah dibayar' ? 'text-green-500' : 'text-gray-500') }}">
                                 {{ $bk->status }}
                             </td>
-                            @if (Auth::check() && Auth::user()->role == 'admin')
+                            @if (Auth::check() && Auth::user()->role != 'user')
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas">View Details</a>
@@ -281,7 +281,7 @@
                 const dibuatOleh = row.querySelector('.dibuat-oleh').textContent;
                 const status = row.querySelector('.status').textContent;
 
-                fetch(`/bukti-kas/${typeId}/invoices`)
+                fetch(`{{ route('getInvoices', ':id') }}`.replace(':id', typeId))
                     .then(response => response.json())
                     .then(data => {
                         const formatter = new Intl.NumberFormat('en-US', {

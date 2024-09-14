@@ -55,7 +55,7 @@
                             </li>
                             <li class="border-b border-gray-200 dark:border-gray-600">
                                 <div class="flex items-center px-3 py-2">
-                                    <input id="po-checkbox" required name="po" type="checkbox" value="true"
+                                    <input id="po-checkbox" name="po" type="checkbox" value="true"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 
         {{ $tandaTerimaRecords->po === 'true' ? 'cursor-not-allowed' : '' }}"
                                         @if ($tandaTerimaRecords->po == "true") disabled checked  @endif>
@@ -293,7 +293,7 @@
             month: 'short',
             year: 'numeric'
         });
-        document.getElementById('tanggal').value = formattedDate;
+        // document.getElementById('tanggal').value = formattedDate;
         console.log("Formatted Date:", formattedDate);
 
         const form = document.getElementById('edittandaterima');

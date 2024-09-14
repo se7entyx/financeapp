@@ -23,13 +23,15 @@ class SupplierController extends Controller
         $validatedData = $request->validate(
             [
                 'name' => 'required|max:255|string',
-                'norek' => 'required|max:255|string',
-                'bank' => 'required|string'
+                'norek' => 'nullable|max:255|string',
+                'bank' => 'nullable|string',
+                'alias' => 'nullable|string'
             ]
         );
 
         $supplier = new Supplier();
         $supplier->name = $validatedData['name'];
+        $supplier->alias = $validatedData['alias'];
         $supplier->no_rek =  $validatedData['norek'];
         $supplier->bank = $validatedData['bank'];
         $supplier->save();
@@ -42,8 +44,10 @@ class SupplierController extends Controller
         // dd('panggil');
         $credentials = $request->validate([
             'name' => 'required|max:255|string',
-            'norek' => 'required|max:255|string',
-            'bank' => 'required|string'
+            'norek' => 'nullable|max:255|string',
+            'bank' => 'string|nullable',
+			'status' => 'required|string|in:active,inactive',
+            'alias' => 'string|nullable'
         ]);
 
         // dd($credentials);
@@ -51,8 +55,10 @@ class SupplierController extends Controller
         if ($credentials) {
             $supplier = Supplier::find($id);
             $supplier->name = $credentials['name'];
+            $supplier->alias = $credentials['alias'];
             $supplier->no_rek = $credentials['norek'];
             $supplier->bank = $credentials['bank'];
+			$supplier->status = $credentials['status'];
             $supplier->save();
             return redirect('/dashboard/admin/suppliers')->with('success', 'Update successfull!');
         } else {

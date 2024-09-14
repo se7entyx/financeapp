@@ -87,6 +87,7 @@
                             <th class="py-2 px-4 border-b text-center">BPB</th>
                             <th class="py-2 px-4 border-b text-center">Surat Jalan</th>
                             <th class="py-2 px-4 border-b" >@sortablelink('tanggal_jatuh_tempo','Tanggal Jatuh Tempo')</th>
+							<th class="py-2 px-4 border-b text-center">Nomor PO</th>
                             <th class="py-2 px-4 border-b">Keterangan</th>
                             <th class="py-2 px-4 border-b">Pembuat</th>
                             <th class="py-2 px-4 border-b">Aksi</th>
@@ -112,9 +113,10 @@
                                 {!! $tt->surat_jalan == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
                             </td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 jatuh-tempo">{{ $tt->tanggal_jatuh_tempo }}</td>
+							<td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 no-po">{{ $tt->nomor_po }}</td>
                             <td class="py-4 px-6 text-sm text-gray-500 break-words keterangan">{{ $tt->keterangan ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
-                            @if (Auth::check() && Auth::user()->role == 'admin')
+                            @if (Auth::check() && Auth::user()->role != 'user')
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
                                 <div class="flex justify-center items-center space-x-4">
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
@@ -210,10 +212,11 @@
                 const bpb = row.querySelector('.bpb').textContent;
                 const suratJalan = row.querySelector('.surat-jalan').textContent;
                 const tanggalJatuhTempo = row.querySelector('.jatuh-tempo').textContent;
+				const nopo = row.querySelector('.no-po').textContent;
                 const keterangan = row.querySelector('.keterangan').textContent;
                 const pembuat = row.querySelector('.dibuat-oleh').textContent;
 
-                fetch(`/tanda-terima/${typeId}/invoices`)
+                fetch(`{{ route('getTandaInvoices', ':id') }}`.replace(':id', typeId))
                     .then(response => response.json())
                     .then(data => {
                         const formatter = new Intl.NumberFormat('en-US', {
@@ -229,6 +232,7 @@
                         <div class="mb-4"><strong>BPB:</strong> ${bpb}</div>
                         <div class="mb-4"><strong>Surat Jalan:</strong> ${suratJalan}</div>
                         <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo}</div>
+						<div class="mb-4"><strong>Nomor PO:</strong> ${nopo}</div>
                         <div class="mb-4"><strong>Keterangan:</strong> ${keterangan}</div>
                         <div class="mb-4"><strong>Dibuat oleh:</strong> ${pembuat}</div>
                         <div class="mb-4"><strong>Invoices:</strong></div>

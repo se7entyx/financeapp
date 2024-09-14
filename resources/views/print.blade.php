@@ -106,15 +106,15 @@
                 </tr>
                 <tr>
                     <td>Faktur Pajak</td>
-                    <td class="icon">: {{ $tandaTerima->pajak ? '✔' : '✘' }}</td>
+                    <td class="icon">: {{ $tandaTerima->pajak === 'true' ? '✔' : '✘' }}</td>
                     <td>PO</td>
-                    <td class="icon">: {{ $tandaTerima->po ? '✔' : '✘' }}</td>
+                    <td class="icon">: {{ $tandaTerima->po === 'true' ? '✔' : '✘' }}</td>
                 </tr>
                 <tr>
                     <td>BPB</td>
-                    <td class="icon">: {{ $tandaTerima->bpb ? '✔' : '✘' }}</td>
+                    <td class="icon">: {{ $tandaTerima->bpb === 'true' ? '✔' : '✘' }}</td>
                     <td>Surat Jalan</td>
-                    <td class="icon">: {{ $tandaTerima->surat_jalan ? '✔' : '✘' }}</td>
+                    <td class="icon">: {{ $tandaTerima->surat_jalan === 'true' ?  '✔' : '✘' }}</td>
                 </tr>
                 <tr>
                     <td>Kwitansi/Nota :</td>

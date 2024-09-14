@@ -62,7 +62,7 @@
                     </li>
                 </ul>
             </li>
-            @if (Auth::check() && Auth::user()->role == 'admin')
+           <!-- @if (Auth::check() && Auth::user()->role != 'user') -->
             <li>
                 <button type="button" class="flex items-center p-2 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700" aria-controls="dropdown-pages2" data-collapse-toggle="dropdown-pages2">
                     <i class="fa-solid fa-user-tie"></i>
@@ -83,7 +83,7 @@
                     </li>
                 </ul>
             </li>
-            @endif
+          <!--  @endif -->
         </ul>
         <ul class="mt-auto space-y-2">
             <li>

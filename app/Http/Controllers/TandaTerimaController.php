@@ -182,15 +182,15 @@ class TandaTerimaController extends Controller
     public function showEditForm($id, $from)
     {
         $tandaTerima = TandaTerima::with('invoices')->findOrFail($id);
-        if(Auth::user()->role != 'admin' && $tandaTerima->user_id != Auth::id()) {
+        if(Auth::user()->role == 'user' && $tandaTerima->user_id != Auth::id()) {
             return redirect()->route('my.tanda-terima')->with('false', 'error encounter');
         }
 
-        if(Auth::user()->role != 'admin' && $from == 'all') {
+        if(Auth::user()->role == 'user' && $from == 'all') {
             return redirect()->route('my.tanda-terima')->with('false', 'error encounter');
         }
 
-        if(Auth::user()->role == 'admin' && $from == 'my' && $tandaTerima->user_id != Auth::id()) {
+        if(Auth::user()->role != 'user' && $from == 'my' && $tandaTerima->user_id != Auth::id()) {
             return redirect()->route('all.tanda-terima')->with('false', 'error encounter');
         }
 
@@ -342,6 +342,6 @@ class TandaTerimaController extends Controller
         $fileUrl = asset('storage/tanda_terima.pdf');
 
 
-        return redirect($fileUrl);
+        return $dompdf->stream($filePath, ['Attachment' => 0]);
     }
 }
