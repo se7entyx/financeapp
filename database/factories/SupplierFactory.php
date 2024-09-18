@@ -22,7 +22,8 @@ class SupplierFactory extends Factory
         return [
             'name' => $this->faker->company,
             'no_rek' =>$this->faker->bankAccountNumber,
-            'bank' => $this->faker->words(2, true)
+            'bank' => $this->faker->words(2, true),
+            'alias' =>$this->faker->words(2,true)
         ];
     }
 }

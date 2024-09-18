@@ -21,7 +21,10 @@ class Transaction extends Model
         'nominal_ppn',
         'nominal_pph',
         'id_ppn',
-        'id_pph'
+        'id_pph',
+        'quantity',
+        'harga_satuan',
+        'satuan'
     ];
 
     protected static function boot()

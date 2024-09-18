@@ -6,7 +6,7 @@
         }
     </style>
     <x-slot:title>{{$title}}</x-slot:title>
-    <section class="bg-white dark:bg-gray-900">
+    <section class="bg-white dark:bg-gray-900 w-full min-h-screen">
         @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -28,7 +28,7 @@
             </script>
         </div>
         @endif
-        <div class="py-8 px-4 mx-auto max-w-7xl">
+        <div class="py-8 px-4 mx-auto max-w-7xl w-full min-h-screen">
             <form id="addtandaterima" action="{{route('newtanda')}}" method="post">
                 @csrf
                 <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
@@ -142,12 +142,12 @@
             if (this.checked) {
                 // Show the input field
                 poNumberInput.classList.remove('hidden');
-				poNumberInput.required = true;
+                poNumberInput.required = true;
             } else {
                 // Hide the input field
                 poNumberInput.classList.add('hidden');
                 poNumberInput.value = null;
-				poNumberInput.required = false;
+                poNumberInput.required = false;
 
             }
         });
@@ -157,7 +157,7 @@
 
             if (poNumber) {
                 checkPoNumber(poNumber);
-            }else{
+            } else {
                 alert('Inputkan nomer PO');
             }
         });
@@ -210,16 +210,16 @@
         function openBuktiKasTabs(ids) {
             console.log(ids);
             const baseUrl = "{{ route('bukti-kas.print', ':id') }}";
-           ids.forEach((id, index) => {
-console.log('test');
-               //setTimeout(() => {
-                    //const url = baseUrl.replace(':id', id);
-                   //window.open(url);
-              //}, index * 1000);
-const url = baseUrl.replace(':id', id);
-                   window.open(url);
-           });
-		
+            ids.forEach((id, index) => {
+                console.log('test');
+                //setTimeout(() => {
+                //const url = baseUrl.replace(':id', id);
+                //window.open(url);
+                //}, index * 1000);
+                const url = baseUrl.replace(':id', id);
+                window.open(url);
+            });
+
         }
 
         toggleCheckboxValue('faktur-checkbox');
@@ -267,7 +267,7 @@ const url = baseUrl.replace(':id', id);
             <input type="text" name="invoice[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Invoice" required>
         </div>
         <div class="flex-1">
-            <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
+            <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total Harga Invoice <span class="required">*</span></label>
             <input type="number" name="nominal[]" readonly class="invoice-nominal bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nominal" required>
         </div>
         <div class="flex-1">
@@ -285,18 +285,30 @@ const url = baseUrl.replace(':id', id);
                 transDiv.className = 'trans-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2 pl-8'; // Add padding-left for indentation
 
                 transDiv.innerHTML = `
-            <div class="flex-1">
-                <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
-                <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Keterangan">
-            </div>
-            <div class="flex-1">
-                <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
-                <input type="number" name="trans_nominal[]" class="trans-nominal bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Nominal">
-            </div>
-            <div class="flex-1">
-                <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeTransRow(this)">Delete</button>
-            </div>
-        `;
+        <div class="flex-1">
+            <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
+            <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Keterangan">
+        </div>
+        <div class="flex-1">
+            <label for="harga_satuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Harga Satuan <span class="required">*</span></label>
+            <input type="number" name="harga_satuan[]" class="harga-satuan bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  placeholder="Harga Satuan">
+        </div>
+        <div class="flex-1">
+            <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity </label>
+            <input type="number" name="quantity[]" class="quantity bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  placeholder="Quantity">
+        </div>
+        <div class="flex-1">
+            <label for="satuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Satuan </label>
+            <input type="text" name="satuan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  placeholder="Satuan">
+        </div>
+        <div class="flex-1">
+            <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
+            <input type="number" name="trans_nominal[]" readonly class="trans-nominal bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Nominal">
+        </div>
+        <div class="flex-1">
+            <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeTransRow(this)">Delete</button>
+        </div>
+    `;
 
                 let lastTransRow = div;
                 while (lastTransRow.nextElementSibling && lastTransRow.nextElementSibling.classList.contains('trans-row')) {
@@ -310,6 +322,20 @@ const url = baseUrl.replace(':id', id);
                 const transCountInput = div.querySelector('.trans-count');
                 transCountInput.value = parseInt(transCountInput.value) + 1;
                 console.log('Trans count after addition:', transCountInput.value);
+
+                const quantityInput = transDiv.querySelector('.quantity');
+                const hargaSatuanInput = transDiv.querySelector('.harga-satuan');
+                const transNominalInput = transDiv.querySelector('.trans-nominal');
+
+                function updateTransNominal() {
+                    const quantity = quantityInput.value || 1;
+                    const hargaSatuan = hargaSatuanInput.value || 0;
+                    transNominalInput.value = quantity * hargaSatuan;
+                    updateInvoiceNominal(div);
+                }
+
+                quantityInput.addEventListener('input', updateTransNominal);
+                hargaSatuanInput.addEventListener('input', updateTransNominal);
 
                 transDiv.querySelector('.trans-nominal').addEventListener('input', function() {
                     updateInvoiceNominal(div);

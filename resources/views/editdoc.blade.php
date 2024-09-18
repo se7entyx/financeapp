@@ -6,7 +6,7 @@
         }
     </style>
     <x-slot:title>{{$title}}</x-slot:title>
-    <section class="bg-white dark:bg-gray-900">
+    <section class="bg-white dark:bg-gray-900 w-full min-h-screen">
         @if (session('success'))
         <div class="alert alert-success">
             <script>
@@ -18,7 +18,7 @@
             <form id="edittandaterima" action="{{ route('tanda-terima.update', ['id' => $tandaTerimaRecords->id, 'from' => $from]) }}" method="post">
                 @csrf
                 @method('PUT')
-                <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+                <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 w-full min-h-screen">
                     <div class="sm:col-span-2 md:col-span-1">
                         <label for="supplier" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier <span class="required">*</span></label>
                         <select id="supplier_id" name="supplier_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
@@ -58,7 +58,7 @@
                                     <input id="po-checkbox" name="po" type="checkbox" value="true"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 
         {{ $tandaTerimaRecords->po === 'true' ? 'cursor-not-allowed' : '' }}"
-                                        @if ($tandaTerimaRecords->po == "true") disabled checked  @endif>
+                                        @if ($tandaTerimaRecords->po == "true") disabled checked @endif>
                                     <label for="po-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">PO</label>
                                 </div>
                                 <div id="po-input-container" class="mt-2">
@@ -129,12 +129,23 @@
                             <div class="trans-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2 pl-8">
                                 <div class="flex-1">
                                     <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
-                                    <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{$trans->keterangan}}" placeholder="Keterangan">
+                                    <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Keterangan" value="{{$trans->keterangan}}">
+                                </div>
+                                <div class="flex-1">
+                                    <label for="harga_satuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Harga Satuan <span class="required">*</span></label>
+                                    <input type="number" name="harga_satuan[]" class="harga-satuan bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Harga Satuan" value="{{$trans->harga_satuan}}">
+                                </div>
+                                <div class="flex-1">
+                                    <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity </label>
+                                    <input type="number" name="quantity[]" class="quantity bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Quantity" value="{{$trans->quantity}}">
+                                </div>
+                                <div class="flex-1">
+                                    <label for="satuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Satuan </label>
+                                    <input type="text" name="satuan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Satuan" value="{{$trans->satuan}}">
                                 </div>
                                 <div class="flex-1">
                                     <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
-                                    <input type="number" name="trans_nominal[]" value="{{$trans->nominal}}"
-                                        class="trans-nominal bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Nominal">
+                                    <input type="number" name="trans_nominal[]" readonly class="trans-nominal bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Nominal" value="{{$trans->nominal}}">
                                 </div>
                                 <div class="flex-1">
                                     <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeTransRow(this)">Delete</button>
@@ -392,7 +403,6 @@
                 event.preventDefault();
             }
 
-            
         });
     });
 
@@ -404,18 +414,30 @@
         transDiv.className = 'trans-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2 pl-8'; // Add padding-left for indentation
 
         transDiv.innerHTML = `
-            <div class="flex-1">
-                <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
-                <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Keterangan">
-            </div>
-            <div class="flex-1">
-                <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
-                <input type="number" name="trans_nominal[]" class="trans-nominal bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Nominal">
-            </div>
-            <div class="flex-1">
-                <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeTransRow(this)">Delete</button>
-            </div>
-        `;
+        <div class="flex-1">
+            <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
+            <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Keterangan">
+        </div>
+        <div class="flex-1">
+            <label for="harga_satuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Harga Satuan <span class="required">*</span></label>
+            <input type="number" name="harga_satuan[]" class="harga-satuan bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Harga Satuan">
+        </div>
+        <div class="flex-1">
+            <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity </label>
+            <input type="number" name="quantity[]" class="quantity bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Quantity">
+        </div>
+        <div class="flex-1">
+            <label for="satuan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Satuan </label>
+            <input type="text" name="satuan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Satuan">
+        </div>
+        <div class="flex-1">
+            <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
+            <input type="number" name="trans_nominal[]" readonly class="trans-nominal bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Nominal">
+        </div>
+        <div class="flex-1">
+            <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeTransRow(this)">Delete</button>
+        </div>
+    `;
 
         // Find the last trans-row after the invoiceRow
         let lastTransRow = invoiceRow;
@@ -431,13 +453,52 @@
         transCountInput.value = parseInt(transCountInput.value) + 1;
         console.log('Trans count after addition:', transCountInput.value);
 
-        transDiv.querySelector('.trans-nominal').addEventListener('input', function() {
-            updateInvoiceNominal(invoiceRow);
-        });
+        // Add event listeners to harga_satuan and quantity to calculate trans_nominal
+        const hargaSatuanInput = transDiv.querySelector('.harga-satuan');
+        const quantityInput = transDiv.querySelector('.quantity');
+        const transNominalInput = transDiv.querySelector('.trans-nominal');
 
-        addEventListenersToTransNominals();
+        const calculateTransNominal = () => {
+            const hargaSatuan = parseFloat(hargaSatuanInput.value) || 0;
+            const quantity = parseFloat(quantityInput.value) || 1; // If quantity is empty, treat it as 1
+            const nominal = hargaSatuan * quantity;
+            transNominalInput.value = nominal > 0 ? nominal : null; // Update trans_nominal
+            updateInvoiceNominal(invoiceRow); // Update invoice nominal
+        };
+
+        hargaSatuanInput.addEventListener('input', calculateTransNominal);
+        quantityInput.addEventListener('input', calculateTransNominal);
+
         synchronizeRows();
     }
+
+    function addEventListenersToExistingRows() {
+        const transRows = document.querySelectorAll('.trans-row');
+
+        transRows.forEach(transRow => {
+            const hargaSatuanInput = transRow.querySelector('.harga-satuan');
+            const quantityInput = transRow.querySelector('.quantity');
+            const transNominalInput = transRow.querySelector('.trans-nominal');
+            const invoiceRow = findInvoiceRow(transRow);
+
+            if (hargaSatuanInput && quantityInput && transNominalInput) {
+                const calculateTransNominal = () => {
+                    const hargaSatuan = parseFloat(hargaSatuanInput.value) || 0;
+                    const quantity = parseFloat(quantityInput.value) || 1; // If quantity is empty, treat it as 1
+                    const nominal = hargaSatuan * quantity;
+                    transNominalInput.value = nominal > 0 ? nominal : null; // Update trans_nominal
+                    updateInvoiceNominal(invoiceRow); // Update invoice nominal
+                };
+
+                hargaSatuanInput.addEventListener('input', calculateTransNominal);
+                quantityInput.addEventListener('input', calculateTransNominal);
+
+                // Calculate the nominal immediately to handle pre-existing rows
+                calculateTransNominal();
+            }
+        });
+    }
+    addEventListenersToExistingRows();
 
     function addEventListenersToTransNominals() {
         const transNominals = document.querySelectorAll('.trans-nominal');

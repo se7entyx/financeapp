@@ -59,8 +59,16 @@ class TandaTerimaController extends Controller
                 'keterangan.*' => 'required|string',
                 'trans_nominal' => 'required|array',
                 'trans_nominal.*' => 'required|numeric',
-                'po_number' => 'nullable|string'
+                'po_number' => 'nullable|string',
+                'satuan' => 'required|array',
+                'satuan.*' => 'nullable|string',
+                'quantity' => 'required|array',
+                'quantity.*' => 'nullable|numeric',
+                'harga_satuan' => 'required|array',
+                'harga_satuan.*' => 'nullable|numeric'
             ]);
+
+            // dd($validated['quantity']);
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Validation error: ' . $e->getMessage()]);
         }
@@ -106,6 +114,9 @@ class TandaTerimaController extends Controller
                         $trans = new Transaction();
                         $trans->invoice_id = $invoice->id;
                         $trans->keterangan = $validated['keterangan'][$transIndex];
+                        $trans->quantity = $validated['quantity'][$transIndex];
+                        $trans->harga_satuan = $validated['harga_satuan'][$transIndex];
+                        $trans->satuan = $validated['satuan'][$transIndex];
                         $trans->nominal = $validated['trans_nominal'][$transIndex];
                         $trans->save();
                     } catch (\Exception $e) {
@@ -181,6 +192,7 @@ class TandaTerimaController extends Controller
 
     public function showEditForm($id, $from)
     {
+<<<<<<< HEAD
         $tandaTerima = TandaTerima::with(['invoices', 'bukti_kas'])->findOrFail($id);
 
         if ($tandaTerima->bukti_kas !== null) {
@@ -194,14 +206,18 @@ class TandaTerimaController extends Controller
         }
 
         if(Auth::user()->role == 'user' && $tandaTerima->user_id != Auth::id()) {
+=======
+        $tandaTerima = TandaTerima::with('invoices')->findOrFail($id);
+        if (Auth::user()->role == 'user' && $tandaTerima->user_id != Auth::id()) {
+>>>>>>> 08da7d208db9ea746b67b40ab8f6aa067f080788
             return redirect()->route('my.tanda-terima')->with('false', 'error encounter');
         }
 
-        if(Auth::user()->role == 'user' && $from == 'all') {
+        if (Auth::user()->role == 'user' && $from == 'all') {
             return redirect()->route('my.tanda-terima')->with('false', 'error encounter');
         }
 
-        if(Auth::user()->role != 'user' && $from == 'my' && $tandaTerima->user_id != Auth::id()) {
+        if (Auth::user()->role != 'user' && $from == 'my' && $tandaTerima->user_id != Auth::id()) {
             return redirect()->route('all.tanda-terima')->with('false', 'error encounter');
         }
 
@@ -211,7 +227,7 @@ class TandaTerimaController extends Controller
         // dd($tandaTerima);
 
         // dd($tandaTerima->invoices);
-        return view('editdoc', ['tandaTerimaRecords' => $tandaTerima,'usedPONumbers' => $usedPONumbers , 'title' => $title, 'suppliers' => $z, 'from' => $from]);
+        return view('editdoc', ['tandaTerimaRecords' => $tandaTerima, 'usedPONumbers' => $usedPONumbers, 'title' => $title, 'suppliers' => $z, 'from' => $from]);
     }
 
     public function update(Request $request, $id, $from)
@@ -238,6 +254,12 @@ class TandaTerimaController extends Controller
             'keterangan.*' => 'required|string',
             'trans_nominal' => 'required|array',
             'trans_nominal.*' => 'required|numeric',
+            'satuan' => 'required|array',
+            'satuan.*' => 'nullable|string',
+            'quantity' => 'required|array',
+            'quantity.*' => 'nullable|numeric',
+            'harga_satuan' => 'required|array',
+            'harga_satuan.*' => 'nullable|numeric'
         ]);
 
         // Update Tanda Terima record
@@ -249,9 +271,9 @@ class TandaTerimaController extends Controller
         $tandaTerima->bpb = $validated['bpb'];
         $tandaTerima->currency = $validated['currency'];
         $tandaTerima->surat_jalan = $validated['sjalan'];
-        if($tandaTerima->po == 'true'){
+        if ($tandaTerima->po == 'true') {
             $tandaTerima->po = 'true';
-        }else{
+        } else {
             $tandaTerima->po = $validated['po'];
         }
         $tandaTerima->nomor_po = $validated['po_number'];
@@ -283,7 +305,12 @@ class TandaTerimaController extends Controller
             for ($i = 0; $i < $transCount; $i++) {
                 $transaction = $invoice->transaction()->updateOrCreate(
                     ['keterangan' => $validated['keterangan'][$transIndex]],
-                    ['nominal' => $validated['trans_nominal'][$transIndex]]
+                    [
+                        'nominal' => $validated['trans_nominal'][$transIndex],
+                        'quantity' => $validated['quantity'][$transIndex],
+                        'satuan' => $validated['satuan'][$transIndex],
+                        'harga_satuan' => $validated['harga_satuan'][$transIndex]
+                    ]
                 );
 
                 // Add the transaction nominal to the total
@@ -327,10 +354,9 @@ class TandaTerimaController extends Controller
                 $transIndex++;
             }
         }
-        if($from == 'my') {
+        if ($from == 'my') {
             return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
-        }
-        elseif($from == 'all') {
+        } elseif ($from == 'all') {
             return redirect()->route('all.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
         }
     }
