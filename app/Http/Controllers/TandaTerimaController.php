@@ -192,7 +192,6 @@ class TandaTerimaController extends Controller
 
     public function showEditForm($id, $from)
     {
-<<<<<<< HEAD
         $tandaTerima = TandaTerima::with(['invoices', 'bukti_kas'])->findOrFail($id);
 
         if ($tandaTerima->bukti_kas !== null) {
@@ -206,10 +205,6 @@ class TandaTerimaController extends Controller
         }
 
         if(Auth::user()->role == 'user' && $tandaTerima->user_id != Auth::id()) {
-=======
-        $tandaTerima = TandaTerima::with('invoices')->findOrFail($id);
-        if (Auth::user()->role == 'user' && $tandaTerima->user_id != Auth::id()) {
->>>>>>> 08da7d208db9ea746b67b40ab8f6aa067f080788
             return redirect()->route('my.tanda-terima')->with('false', 'error encounter');
         }
 
