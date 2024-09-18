@@ -200,7 +200,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>{{ $carryOverRow['transaction_keterangan'] }} {{$yrow}}</td>
+                <td>{{ $carryOverRow['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
                 <td class="right-text">{{ $carryOverRow['currency'] }} {{ number_format($carryOverRow['transaction_nominal'], 0, ',', '.') }}</td>
             </tr>
@@ -257,7 +257,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>{{ $trans['transaction_keterangan'] }} {{$yrow}}</td>
+                <td>{{ $trans['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
                 <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
             </tr>
@@ -297,7 +297,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>{{ $trans['transaction_keterangan'] }} {{$yrow}}</td>
+                <td>{{ $trans['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
                 <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
             </tr>
@@ -330,7 +330,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>{{ $trans['transaction_keterangan'] }} {{$yrow}}</td>
+                <td>{{ $trans['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
                 <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
             </tr>
@@ -363,7 +363,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>{{ $trans['transaction_keterangan'] }} {{$yrow}}</td>
+                <td>{{$trans['transaction_keterangan']}} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
                 <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
             </tr>
@@ -563,7 +563,7 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td>{{ $carryOverRow['transaction_keterangan'] }} {{$yrow}}</td>
+                    <td>{{ $carryOverRow['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$carryOverRow['quantity']}} {{$carryOverRow['satuan']}}</span></td>
                     <td class="center-text"></td>
                     <td class="right-text">{{ $carryOverRow['currency'] }} {{ number_format($carryOverRow['transaction_nominal'], 0, ',', '.') }}</td>
                 </tr>

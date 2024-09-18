@@ -65,7 +65,7 @@
                                 $startYear = date('Y');
                                 for ($i = 0; $i < 8; $i++) {
                                     $year=$startYear + $i;
-                                    echo "<option value=\" $year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
+                                    echo "<option value=\"$year\"" . ($year==$tahun ? ' selected' : '' ) . ">$year</option>" ;
                                     }
                                     @endphp
                                     </select>
@@ -392,7 +392,7 @@
 
                     const addPPnButton = document.createElement('button');
                     addPPnButton.textContent = 'Add PPn';
-                    addPPnButton.className = 'ppnButton px-2 py-1 text-blue-500 text-xs rounded';
+                    addPPnButton.className = 'ppnButton px-2 py-1 text-blue-500 text-md rounded';
                     addPPnButton.type = 'button';
                     addPPnButton.onclick = () => {
                         addTaxRow('PPn', item.nominalValue, item.selectedCurrency, newRow);
@@ -402,7 +402,7 @@
 
                     const addPPhButton = document.createElement('button');
                     addPPhButton.textContent = 'Add PPh';
-                    addPPhButton.className = 'pphButton px-2 py-1 text-blue-500 text-xs rounded ml-2';
+                    addPPhButton.className = 'pphButton px-2 py-1 text-blue-500 text-md rounded ml-2';
                     addPPhButton.type = 'button';
                     addPPhButton.onclick = () => {
                         addTaxRow('PPh', item.nominalValue, item.selectedCurrency, newRow);

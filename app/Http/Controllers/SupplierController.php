@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use App\Models\TandaTerima;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SupplierController extends Controller
 {
@@ -15,14 +16,14 @@ class SupplierController extends Controller
         $suppliers = Supplier::orderBy('name', 'asc')->get();
         $usedPONumbers = TandaTerima::pluck('nomor_po')->toArray();
         // Return the view 'newtanda' with the suppliers and a title
-        return view('newtanda', ['suppliers' => $suppliers, 'usedPONumbers' => $usedPONumbers , 'title' => 'New Tanda Terima']);
+        return view('newtanda', ['suppliers' => $suppliers, 'usedPONumbers' => $usedPONumbers, 'title' => 'New Tanda Terima']);
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate(
             [
-                'name' => 'required|max:255|string',
+                'name' => 'required|max:255|string|unique:suppliers,name',
                 'norek' => 'nullable|max:255|string',
                 'bank' => 'nullable|string',
                 'alias' => 'nullable|string',
@@ -45,10 +46,15 @@ class SupplierController extends Controller
     {
         // dd('panggil');
         $credentials = $request->validate([
-            'name' => 'required|max:255|string',
+            'name' => [
+                'required',
+                'max:255',
+                'string',
+                Rule::unique('suppliers', 'name')->ignore($id),
+            ],
             'norek' => 'nullable|max:255|string',
             'bank' => 'string|nullable',
-			'status' => 'required|string|in:active,inactive',
+            'status' => 'required|string|in:active,inactive',
             'alias' => 'string|nullable',
             'swift' => 'nullable|string'
         ]);
@@ -62,7 +68,7 @@ class SupplierController extends Controller
             $supplier->no_rek = $credentials['norek'];
             $supplier->bank = $credentials['bank'];
             $supplier->swift = $credentials['swift'];
-			$supplier->status = $credentials['status'];
+            $supplier->status = $credentials['status'];
             $supplier->save();
             return redirect('/dashboard/admin/suppliers')->with('success', 'Update successfull!');
         } else {
