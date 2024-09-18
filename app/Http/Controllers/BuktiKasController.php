@@ -203,6 +203,15 @@ class BuktiKasController extends Controller
     {
         $buktikas = BuktiKas::with(['tanda_terima.supplier', 'tanda_terima.invoices'])->findOrFail($id);
         $role = Auth::user()->role;
+
+        if($buktikas->status == 'Sudah dibayar') {
+            abort(403, 'Access denied.');
+        }
+
+        if ($from != 'my' && $from != 'all') {
+            abort(403, 'Wrong URL.');
+        }
+
         if(Auth::user()->role == 'user' && $buktikas->user_id != Auth::id()) {
             return redirect()->route('my.bukti-kas')->with('false', 'error encounter');
         }
@@ -266,6 +275,7 @@ class BuktiKasController extends Controller
 
     public function update(Request $request, $id, $from)
     {
+
         // Validate the request
         $validated = $request->validate([
             'tanda_terima_id_hidden' => 'required|exists:tanda_terima,id',
@@ -280,6 +290,9 @@ class BuktiKasController extends Controller
 
         // Find and update BuktiKas record
         $buktikas = BuktiKas::findOrFail($id);
+        if($buktikas->status == 'Sudah dibayar') {
+            abort(403, 'Access denied.');
+        }
         $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
         $buktikas->nomer = $validated['nomer'];
         $buktikas->kas = $validated['kas'];
@@ -338,7 +351,7 @@ class BuktiKasController extends Controller
         $buktikas->status = "Sudah dibayar";
         $buktikas->save();
 
-        return redirect()->route('my.bukti-kas')->with('success', 'Bukti Kas Updated successfully.');
+        return redirect()->route('my.bukti-kas')->with('finished', 'Bukti Kas Updated successfully.');
     }
 
     public function printBuktiKas($id)

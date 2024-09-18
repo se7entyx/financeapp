@@ -262,7 +262,7 @@
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td colspan="4" style="text-align: center;">{{$buktiKas->tanda_terima->supplier->swift}}</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>

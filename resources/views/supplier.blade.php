@@ -49,6 +49,7 @@
                                 <th scope="col" class="px-4 py-3">Alias</th>
                                 <th scope="col" class="px-4 py-3">Nomor Rekening</th>
                                 <th scope="col" class="px-4 py-3">Bank</th>
+                                <th scope="col" class="px-4 py-3">Swift Code</th>
                                 <th scope="col" class="px-4 py-3">Status</th>
                                 <th scope="col" class="px-4 py-3">
                                     <span class="sr-only">Actions</span>
@@ -63,6 +64,7 @@
                                 <td class="px-4 py-3">{{ $supplier->alias }}</td>
                                 <td class="px-4 py-3">{{ $supplier->no_rek }}</td>
                                 <td class="px-4 py-3 max-w-[12rem] truncate">{{ $supplier->bank }}</td>
+                                <td class="px-4 py-3">{{ $supplier->swift }}</td>
 								<td class="px-4 py-3 {{ $supplier->status === 'inactive' ? 'text-red-500' : ($supplier->status === 'active' ? 'text-green-500' : 'text-gray-500') }}">{{ $supplier->status }}</td>
                                 <td class="px-4 py-3 flex items-center justify-end">
                                     <button id="dropdown-button-{{ $supplier->id }}" data-dropdown-toggle="dropdown-{{ $supplier->id }}" class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
@@ -73,7 +75,7 @@
                                     <div id="dropdown-{{ $supplier->id }}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-1 text-sm" aria-labelledby="dropdown-button-{{ $supplier->id }}">
                                             <li>
-                                                <button id='edit-button' type="button" data-modal-target="updateProductModal" data-modal-toggle="updateProductModal" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200" data-supplier-id="{{ $supplier->id }}" data-supplier-name="{{ $supplier->name }}" data-supplier-alias="{{ $supplier->alias }}" data-supplier-norek="{{ $supplier->no_rek }}" data-supplier-bank="{{$supplier->bank}}" data-supplier-status={{ $supplier->status }}>
+                                                <button id='edit-button' type="button" data-modal-target="updateProductModal" data-modal-toggle="updateProductModal" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200" data-supplier-id="{{ $supplier->id }}" data-supplier-name="{{ $supplier->name }}" data-supplier-alias="{{ $supplier->alias }}" data-supplier-norek="{{ $supplier->no_rek }}" data-supplier-bank="{{$supplier->bank}}" data-supplier-swift="{{$supplier->swift}}" data-supplier-status={{ $supplier->status }}>
                                                     <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                         <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
@@ -140,6 +142,10 @@
                                 <label for="bank" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bank</label>
                                 <input type="text" name="bank" id="bank" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan Nama Bank">
                             </div>
+                            <div class="col-span-2">
+                                <label for="swift" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Swift code</label>
+                                <input type="text" name="swift" id="swift" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan Swift Code">
+                            </div>
                         </div>
                         <div class="flex justify-end">
                             <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 flex items-center">
@@ -188,6 +194,10 @@
                             <div class="col-span-2">
                                 <label for="bank" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bank</label>
                                 <input type="text" name="bank" id="editbank" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan Nama Bank" >
+                            </div>
+                            <div class="col-span-2">
+                                <label for="swift" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Swift code</label>
+                                <input type="text" name="swift" id="editswift" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Masukan Swift Code">
                             </div>
 							<div class="col-span-2">
                                 <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
@@ -255,6 +265,7 @@
                     const alias = this.getAttribute('data-supplier-alias');
                     const norek = this.getAttribute('data-supplier-norek');
                     const bank = this.getAttribute('data-supplier-bank');
+                    const swift = this.getAttribute('data-supplier-swift');
                     const status = this.getAttribute('data-supplier-status');
                     console.log(id, name, norek, bank);
 
@@ -267,6 +278,7 @@
                         document.getElementById('editalias').value = alias;
                         document.getElementById('editnorek').value = norek;
                         document.getElementById('editbank').value = bank;
+                        document.getElementById('editswift').value = swift;
 
 						const statusSelect = document.getElementById('status');
                         if (statusSelect) {

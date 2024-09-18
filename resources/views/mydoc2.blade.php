@@ -30,6 +30,14 @@
         </div>
         @endif
 
+        @if (session('finished'))
+        <div class="alert alert-success">
+        <script>
+            alert("Bukti kas berhasil diselesaikan");
+        </script>
+        </div>
+        @endif
+
         @if (session('successs'))
         <div class="alert alert-success">
         <script>

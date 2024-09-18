@@ -181,7 +181,18 @@ class TandaTerimaController extends Controller
 
     public function showEditForm($id, $from)
     {
-        $tandaTerima = TandaTerima::with('invoices')->findOrFail($id);
+        $tandaTerima = TandaTerima::with(['invoices', 'bukti_kas'])->findOrFail($id);
+
+        if ($tandaTerima->bukti_kas !== null) {
+            if ($tandaTerima->bukti_kas->status == 'Sudah dibayar') {
+                abort(403, 'Access denied.');
+            }
+        }
+        
+        if ($from != 'my' && $from != 'all') {
+            abort(403, 'Wrong URL.');
+        }
+
         if(Auth::user()->role == 'user' && $tandaTerima->user_id != Auth::id()) {
             return redirect()->route('my.tanda-terima')->with('false', 'error encounter');
         }
