@@ -200,7 +200,10 @@
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td colspan="4" style="text-align: center; vertical-align: top;">{{$buktiKas->tanda_terima->supplier->bank}}</td>
+                    <td colspan="4" style="text-align: center; vertical-align: top;">
+                        {{$buktiKas->tanda_terima->supplier->bank}}<br>
+                        {{$buktiKas->tanda_terima->supplier->swift}}
+                    </td>
                     <td colspan="5" id="terbilang">
                         @php
                         function numberToWords($number) {
@@ -262,7 +265,7 @@
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td colspan="4" style="text-align: center;">{{$buktiKas->tanda_terima->supplier->swift}}</td>
+                    <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -296,9 +299,9 @@
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-	<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
