@@ -691,12 +691,13 @@
                     <td style="width: 90px"></td>
                     <td style="width: 400px"></td>
                     <td style="width: 50px" class="center-text"></td>
-                    <td style="width: 130px" class="right-text">{{$buktiKas->tanda_terima->currency}}
-                        @if ($buktiKas->tanda_terima->currency)
+                    <td style="width: 130px" class="right-text"> <b>{{$buktiKas->tanda_terima->currency}}
+                        @if ($buktiKas->tanda_terima->currency == "USD")
                         {{number_format($grandTotal, 2, ',', '.')}}
                         @else
                         {{number_format($grandTotal, 0, ',', '.')}}
                         @endif
+                        </b>
                     </td>
                 </tr>
             </table>
