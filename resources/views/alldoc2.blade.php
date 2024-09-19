@@ -110,7 +110,13 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center tanggal">{{ $bk->tanggal ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibayarkan-kepada">{{ $bk->tanda_terima->supplier->name }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kas">{{ $bk->kas }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah"> {{$bk->tanda_terima->currency }} {{ number_format($bk->jumlah) }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah">
+                                @if($bk->tanda_terima->currency == 'USD')
+                                    {{ $bk->tanda_terima->currency }} {{ number_format($bk->jumlah, 2) }}
+                                @else
+                                    {{ $bk->tanda_terima->currency }} {{ number_format($bk->jumlah, 0) }}
+                                @endif
+                            </td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center no-cek">{{ $bk->no_cek ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jatuh-tempo">{{ $bk->tanda_terima->tanggal_jatuh_tempo }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center berita-transaksi">{{ $bk->berita_transaksi}}</td>
@@ -360,7 +366,16 @@
 
                     const cellAmount = newRow.insertCell(2);
                     cellAmount.className = "px-6 py-4 text-right";
-                    cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                    if (item.currency == 'USD') {
+                        const usdFormatter = new Intl.NumberFormat('en-ID', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                        cellAmount.textContent = item.currency + ' ' + usdFormatter.format(item.transaction_nominal);
+                    } else {
+                        cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                    }
+
                 } else {
                     const cellNo = newRow.insertCell(0);
                     cellNo.className = "px-6 py-4 font-medium text-gray-900 whitespace-nowrap";
@@ -371,8 +386,16 @@
                     cellKeterangan.textContent = item.transaction_keterangan;
 
                     const cellAmount = newRow.insertCell(2);
-                    cellAmount.className = "px-6 py-4 text-right";
-                    cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                    if (item.currency == 'USD') {
+                        const usdFormatter = new Intl.NumberFormat('en-ID', {
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1
+                        });
+                        cellAmount.textContent = item.currency + ' ' + usdFormatter.format(item.transaction_nominal);
+                    } else {
+                        cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                    }
+
                 }
 
                 // Add tax rows if PPn or PPh exists
