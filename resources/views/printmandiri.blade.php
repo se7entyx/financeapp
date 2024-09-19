@@ -177,7 +177,13 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td colspan="3" style="text-align:center;" id="nominal">{{$buktiKas->tanda_terima->currency}}. {{number_format($buktiKas->jumlah)}}</td>
+                    <td colspan="3" style="text-align:center;" id="nominal">{{$buktiKas->tanda_terima->currency}}. 
+                        @if ($buktiKas->tanda_terima->currency == 'USD')
+                        {{number_format($buktiKas->jumlah,2)}}
+                        @else
+                        {{number_format($buktiKas->jumlah,0)}}
+                        @endif
+                    </td>
                     <!-- <input type="hidden" id="jumlah" value="{{$buktiKas->jumlah}}"> -->
                 </tr>
                 <tr>
@@ -254,7 +260,11 @@
                         return convertNumber($number, $one, $teen, $tens, $hundred, $thousand);
                         }
 
-                        $jumlah = $buktiKas->jumlah;
+                        if($buktiKas->jumlah == 'USD'){
+                            $jumlah = $buktiKas->jumlah;
+                        }else{
+                            $jumlah = round($buktiKas->jumlah);
+                        }
                         $terbilang = numberToWords($jumlah);
                         if($buktiKas->tanda_terima->currency == 'Rp'){
                         $currency = 'Rupiah';
