@@ -377,6 +377,8 @@ class BuktiKasController extends Controller
                     'name_ppn' => $taxPpn ? $taxPpn->name : null,
                     'name_pph' => $taxPph ? $taxPph->name : null,
                     'currency' => $tandaTerima->currency,
+                    'quantity' => $transaction->quantity,
+                    'satuan' => $transaction->satuan,
                 ];
             }
         }
