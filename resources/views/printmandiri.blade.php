@@ -202,7 +202,9 @@
                     <td>&nbsp;</td>
                     <td colspan="4" style="text-align: center; vertical-align: top;">
                         {{$buktiKas->tanda_terima->supplier->bank}}<br>
-                        {{$buktiKas->tanda_terima->supplier->swift}}
+                        {{$buktiKas->tanda_terima->supplier->swift}}<br>
+                        {{$buktiKas->tanda_terima->supplier->intBank}}<br>
+                        {{$buktiKas->tanda_terima->supplier->swift2}}
                     </td>
                     <td colspan="5" id="terbilang">
                         @php

@@ -27,7 +27,9 @@ class SupplierController extends Controller
                 'norek' => 'nullable|max:255|string',
                 'bank' => 'nullable|string',
                 'alias' => 'nullable|string',
-                'swift' => 'nullable|string'
+                'swift' => 'nullable|string',
+                'intBank' => 'nullable|string',
+                'swift2' => 'nullable|string',
             ]
         );
 
@@ -37,6 +39,8 @@ class SupplierController extends Controller
         $supplier->no_rek =  $validatedData['norek'];
         $supplier->bank = $validatedData['bank'];
         $supplier->swift = $validatedData['swift'];
+        $supplier->intBank = $validatedData['intBank'];
+        $supplier->swift2 = $validatedData['swift2'];
         $supplier->save();
 
         return redirect('/dashboard/admin/suppliers')->with('success', 'Registration successfull!');
@@ -56,7 +60,9 @@ class SupplierController extends Controller
             'bank' => 'string|nullable',
             'status' => 'required|string|in:active,inactive',
             'alias' => 'string|nullable',
-            'swift' => 'nullable|string'
+            'swift' => 'nullable|string',
+            'intBank' => 'nullable|string',
+            'swift2' => 'nullable|string',
         ]);
 
         // dd($credentials);
@@ -68,6 +74,8 @@ class SupplierController extends Controller
             $supplier->no_rek = $credentials['norek'];
             $supplier->bank = $credentials['bank'];
             $supplier->swift = $credentials['swift'];
+            $supplier->intBank = $credentials['intBank'];
+            $supplier->swift2 = $credentials['swift2'];
             $supplier->status = $credentials['status'];
             $supplier->save();
             return redirect('/dashboard/admin/suppliers')->with('success', 'Update successfull!');

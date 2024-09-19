@@ -14,7 +14,7 @@ class Supplier extends Model
     use HasFactory, HasUuids;
     protected $keyType = 'string'; // UUID is a string
     public $incrementing = false; // Disable auto-incrementing
-    protected $fillable = ['name', 'no_rek', 'bank', 'swift', 'status'];
+    protected $fillable = ['name', 'no_rek', 'bank', 'swift', 'intBank', 'swift2', 'status'];
     public function tanda_terima(): HasMany
     {
         return $this->hasMany(TandaTerima::class, 'supplier_id');
