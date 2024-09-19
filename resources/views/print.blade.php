@@ -140,7 +140,11 @@
                     <tr>
                         <td style="width: 25%;">{{ $invoice->nomor }}</td>
                         <td style="width: 25%;">{{ $tandaTerima->currency }}</td>
+                        @if ($tandaTerima->currency === 'USD')
+                        <td style="width: 50%;">{{ number_format($invoice->nominal, 2, ',', '.') }}</td>
+                        @else
                         <td style="width: 50%;">{{ number_format($invoice->nominal, 0, ',', '.') }}</td>
+                        @endif
                     </tr>
                     @endforeach
 

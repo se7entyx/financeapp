@@ -161,7 +161,13 @@
             </tr>
             <tr>
                 <td class="no-border align-left">Jumlah USD / Rp</td>
-                <td class="no-border">: {{$buktiKas->tanda_terima->currency}} {{number_format($buktiKas->jumlah, 0, ',', '.')}}</td>
+                <td class="no-border">: {{$buktiKas->tanda_terima->currency}} 
+                    @if ($buktiKas->tanda_terima->currency == 'USD')
+                    {{number_format($buktiKas->jumlah, 2, ',', '.')}}
+                    @else
+                    {{number_format($buktiKas->jumlah, 0, ',', '.')}}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td class="no-border align-left">No. cek</td>
@@ -202,7 +208,13 @@
                 <td></td>
                 <td>{{ $carryOverRow['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
-                <td class="right-text">{{ $carryOverRow['currency'] }} {{ number_format($carryOverRow['transaction_nominal'], 0, ',', '.') }}</td>
+                <td class="right-text">{{ $carryOverRow['currency'] }}
+                    @if ($carryOverRow['currency'] == 'USD')
+                    {{ number_format($carryOverRow['transaction_nominal'], 2, ',', '.') }}
+                    @else
+                    {{ number_format($carryOverRow['transaction_nominal'], 0, ',', '.') }}
+                    @endif
+                </td>
             </tr>
             @php
             $currentRow += 1;
@@ -259,7 +271,13 @@
                 <td></td>
                 <td>{{ $trans['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
-                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
+                <td class="right-text">{{ $trans['currency'] }} 
+                    @if ($trans['currency'] == 'USD')
+                    {{ number_format($trans['transaction_nominal'], 2, ',', '.') }}
+                    @else
+                    {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td></td>
@@ -299,7 +317,13 @@
                 <td></td>
                 <td>{{ $trans['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
-                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
+                <td class="right-text">{{ $trans['currency'] }} 
+                    @if ($trans['currency'] == 'USD')
+                    {{ number_format($trans['transaction_nominal'], 2, ',', '.') }}
+                    @else
+                    {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td></td>
@@ -332,7 +356,13 @@
                 <td></td>
                 <td>{{ $trans['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
-                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
+                <td class="right-text">{{ $trans['currency'] }} 
+                    @if ($trans['currency'] == 'USD')
+                    {{ number_format($trans['transaction_nominal'], 2, ',', '.') }}
+                    @else
+                    {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td></td>
@@ -365,7 +395,13 @@
                 <td></td>
                 <td>{{$trans['transaction_keterangan']}} {{$yrow}} <span class="float-right">{{$trans['quantity']}} {{$trans['satuan']}}</span></td>
                 <td class="center-text"></td>
-                <td class="right-text">{{ $trans['currency'] }} {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}</td>
+                <td class="right-text">{{ $trans['currency'] }} 
+                    @if ($trans['currency'] == 'USD')
+                    {{ number_format($trans['transaction_nominal'], 2, ',', '.') }}
+                    @else
+                    {{ number_format($trans['transaction_nominal'], 0, ',', '.') }}
+                    @endif
+                </td>
             </tr>
             @php 
             $currentRow += 1;
@@ -437,7 +473,13 @@
                 <td style="width: 90px"></td>
                 <td style="width: 400px"></td>
                 <td style="width: 50px" class="center-text"></td>
-                <td style="width: 130px" class="right-text">{{$buktiKas->tanda_terima->currency}} {{number_format($grandTotal, 0, ',', '.')}}</td>
+                <td style="width: 130px" class="right-text">{{$buktiKas->tanda_terima->currency}} 
+                @if ($trans['currency'] == 'USD')
+                    {{ number_format($grandTotal, 2, ',', '.') }}
+                    @else
+                    {{ number_format($grandTotal, 0, ',', '.') }}
+                    @endif
+                </td>
             </tr>
         </table>
 
@@ -536,7 +578,13 @@
                 </tr>
                 <tr>
                     <td class="no-border align-left">Jumlah USD / Rp</td>
-                    <td class="no-border">: {{$buktiKas->tanda_terima->currency}} {{number_format($buktiKas->jumlah, 0, ',', '.')}}</td>
+                    <td class="no-border">: {{$buktiKas->tanda_terima->currency}}
+                        @if ($buktiKas->tanda_terima->currency == 'USD')
+                        {{number_format($buktiKas->jumlah, 2, ',', '.')}}
+                        @else
+                        {{number_format($buktiKas->jumlah, 0, ',', '.')}}
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td class="no-border align-left">No. cek</td>
@@ -565,7 +613,13 @@
                     <td></td>
                     <td>{{ $carryOverRow['transaction_keterangan'] }} {{$yrow}} <span class="float-right">{{$carryOverRow['quantity']}} {{$carryOverRow['satuan']}}</span></td>
                     <td class="center-text"></td>
-                    <td class="right-text">{{ $carryOverRow['currency'] }} {{ number_format($carryOverRow['transaction_nominal'], 0, ',', '.') }}</td>
+                    <td class="right-text">{{ $carryOverRow['currency'] }}
+                        @if ($carryOverRow['currency'] == 'USD')
+                        {{ number_format($carryOverRow['transaction_nominal'], 2, ',', '.') }}
+                        @else
+                        {{ number_format($carryOverRow['transaction_nominal'], 0, ',', '.') }}
+                        @endif
+                    </td>
                 </tr>
                 @php
                 $currentRow += 1;
@@ -637,7 +691,13 @@
                     <td style="width: 90px"></td>
                     <td style="width: 400px"></td>
                     <td style="width: 50px" class="center-text"></td>
-                    <td style="width: 130px" class="right-text">{{$buktiKas->tanda_terima->currency}} {{number_format($grandTotal, 0, ',', '.')}}</td>
+                    <td style="width: 130px" class="right-text">{{$buktiKas->tanda_terima->currency}}
+                        @if ($buktiKas->tanda_terima->currency)
+                        {{number_format($grandTotal, 2, ',', '.')}}
+                        @else
+                        {{number_format($grandTotal, 0, ',', '.')}}
+                        @endif
+                    </td>
                 </tr>
             </table>
 

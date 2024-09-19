@@ -24,25 +24,25 @@
 
         @if (session('success'))
         <div class="alert alert-success">
-        <script>
-            alert("Bukti kas berhasil diedit");
-        </script>
+            <script>
+                alert("Bukti kas berhasil diedit");
+            </script>
         </div>
         @endif
 
         @if (session('finished'))
         <div class="alert alert-success">
-        <script>
-            alert("Bukti kas berhasil diselesaikan");
-        </script>
+            <script>
+                alert("Bukti kas berhasil diselesaikan");
+            </script>
         </div>
         @endif
 
         @if (session('successs'))
         <div class="alert alert-success">
-        <script>
-            alert("Bukti kas berhasil dihapus");
-        </script>
+            <script>
+                alert("Bukti kas berhasil dihapus");
+            </script>
         </div>
         @endif
 
@@ -117,7 +117,7 @@
                                     <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas">View Details</a>
                                     @if ($bk->status == 'Belum dibayar')
                                     <a href="{{ route('bukti-kas.edit', ['id' => $bk->id, 'from' => 'my']) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
-                                    @endif                               
+                                    @endif
                                     <form action="{{ route('delete.bukti-kas', $bk->id) }}" method="POST" class="inline-block m-0 p-0 delete-form-bk">
                                         @csrf
                                         @method('DELETE')
@@ -337,7 +337,16 @@
 
                     const cellAmount = newRow.insertCell(2);
                     cellAmount.className = "px-6 py-4 text-right";
-                    cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                    if (item.currency == 'USD') {
+                        const usdFormatter = new Intl.NumberFormat('en-ID', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                        cellAmount.textContent = item.currency + ' ' + usdFormatter.format(item.transaction_nominal);
+                    } else {
+                        cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                    }
+
                 } else {
                     const cellNo = newRow.insertCell(0);
                     cellNo.className = "px-6 py-4 font-medium text-gray-900 whitespace-nowrap";
@@ -348,8 +357,16 @@
                     cellKeterangan.textContent = item.transaction_keterangan;
 
                     const cellAmount = newRow.insertCell(2);
-                    cellAmount.className = "px-6 py-4 text-right";
-                    cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                    if (item.currency == 'USD') {
+                        const usdFormatter = new Intl.NumberFormat('en-ID', {
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1
+                        });
+                        cellAmount.textContent = item.currency + ' ' + usdFormatter.format(item.transaction_nominal);
+                    } else {
+                        cellAmount.textContent = item.currency + ' ' + formatter.format(item.transaction_nominal);
+                    }
+
                 }
 
                 // Add tax rows if PPn or PPh exists
@@ -431,7 +448,7 @@
                 const finishForm = document.getElementById('finish-form');
                 if (finishForm) {
                     const urlTemplate = "{{ route('finish', ':id') }}";
-                    finishForm.action = urlTemplate.replace(':id', id);                    // Split the 'nomer' value
+                    finishForm.action = urlTemplate.replace(':id', id); // Split the 'nomer' value
                     const nomerParts = nomer.split(/\s*\/\s*/);
                     const kode = nomerParts[0];
                     const nomor = nomerParts[1];
