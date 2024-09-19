@@ -353,7 +353,7 @@
           addPPnButton.className = 'ppnButton px-2 py-1 text-blue-500 text-md rounded';
           addPPnButton.type = 'button';
           addPPnButton.onclick = () => {
-            addTaxRow('ppn', item.nominalValue, item.selectedCurrency, newRow);
+            addTaxRow('PPn', item.nominalValue, item.selectedCurrency, newRow);
             addPPnButton.style.display = 'none'; // Hide other button
             updateTotal();
           }
@@ -363,7 +363,7 @@
           addPPhButton.className = 'pphButton px-2 py-1 text-blue-500 text-md rounded ml-2';
           addPPhButton.type = 'button';
           addPPhButton.onclick = () => {
-            addTaxRow('pph', item.nominalValue, item.selectedCurrency, newRow);
+            addTaxRow('PPh', item.nominalValue, item.selectedCurrency, newRow);
             addPPhButton.style.display = 'none'; // Hide button after click
             updateTotal(); // Set flag to indicate buttons have been used
           };
@@ -417,10 +417,10 @@
             cellAmount.textContent = formatCurrency(taxAmount, currency);
 
             const buktiIndex = referenceRow.dataset.buktiIndex;
-            if (type === 'ppn') {
+            if (type === 'PPn') {
               bukti[buktiIndex].ppnid = selectedRate.id;
               bukti[buktiIndex].ppnNominal = taxAmount;
-            } else if (type === 'pph') {
+            } else if (type === 'PPh') {
               bukti[buktiIndex].pphid = selectedRate.id;
               bukti[buktiIndex].pphNominal = taxAmount;
             }
@@ -436,11 +436,11 @@
           const taxAmount = calculateTaxAmount(baseAmount, selectedRate.percentage, type);
           cellAmount.textContent = formatCurrency(taxAmount, currency);
           const buktiIndex = referenceRow.dataset.buktiIndex;
-          if (type === 'ppn') {
+          if (type === 'PPn') {
             console.log(buktiIndex);
             bukti[buktiIndex].ppnid = selectedRate.id;
             bukti[buktiIndex].ppnNominal = taxAmount;
-          } else if (type === 'pph') {
+          } else if (type === 'PPh') {
             bukti[buktiIndex].pphid = selectedRate.id;
             bukti[buktiIndex].pphNominal = taxAmount;
           }
@@ -482,9 +482,9 @@
         console.log(ppnData);
         const pphData = JSON.parse(document.getElementById('pphData').value);
 
-        if (type === 'ppn') {
+        if (type === 'PPn') {
           return ppnData;
-        } else if (type === 'pph') {
+        } else if (type === 'PPh') {
           return pphData;
         }
         return [];
@@ -492,10 +492,10 @@
 
       function calculateTaxAmount(baseAmount, rate, type) {
         let taxAmount;
-        if (type === 'ppn') {
+        if (type === 'PPn') {
           taxAmount = baseAmount * (rate / 100);
 
-        } else if (type === 'pph') {
+        } else if (type === 'PPh') {
           taxAmount = -(baseAmount * (rate / 100));
         }
         taxAmount = Math.round(taxAmount);
