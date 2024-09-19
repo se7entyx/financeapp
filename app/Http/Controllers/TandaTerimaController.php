@@ -249,101 +249,118 @@ class TandaTerimaController extends Controller
             'keterangan.*' => 'required|string',
             'trans_nominal' => 'required|array',
             'trans_nominal.*' => 'required|numeric',
-            'satuan' => 'required|array',
+            'satuan' => 'nullable|array',
             'satuan.*' => 'nullable|string',
-            'quantity' => 'required|array',
+            'quantity' => 'nullable|array',
             'quantity.*' => 'nullable|numeric',
-            'harga_satuan' => 'required|array',
-            'harga_satuan.*' => 'nullable|numeric'
+            'harga_satuan' => 'nullable|array',
+            'harga_satuan.*' => 'nullable|numeric',
+            'trans_id' => 'nullable|array',
+            'trans_id.*' => 'nullable|string',
         ]);
-
+    
         // Update Tanda Terima record
         $tandaTerima = TandaTerima::findOrFail($id);
-        // dd($validated);
         $tandaTerima->supplier_id = $validated['supplier_id'];
         $tandaTerima->pajak = $validated['faktur'];
-        // $tandaTerima->po = $validated['po'];
         $tandaTerima->bpb = $validated['bpb'];
         $tandaTerima->currency = $validated['currency'];
         $tandaTerima->surat_jalan = $validated['sjalan'];
-        if ($tandaTerima->po == 'true') {
-            $tandaTerima->po = 'true';
-        } else {
-            $tandaTerima->po = $validated['po'];
-        }
+        $tandaTerima->po = $tandaTerima->po === 'true' ? 'true' : $validated['po'];
         $tandaTerima->nomor_po = $validated['po_number'];
         $tandaTerima->tanggal_jatuh_tempo = $validated['jatuh_tempo'];
         $tandaTerima->keterangan = $validated['notes'];
         $tandaTerima->save();
-
-        // Delete invoices and transactions not in the request
+    
+        // Delete invoices not present in the request
         $tandaTerima->invoices()->whereNotIn('nomor', $validated['invoice'])->delete();
-
-        // Initialize a variable to track the transaction index
+    
+        // Initialize variables
         $transIndex = 0;
         $total = 0.0;
-
+    
         foreach ($validated['invoice'] as $index => $invoiceNo) {
+            // Update or create invoice
             $invoice = $tandaTerima->invoices()->updateOrCreate(
                 ['nomor' => $invoiceNo],
                 ['nominal' => $validated['nominal'][$index]]
             );
-
-            $transCount = intval($validated['trans_count'][$index]);
-
+    
+            // Clear previous transactions for the invoice
+            $temp = $invoice->transaction()->get();
             $invoice->transaction()->delete();
-
+    
+            $transCount = intval($validated['trans_count'][$index]);
+    
             for ($i = 0; $i < $transCount; $i++) {
+                // Create a new transaction
                 $transaction = $invoice->transaction()->create([
                     'keterangan' => $validated['keterangan'][$transIndex],
                     'nominal' => $validated['trans_nominal'][$transIndex],
                     'quantity' => $validated['quantity'][$transIndex],
                     'satuan' => $validated['satuan'][$transIndex],
-                    'harga_satuan' => $validated['harga_satuan'][$transIndex]
+                    'harga_satuan' => $validated['harga_satuan'][$transIndex],
                 ]);
-
+    
                 $total += $transaction->nominal;
-
+    
+                // Initialize tax amounts
                 $ppnAmount = 0;
                 $pphAmount = 0;
-
-                if ($transaction->id_ppn) {
-                    $ppn = Tax::find($transaction->id_ppn);
-                    if ($ppn && $ppn->type == 'ppn') {
-                        $ppnAmount = ($transaction->nominal * $ppn->percentage) / 100;
+    
+                // Handle tax assignment
+                if (!empty($validated['trans_id'][$transIndex])) {
+                    $existingTransaction = $temp->firstWhere('id', $validated['trans_id'][$transIndex]);
+    
+                    if ($existingTransaction) {
+                        // Handle PPN tax
+                        if ($existingTransaction->id_ppn) {
+                            $id_ppn = $existingTransaction->id_ppn;
+                            $transaction->id_ppn = $id_ppn;
+                            $ppn = Tax::find($id_ppn);
+                            if ($ppn && $ppn->type == 'ppn') {
+                                $ppnAmount = ($transaction->nominal * $ppn->percentage) / 100;
+                                $ppnAmount = round($ppnAmount);
+                                $transaction->nominal_ppn = $ppnAmount;
+                            }
+                        }
+    
+                        // Handle PPH tax
+                        if ($existingTransaction->id_pph) {
+                            $id_pph = $existingTransaction->id_pph;
+                            $transaction->id_pph = $id_pph;
+                            $pph = Tax::find($id_pph);
+                            if ($pph && $pph->type == 'pph') {
+                                $pphAmount = -($transaction->nominal * $pph->percentage) / 100;
+                                $pphAmount = round($pphAmount);
+                                $transaction->nominal_pph = $pphAmount;
+                            }
+                        }
                     }
                 }
-
-                if ($transaction->id_pph) {
-                    $pph = Tax::find($transaction->id_pph);
-                    if ($pph && $pph->type == 'pph') {
-                        $pphAmount = ($transaction->nominal * $pph->percentage) / 100;
-                    }
-                }
-
-                $ppnAmount = round($ppnAmount);
-                $pphAmount = round($pphAmount);
-                $total = $total + $ppnAmount - $pphAmount;
-
-                $transaction->nominal_ppn = $ppnAmount;
-                $transaction->nominal_pph = $pphAmount;
+    
+                // Update total with taxes
+                $total += $ppnAmount + $pphAmount;
                 $transaction->save();
-
-                if ($tandaTerima->bukti_kas) {
-                    $tandaTerima->bukti_kas->jumlah = $total;
-                    $tandaTerima->bukti_kas->save();
-                }
-
+    
                 $transIndex++;
             }
+    
+            // Update the related bukti_kas with the total
+            if ($tandaTerima->bukti_kas) {
+                $tandaTerima->bukti_kas->jumlah = $total;
+                $tandaTerima->bukti_kas->save();
+            }
         }
-
+    
+        // Redirect based on the `from` parameter
         if ($from == 'my') {
             return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
         } elseif ($from == 'all') {
             return redirect()->route('all.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
         }
     }
+    
 
     public function printTandaTerima($id)
     {

@@ -127,6 +127,7 @@
                             </div>
                             @foreach ($invoice->transaction as $trans)
                             <div class="trans-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2 pl-8">
+                                <input type="hidden" name="trans_id[]" value="{{$trans->id}}">
                                 <div class="flex-1">
                                     <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
                                     <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Keterangan" value="{{$trans->keterangan}}">
@@ -414,6 +415,7 @@
         transDiv.className = 'trans-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2 pl-8'; // Add padding-left for indentation
 
         transDiv.innerHTML = `
+        <input type="hidden" name="trans_id[]">
         <div class="flex-1">
             <label for="keterangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Keterangan <span class="required">*</span></label>
             <input type="text" name="keterangan[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="Keterangan">

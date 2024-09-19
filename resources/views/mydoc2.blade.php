@@ -362,8 +362,9 @@
                     const cellKeterangan = newRow.insertCell(1);
                     cellKeterangan.className = "px-6 py-4";
                     cellKeterangan.textContent = item.transaction_keterangan;
-
+                    
                     const cellAmount = newRow.insertCell(2);
+                    cellAmount.className = 'px-6 py-4 text-right'
                     if (item.currency == 'USD') {
                         const usdFormatter = new Intl.NumberFormat('en-ID', {
                             minimumFractionDigits: 1,
