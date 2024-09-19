@@ -199,12 +199,12 @@ class TandaTerimaController extends Controller
                 abort(403, 'Access denied.');
             }
         }
-
+        
         if ($from != 'my' && $from != 'all') {
             abort(403, 'Wrong URL.');
         }
 
-        if (Auth::user()->role == 'user' && $tandaTerima->user_id != Auth::id()) {
+        if(Auth::user()->role == 'user' && $tandaTerima->user_id != Auth::id()) {
             return redirect()->route('my.tanda-terima')->with('false', 'error encounter');
         }
 
@@ -283,27 +283,35 @@ class TandaTerimaController extends Controller
         $transIndex = 0;
         $total = 0.0;
 
+        // Update or create invoices and transactions
         foreach ($validated['invoice'] as $index => $invoiceNo) {
             $invoice = $tandaTerima->invoices()->updateOrCreate(
                 ['nomor' => $invoiceNo],
                 ['nominal' => $validated['nominal'][$index]]
             );
 
+            // Get the number of transactions for this invoice
             $transCount = intval($validated['trans_count'][$index]);
 
-            $invoice->transaction()->delete();
+            // Remove any transactions not included in the request for this invoice
+            $invoice->transaction()->whereNotIn('keterangan', array_slice($validated['keterangan'], $transIndex, $transCount))->delete();
 
+            // Update or create transactions for this invoice
             for ($i = 0; $i < $transCount; $i++) {
-                $transaction = $invoice->transaction()->create([
-                    'keterangan' => $validated['keterangan'][$transIndex],
-                    'nominal' => $validated['trans_nominal'][$transIndex],
-                    'quantity' => $validated['quantity'][$transIndex],
-                    'satuan' => $validated['satuan'][$transIndex],
-                    'harga_satuan' => $validated['harga_satuan'][$transIndex]
-                ]);
+                $transaction = $invoice->transaction()->updateOrCreate(
+                    ['keterangan' => $validated['keterangan'][$transIndex]],
+                    [
+                        'nominal' => $validated['trans_nominal'][$transIndex],
+                        'quantity' => $validated['quantity'][$transIndex],
+                        'satuan' => $validated['satuan'][$transIndex],
+                        'harga_satuan' => $validated['harga_satuan'][$transIndex]
+                    ]
+                );
 
+                // Add the transaction nominal to the total
                 $total += $transaction->nominal;
 
+                // Handle PPN and PPH calculations
                 $ppnAmount = 0;
                 $pphAmount = 0;
 
@@ -321,23 +329,26 @@ class TandaTerimaController extends Controller
                     }
                 }
 
+                // Add PPN and subtract PPH from the total
                 $ppnAmount = round($ppnAmount);
                 $pphAmount = round($pphAmount);
                 $total = $total + $ppnAmount - $pphAmount;
 
+                // Update the transaction with PPN and PPH amounts
                 $transaction->nominal_ppn = $ppnAmount;
                 $transaction->nominal_pph = $pphAmount;
                 $transaction->save();
 
+                // Update the associated Bukti Kas if applicable
                 if ($tandaTerima->bukti_kas) {
                     $tandaTerima->bukti_kas->jumlah = $total;
                     $tandaTerima->bukti_kas->save();
                 }
 
+                // Increment the transaction index
                 $transIndex++;
             }
         }
-
         if ($from == 'my') {
             return redirect()->route('my.tanda-terima')->with('success', 'Tanda Terima updated successfully.');
         } elseif ($from == 'all') {
