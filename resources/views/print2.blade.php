@@ -72,6 +72,7 @@
 
         .title {
             font-size: 18px;
+            position: relative;
         }
 
         .center-text {
@@ -114,6 +115,12 @@
         .page-break {
             page-break-after: always;
         }
+
+        .paging {
+            position: absolute;
+            right: 0;
+            font-size: small;
+        }
     </style>
 </head>
 
@@ -127,7 +134,29 @@
     $y = '';
     $yrow = '';
     $carryOverRow = null;
+    $halaman = 1;
+    $cekkolom = 0;
     @endphp
+
+    @foreach ($invoiceData as $index => $trans)
+    @if ($trans['transaction_keterangan'] && $trans['name_ppn'] && $trans['name_pph'])
+    @php
+    $cekkolom += 3
+    @endphp
+    @elseif ($trans['transaction_keterangan'] && !$trans['name_ppn'] && $trans['name_pph'])
+    @php
+    $cekkolom += 2
+    @endphp
+    @elseif ($trans['transaction_keterangan'] && $trans['name_ppn'] && !$trans['name_pph'])
+    @php
+    $cekkolom += 2
+    @endphp
+    @elseif ($trans['transaction_keterangan'] && !$trans['name_ppn'] && !$trans['name_pph'])
+    @php
+    $cekkolom += 1
+    @endphp
+    @endif
+    @endforeach
 
     @foreach ($invoiceData as $index => $trans)
     @if($currentRow % $totalRowsPerPage == 0)
@@ -145,7 +174,11 @@
                 <td class="center-text border" style="width: 120px;">{{ $buktiKas->tanggal ?? '' }}</td>
             </tr>
             <tr>
-                <td class=" title center-text no-border" colspan="3">BUKTI PENGELUARAN KAS / BANK</td>
+                <td class=" title center-text no-border" colspan="3">BUKTI PENGELUARAN KAS / BANK 
+                    @if ($cekkolom > $totalRowsPerPage - 2)
+                    <span class="paging">Halaman {{$halaman}}</span>
+                    @endif
+                </td>
             </tr>
         </table>
 
@@ -473,12 +506,23 @@
                 <td style="width: 90px"></td>
                 <td style="width: 400px"></td>
                 <td style="width: 50px" class="center-text"></td>
-                <td style="width: 130px" class="right-text">{{$buktiKas->tanda_terima->currency}} 
+                <td style="width: 130px" class="right-text">
+                @if (!$carryOverRow && $index == count($invoiceData) - 1)
+                <b>{{$buktiKas->tanda_terima->currency}} 
                 @if ($trans['currency'] == 'USD')
-                    {{ number_format($grandTotal, 2, ',', '.') }}
-                    @else
-                    {{ number_format($grandTotal, 0, ',', '.') }}
-                    @endif
+                {{ number_format($grandTotal, 2, ',', '.') }}
+                @else
+                {{ number_format($grandTotal, 0, ',', '.') }}
+                @endif
+                </b>
+                @else
+                {{$buktiKas->tanda_terima->currency}} 
+                @if ($trans['currency'] == 'USD')
+                {{ number_format($grandTotal, 2, ',', '.') }}
+                @else
+                {{ number_format($grandTotal, 0, ',', '.') }}
+                @endif
+                @endif
                 </td>
             </tr>
         </table>
@@ -522,6 +566,7 @@
         <div class="page-break"></div>
         @php
         $currentRow = 0;
+        $halaman += 1;
         @endphp
         @endif
         @endif
@@ -534,6 +579,7 @@
     @if($carryOverRow != null)
         @php
         $currentRow = 0;
+        $halaman++;
         @endphp
 
         @if (is_array($carryOverRow) && isset($carryOverRow['invoice_keterangan']) && ($y != '(' . $carryOverRow['invoice_keterangan'] . ')' || $y == $yrow))
@@ -562,7 +608,7 @@
                     <td class="center-text border" style="width: 120px;">{{ $buktiKas->tanggal ?? '' }}</td>
                 </tr>
                 <tr>
-                    <td class=" title center-text no-border" colspan="3">BUKTI PENGELUARAN KAS / BANK</td>
+                    <td class=" title center-text no-border" colspan="3">BUKTI PENGELUARAN KAS / BANK <span class="paging">Halaman {{$halaman}}</span></td>
                 </tr>
             </table>
 
