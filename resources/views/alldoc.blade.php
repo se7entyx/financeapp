@@ -212,58 +212,64 @@
                 const bpb = row.querySelector('.bpb').textContent;
                 const suratJalan = row.querySelector('.surat-jalan').textContent;
                 const tanggalJatuhTempo = row.querySelector('.jatuh-tempo').textContent;
-				const nopo = row.querySelector('.no-po').textContent;
+                const nopo = row.querySelector('.no-po').textContent;
                 const keterangan = row.querySelector('.keterangan').textContent;
                 const pembuat = row.querySelector('.dibuat-oleh').textContent;
 
                 fetch(`{{ route('getTandaInvoices', ':id') }}`.replace(':id', typeId))
                     .then(response => response.json())
                     .then(data => {
-                        const formatter = new Intl.NumberFormat('en-US', {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0
-                        });
-
                         detailsContent.innerHTML = `
-                        <div class="mb-4"><strong>Tanggal:</strong> ${tanggal || 'N/A'}</div>
-                        <div class="mb-4"><strong>Supplier:</strong> ${supplier || 'N/A'}</div>
-                        <div class="mb-4"><strong>Faktur Pajak:</strong> ${fakturPajak}</div>
-                        <div class="mb-4"><strong>PO:</strong> ${po}</div>
-                        <div class="mb-4"><strong>BPB:</strong> ${bpb}</div>
-                        <div class="mb-4"><strong>Surat Jalan:</strong> ${suratJalan}</div>
-                        <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo}</div>
-						<div class="mb-4"><strong>Nomor PO:</strong> ${nopo}</div>
-                        <div class="mb-4"><strong>Keterangan:</strong> ${keterangan}</div>
-                        <div class="mb-4"><strong>Dibuat oleh:</strong> ${pembuat}</div>
-                        <div class="mb-4"><strong>Invoices:</strong></div>
-                        <table class="w-full bg-white rtl:text-right border border-gray-300">
-                            <thead class="bg-gray-200">
-                                <tr class="text-gray-700">
-                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">No</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Invoice</th>
-                                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Nominal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${data.map((kbk, index) => `
-                                    <tr>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${index + 1}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.invoice_keterangan}</td>
-                                        <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.currency} ${formatter.format(kbk.invoice_nominal)}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                        `;
-
-                        // Show the modal
-                        detailModal.classList.remove('hidden');
-                    })
-                    .catch(error => console.error('Error fetching tandaTerimaInvoices details:', error))
-                    .finally(() => {
-                        // Hide the loading animation
-                        loadingContainer.classList.add('hidden');
+        <div class="mb-4"><strong>Tanggal:</strong> ${tanggal || 'N/A'}</div>
+        <div class="mb-4"><strong>Supplier:</strong> ${supplier || 'N/A'}</div>
+        <div class="mb-4"><strong>Faktur Pajak:</strong> ${fakturPajak}</div>
+        <div class="mb-4"><strong>PO:</strong> ${po}</div>
+        <div class="mb-4"><strong>BPB:</strong> ${bpb}</div>
+        <div class="mb-4"><strong>Surat Jalan:</strong> ${suratJalan}</div>
+        <div class="mb-4"><strong>Tanggal Jatuh Tempo:</strong> ${tanggalJatuhTempo}</div>
+        <div class="mb-4"><strong>Nomor PO:</strong> ${nopo}</div>
+        <div class="mb-4"><strong>Keterangan:</strong> ${keterangan}</div>
+        <div class="mb-4"><strong>Dibuat oleh:</strong> ${pembuat}</div>
+        <div class="mb-4"><strong>Invoices:</strong></div>
+        <table class="w-full bg-white rtl:text-right border border-gray-300">
+            <thead class="bg-gray-200">
+                <tr class="text-gray-700">
+                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">No</th>
+                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Invoice</th>
+                    <th scope="col" class="py-2 px-4 border-b w-1/4 text-start">Nominal</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${data.map((kbk, index) => {
+                    // Determine the number of fraction digits based on the currency
+                    const fractionDigits = kbk.currency === 'USD' ? 2 : 0;
+                    
+                    // Create a formatter based on the currency type
+                    const formatter = new Intl.NumberFormat('en-US', {
+                        minimumFractionDigits: fractionDigits,
+                        maximumFractionDigits: fractionDigits
                     });
+
+                    return `
+                        <tr>
+                            <td scope="col" class="py-2 px-4 border-b w-1/4">${index + 1}</td>
+                            <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.invoice_keterangan}</td>
+                            <td scope="col" class="py-2 px-4 border-b w-1/4">${kbk.currency} ${formatter.format(kbk.invoice_nominal)}</td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+        `;
+
+                    // Show the modal
+                    detailModal.classList.remove('hidden');
+                })
+                .catch(error => console.error('Error fetching tandaTerimaInvoices details:', error))
+                .finally(() => {
+                    // Hide the loading animation
+                    loadingContainer.classList.add('hidden');
+                });
             });
         });
 
