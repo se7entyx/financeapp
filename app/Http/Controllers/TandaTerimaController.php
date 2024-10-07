@@ -217,12 +217,14 @@ class TandaTerimaController extends Controller
         }
 
         $usedPONumbers = TandaTerima::pluck('nomor_po')->toArray();
+        $usedInvoiceNumbers = Invoices::pluck('nomor')->toArray();
+
         $z = Supplier::orderBy('name', 'asc')->get();
         $title = 'Edit Tanda Terima';
         // dd($tandaTerima);
 
         // dd($tandaTerima->invoices);
-        return view('editdoc', ['tandaTerimaRecords' => $tandaTerima, 'usedPONumbers' => $usedPONumbers, 'title' => $title, 'suppliers' => $z, 'from' => $from]);
+        return view('editdoc', ['tandaTerimaRecords' => $tandaTerima, 'usedPONumbers' => $usedPONumbers, 'title' => $title, 'suppliers' => $z, 'from' => $from, 'usedInvoiceNumbers' => $usedInvoiceNumbers]);
     }
 
     public function update(Request $request, $id, $from)

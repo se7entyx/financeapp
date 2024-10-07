@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoices;
 use App\Models\Supplier;
 use App\Models\TandaTerima;
 use Illuminate\Http\Request;
@@ -15,8 +16,9 @@ class SupplierController extends Controller
         // Fetch all suppliers from the database
         $suppliers = Supplier::orderBy('name', 'asc')->get();
         $usedPONumbers = TandaTerima::pluck('nomor_po')->toArray();
+        $usedInvoiceNumbers = Invoices::pluck('nomor')->toArray();
         // Return the view 'newtanda' with the suppliers and a title
-        return view('newtanda', ['suppliers' => $suppliers, 'usedPONumbers' => $usedPONumbers, 'title' => 'New Tanda Terima']);
+        return view('newtanda', ['suppliers' => $suppliers, 'usedPONumbers' => $usedPONumbers, 'title' => 'New Tanda Terima','usedInvoiceNumbers' => $usedInvoiceNumbers]);
     }
 
     public function store(Request $request)

@@ -207,17 +207,38 @@
                 });
         }
 
+        function fetchBuktiKasByInvoice(invoiceNumber) {
+            const url = "{{ route('bukti.kas.for-invoice', ':invoiceNumber') }}".replace(':invoiceNumber', invoiceNumber);
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const validIds = data.filter(id => id !== null);
+                    console.log(validIds);
+
+                    if (validIds.length === 0) {
+                        alert('Bukti pengeluaran kas belum dibuat');
+                    } else {
+                        openBuktiKasTabs(validIds);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching Bukti Kas IDs:', error);
+                    alert('An error occurred while fetching Bukti Kas IDs.');
+                });
+        }
+
         function openBuktiKasTabs(ids) {
             console.log(ids);
             const baseUrl = "{{ route('bukti-kas.print', ':id') }}";
             ids.forEach((id, index) => {
                 console.log('test');
-                //setTimeout(() => {
-                //const url = baseUrl.replace(':id', id);
-                //window.open(url);
-                //}, index * 1000);
+                setTimeout(() => {
                 const url = baseUrl.replace(':id', id);
                 window.open(url);
+                }, index * 1000);
+                // const url = baseUrl.replace(':id', id);
+                // window.open(url);
             });
 
         }
@@ -238,16 +259,18 @@
         document.getElementById('tanggal').value = formattedDate;
         console.log("Formatted Date:", formattedDate);
 
+        // Function to format currency
+        function formatCurrency(value, currency) {
+            return `${currency} ${new Intl.NumberFormat('id-ID').format(value)}`;
+        }
+
         const addButton = document.getElementById('addButton');
         const addButton2 = document.getElementById('addTrans');
         const invoiceFieldsContainer = document.getElementById('invoiceFieldsContainer');
         var form = document.getElementById('addtandaterima');
         let currentEditIndex = null;
+        const usedInvoiceNumbers = @json($usedInvoiceNumbers)
 
-        // Function to format currency
-        function formatCurrency(value, currency) {
-            return `${currency} ${new Intl.NumberFormat('id-ID').format(value)}`;
-        }
         // Add new invoice fields dynamically
         document.getElementById('addButton').addEventListener('click', function() {
             const invoiceRowCount = document.getElementsByClassName('invoice-row').length;
@@ -258,27 +281,71 @@
             }
 
             const div = document.createElement('div');
-            div.className = 'invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2';
+            div.className = 'invoice-row flex flex-col md:flex-row gap-4 mb-6';
 
             div.innerHTML = `
-        <input type="hidden" name="trans_count[]" value="0" class="trans-count">
-        <div class="flex-1">
-            <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor Invoice <span class="required">*</span></label>
-            <input type="text" name="invoice[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Invoice" required>
+    <input type="hidden" name="trans_count[]" value="0" class="trans-count">
+    <div class="flex-1 items-start">
+        <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor Invoice <span class="required">*</span></label>
+        <input type="text" name="invoice[]" class="invoice-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Invoice" required>
+        <a href="#" class="cek-button hidden text-blue-500 hover:text-blue-700 my-2">Cek</a>
+    </div>
+    <div class="flex-1 items-start">
+        <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total Harga Invoice <span class="required">*</span></label>
+        <input type="number" name="nominal[]" readonly class="invoice-nominal bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nominal" required>
+    </div>
+    <div class="flex-1 flex items-end m-0 p-0">
+        <div class="flex gap-2">
+            <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeItem(this)">Delete</button>
+            <button type="button" id="addTrans" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">Add</button>
         </div>
-        <div class="flex-1">
-            <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total Harga Invoice <span class="required">*</span></label>
-            <input type="number" name="nominal[]" readonly class="invoice-nominal bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nominal" required>
-        </div>
-        <div class="flex-1">
-            <div class="flex gap-2">
-                <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeItem(this)">Delete</button>
-                <button type="button" id="addTrans" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900" >Add</button>
-            </div>
-        </div>
-    `;
+    </div>
+`;
+
 
             document.getElementById('invoiceFieldsContainer').appendChild(div);
+
+            // Store alerted invoice numbers
+            const alertedInvoiceNumbers = new Set();
+
+            document.querySelectorAll('.invoice-input').forEach(function(input) {
+                input.addEventListener('focusout', function() {
+                    const invoiceNumber = input.value;
+
+                    // Get the Cek button corresponding to this input field
+                    const cekButton = input.parentElement.querySelector('.cek-button');
+
+                    if (usedInvoiceNumbers.includes(invoiceNumber)) {
+                        // Check if this invoice number has already triggered an alert
+                        if (!alertedInvoiceNumbers.has(invoiceNumber)) {
+                            alert('Nomor Invoice sudah digunakan');
+                            alertedInvoiceNumbers.add(invoiceNumber); // Add to alerted set
+                        }
+                        // Show the "Cek" button if the invoice number is already used
+                        cekButton.classList.remove('hidden');
+                    } else {
+                        // Hide the "Cek" button if the invoice number is not used
+                        cekButton.classList.add('hidden');
+                        // Remove from alerted set if invoice number is not used anymore
+                        alertedInvoiceNumbers.delete(invoiceNumber);
+                    }
+                });
+            });
+
+
+            document.querySelectorAll('.cek-button').forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+
+                    const invoiceInput = button.parentElement.querySelector('.invoice-input');
+                    const invoiceNumber = invoiceInput.value;
+
+                    // Fetch and open the Bukti Kas for the invoice number
+                    if (invoiceNumber) {
+                        fetchBuktiKasByInvoice(invoiceNumber);
+                    }
+                });
+            });
 
             div.querySelector('#addTrans').addEventListener('click', function() {
                 const transDiv = document.createElement('div');
