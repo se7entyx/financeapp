@@ -294,7 +294,7 @@
         <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total Harga Invoice <span class="required">*</span></label>
         <input type="number" name="nominal[]" readonly class="invoice-nominal bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nominal" required>
     </div>
-    <div class="flex-1 flex items-end m-0 p-0">
+    <div class="flex-1 flex m-0 p-0 items-end" id="divbutton">
         <div class="flex gap-2">
             <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeItem(this)">Delete</button>
             <button type="button" id="addTrans" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">Add</button>
@@ -323,6 +323,8 @@
                         }
                         // Show the "Cek" button if the invoice number is already used
                         cekButton.classList.remove('hidden');
+                        document.getElementById('divbutton').classList.remove('items-end');
+                        document.getElementById('divbutton').classList.add('items-center');
                     } else {
                         // Hide the "Cek" button if the invoice number is not used
                         cekButton.classList.add('hidden');

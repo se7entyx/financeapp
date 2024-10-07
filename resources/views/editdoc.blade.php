@@ -423,20 +423,20 @@
             }
 
             const div = document.createElement('div');
-            div.className = 'invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end mt-2';
+            div.className = 'invoice-row flex flex-col md:flex-row gap-4 mb-6 mt-2';
 
             div.innerHTML = `
                 <input type="hidden" name="trans_count[]" value="0" class="trans-count">
-                <div class="flex-1">
+                <div class="flex-1 items-start">
                     <label for="invoice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor Invoice <span class="required">*</span></label>
                     <input type="text" name="invoice[]" class="invoice-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Invoice" required>
                     <a href="#" class="cek-button hidden text-blue-500 hover:text-blue-700 my-2">Cek</a>
                 </div>
-                <div class="flex-1">
+                <div class="flex-1 items-start">
                     <label for="nominal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal <span class="required">*</span></label>
                     <input type="number" name="nominal[]" readonly class="invoice-nominal bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nominal" required>
                 </div>
-                <div class="flex-1">
+                <div class="flex-1 flex m-0 p-0 items-center">
                     <div class="flex gap-2">
                         <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeItem(this)">Delete</button>
                         <button type="button" id="addTrans" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900" >Add</button>
