@@ -62,12 +62,12 @@
         <div class="container flex-grow overflow-auto">
             <div id="tanda-terima-table" class="bg-white shadow-md rounded-lg">
                 <table class="min-w-full bg-white border border-gray-300">
-                    <thead class="sticky top-0 bg-gray-200">
+                    <thead class="top-0 bg-gray-200">
                         <tr class="text-gray-700">
                             <th class="py-2 px-4 border-b">No</th>
-                            <th class="py-2 px-4 border-b">Nomor Tanda Terima</th>
-                            <th class="py-2 px-4 border-b">@sortablelink('created_at','Tanggal')</th>
-                            <th class="py-2 px-4 border-b">Supplier</th>
+                            <th class="py-2 px-4 border-b sticky left-0 z-10 bg-gray-200">Nomor Tanda Terima</th>
+                            <th class="py-2 px-4 border-b sticky left-20 z-10 bg-gray-200">@sortablelink('created_at','Tanggal')</th>
+                            <th class="py-2 px-4 border-b sticky left-48 z-10 bg-gray-200">Supplier</th>
                             <th class="py-2 px-4 border-b text-center">Faktur Pajak</th>
                             <th class="py-2 px-4 border-b text-center">PO</th>
                             <th class="py-2 px-4 border-b text-center">BPB</th>
@@ -83,9 +83,9 @@
                         @foreach ($tandaTerimaRecords as $tt)
                         <tr class="border border-b">
                             <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->index + 1 }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900">{{ $tt->increment_id }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 tanggal">{{ $tt->tanggal }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 supplier">{{ $tt->supplier->name ?? 'N/A' }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900 bg-white sticky left-0 z-10">{{ $tt->increment_id }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 tanggal bg-white sticky left-20 z-10">{{ $tt->tanggal }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 supplier bg-white sticky left-48 z-10">{{ $tt->supplier->name ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-center text-gray-500 pajak">
                                 {!! $tt->pajak == 'true' ? '<span class="text-green-500">&#10003;</span>' : '<span class="text-red-500">&#10007;</span>' !!}
                             </td>
@@ -102,22 +102,39 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 no-po">{{ $tt->nomor_po }}</td>
                             <td class="py-4 px-6 text-sm text-gray-500 break-words keterangan">{{ $tt->keterangan ?? 'N/A' }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 dibuat-oleh">{{ $tt->user->name ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center">
-                                <div class="flex justify-center items-center space-x-4">
-                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
-                                    @if ($tt->bukti_kas)
-                                    @if ($tt->bukti_kas->status == 'Belum dibayar')
-                                    <a href="{{ route('tanda-terima.edit', ['id' => $tt->id, 'from' => 'my']) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
-                                    @endif
-                                    @else
-                                    <a href="{{ route('tanda-terima.edit', ['id' => $tt->id, 'from' => 'my']) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
-                                    @endif
-                                    <form action="{{ route('delete.tanda-terima', $tt->id) }}" method="POST" class="inline-block m-0 p-0 delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
-                                    </form>
-                                    <a href="{{ route('tanda-terima.print', $tt->id) }}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                            <td class="py-4 px-6 flex items-center justify-end text-sm text-gray-500">
+                                <button id="dropdown-button-{{ $tt->id }}" data-dropdown-toggle="dropdown-{{ $tt->id }}" class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    </svg>
+                                </button>
+                                <div id="dropdown-{{ $tt->id }}" class="hidden z-10 w-30 bg-white rounded divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600">
+                                    <ul class="py-1 text-sm" aria-labelledby="dropdown-button-{{ $tt->id }}">
+                                        <li>
+                                            <a href="#" class="flex w-full items-center px-4 py-2 text-blue-500 hover:text-blue-700 view-details" data-id="{{ $tt->id }}" data-table="tanda-terima">View Details</a>
+                                        </li>
+                                        @if ($tt->bukti_kas)
+                                        @if ($tt->bukti_kas->status == 'Belum dibayar')
+                                        <li>
+                                            <a href="{{ route('tanda-terima.edit', ['id' => $tt->id, 'from' => 'my']) }}" class="flex w-full items-center px-4 py-2 text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                        </li>
+                                        @endif
+                                        @else
+                                        <li>
+                                            <a href="{{ route('tanda-terima.edit', ['id' => $tt->id, 'from' => 'my']) }}" class="flex w-full items-center px-4 py-2 text-blue-500 hover:text-blue-700 edit" data-id="{{ $tt->id }}" data-table="tanda-terima">Edit</a>
+                                        </li>
+                                        @endif
+                                        <li>
+                                            <form action="{{ route('delete.tanda-terima', $tt->id) }}" method="POST" class="flex w-full items-center m-0 p-0 delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="flex w-full text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 px-4 py-2 bg-transparent cursor-pointer" role="menuitem" tabindex="-1">Delete</button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('tanda-terima.print', $tt->id) }}" class="flex w-full items-center px-4 py-2  text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </td>
                         </tr>

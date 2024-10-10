@@ -494,7 +494,7 @@
         });
 
         form.addEventListener('submit', function(event) {
-            const invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
+            const invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6');
             const invoiceCount = invoiceRow.length;
 
             let hasInvalidRows = false;

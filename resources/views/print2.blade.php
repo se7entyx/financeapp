@@ -23,13 +23,13 @@
 
         .container {
             width: 100%;
-            height: 50.2%;
+            height: 48.8%;
             margin: 0 auto;
             border: 3px double black;
             box-sizing: border-box;
             padding: 10px;
             position: relative;
-            transform: translate(-5mm, -5.5mm);
+            transform: translate(-5mm, -2.5mm);
         }
 
         table.x {
@@ -39,7 +39,7 @@
         }
 
         table.xy {
-            padding-top: 20px;
+            padding-top: 8px;
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
@@ -93,7 +93,7 @@
 
         table.signature {
             padding-inline: 20px;
-            padding-top: 15px;
+            padding-top: 10px;
             border-collapse: collapse;
             font-size: 11px;
             transform: translateX(5mm);

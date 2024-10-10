@@ -44,6 +44,17 @@ class BuktiKasController extends Controller
         return view('mydoc2', ['title' => $title, 'buktiKasRecords' => $buktiKasRecords]);
     }
 
+public function getBuktiKasForInvoice($invoiceNumber)
+    {
+        $buktiKasIds = Invoices::where('nomor', $invoiceNumber)
+            ->with('tandaTerima.bukti_kas')
+            ->get()
+            ->pluck('tandaTerima.bukti_kas.id')
+            ->toArray();
+
+        return response()->json($buktiKasIds);
+    }
+
 
     public function index()
     {
@@ -75,17 +86,18 @@ class BuktiKasController extends Controller
             $userId = Auth::id();
             $role = Auth::user()->role;
 
-            if ($role != 'user' && $from == 'all') {
+            if($role != 'user' && $from == 'all') {
                 $tandaTerima = TandaTerima::with(['supplier', 'invoices.transaction', 'bukti_kas'])
-                    ->where('increment_id', $tandaTerimaInc)
-                    ->where('po', 'true')
-                    ->first();
-            } else {
+                ->where('increment_id', $tandaTerimaInc)
+                ->where('po','true')
+                ->first();
+            }
+            else {
                 $tandaTerima = TandaTerima::with(['supplier', 'invoices.transaction', 'bukti_kas'])
-                    ->where('user_id', $userId)
-                    ->where('increment_id', $tandaTerimaInc)
-                    ->where('po', 'true')
-                    ->first();
+                ->where('user_id', $userId)
+                ->where('increment_id', $tandaTerimaInc)
+                ->where('po','true')
+                ->first();
             }
 
             if ($tandaTerima) {
@@ -203,7 +215,7 @@ class BuktiKasController extends Controller
         $buktikas = BuktiKas::with(['tanda_terima.supplier', 'tanda_terima.invoices'])->findOrFail($id);
         $role = Auth::user()->role;
 
-        if ($buktikas->status == 'Sudah dibayar') {
+        if($buktikas->status == 'Sudah dibayar') {
             abort(403, 'Access denied.');
         }
 
@@ -211,30 +223,31 @@ class BuktiKasController extends Controller
             abort(403, 'Wrong URL.');
         }
 
-        if (Auth::user()->role == 'user' && $buktikas->user_id != Auth::id()) {
+        if(Auth::user()->role == 'user' && $buktikas->user_id != Auth::id()) {
             return redirect()->route('my.bukti-kas')->with('false', 'error encounter');
         }
 
-        if (Auth::user()->role == 'user' && $from == 'all') {
+        if(Auth::user()->role == 'user' && $from == 'all') {
             return redirect()->route('my.bukti-kas')->with('false', 'error encounter');
         }
 
-        if (Auth::user()->role != 'user' && $from == 'my' && $buktikas->user_id != Auth::id()) {
+        if(Auth::user()->role != 'user' && $from == 'my' && $buktikas->user_id != Auth::id()) {
             return redirect()->route('all.bukti-kas')->with('false', 'error encounter');
         }
 
         $title = 'Edit Bukti Kas';
         $userId = Auth::id();
 
-        if ($role != 'user' && $from == 'all') {
+        if($role != 'user' && $from == 'all') {
             $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
-                ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
-                ->where('po', 'true');
-        } else {
+            ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
+            ->where('po', 'true');
+        }
+        else {
             $tandaTerimaQuery = TandaTerima::with('supplier', 'invoices')
-                ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
-                ->where('po', 'true')
-                ->where('tanda_terima.user_id', $userId);
+            ->leftJoin('bukti_kas', 'tanda_terima.id', '=', 'bukti_kas.tanda_terima_id')
+            ->where('po', 'true')
+            ->where('tanda_terima.user_id', $userId);
         }
 
         // Check if $id is provided
@@ -288,7 +301,7 @@ class BuktiKasController extends Controller
 
         // Find and update BuktiKas record
         $buktikas = BuktiKas::findOrFail($id);
-        if ($buktikas->status == 'Sudah dibayar') {
+        if($buktikas->status == 'Sudah dibayar') {
             abort(403, 'Access denied.');
         }
         $buktikas->tanda_terima_id = $validated['tanda_terima_id_hidden'];
@@ -314,9 +327,10 @@ class BuktiKasController extends Controller
             }
         }
 
-        if ($from == 'my') {
+        if($from == 'my') {
             return redirect()->route('my.bukti-kas')->with('success', 'Tanda Terima updated successfully.');
-        } elseif ($from == 'all') {
+        }
+        elseif($from == 'all') {
             return redirect()->route('all.bukti-kas')->with('success', 'Tanda Terima updated successfully.');
         }
     }
@@ -325,24 +339,13 @@ class BuktiKasController extends Controller
     {
         // Fetch Tanda Terima records with the given PO number
         $tandaTerimaRecords = TandaTerima::where('nomor_po', $poNumber)
-            ->with('bukti_kas')
+            ->with('bukti_kas') 
             ->get();
 
         // Extract Bukti Kas IDs
         $buktiKasIds = $tandaTerimaRecords->pluck('bukti_kas.id');
 
         // Return the IDs as a JSON response
-        return response()->json($buktiKasIds);
-    }
-
-    public function getBuktiKasForInvoice($invoiceNumber)
-    {
-        $buktiKasIds = Invoices::where('nomor', $invoiceNumber)
-            ->with('tandaTerima.bukti_kas')
-            ->get()
-            ->pluck('tandaTerima.bukti_kas.id')
-            ->toArray();
-
         return response()->json($buktiKasIds);
     }
 

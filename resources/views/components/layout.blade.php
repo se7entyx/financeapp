@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
     <title>@yield('title', 'Default Title')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-	<!-- <link rel="stylesheet" href="{{ asset('build/assets/app-BRbn0B88.css') }}"> -->
-	<!-- <script src="{{ asset('/public/build/assets/app-Bra6MsPr.js')}}"></script> -->
+    <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
+	<link rel="stylesheet" href="{{ asset('public/build/assets/app-BRbn0B88.css') }}">
+	<script src="{{ asset('public/build/assets/app-Bra6MsPr.js') }}"></script>
     <!-- <link rel="stylesheet" href="{{ asset('public/fontawesome-free-6.5.2-web/css/all.min.css') }}"> -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-	<!-- <link rel="stylesheet" href="{{ asset('resources/js/app.js')}}"> -->
-	<!-- <link rel="stylesheet" href="{{ asset('resources/css/app.css')}}"> -->
+	<link rel="stylesheet" href="{{ asset('resources/js/app.js') }}">
+	<link rel="stylesheet" href="{{ asset('resources/css/app.css') }}">
 	
 
 	

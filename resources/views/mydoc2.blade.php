@@ -76,12 +76,12 @@
         <div class="container flex-grow overflow-auto">
             <div id="bukti-kas-keluar-table" class="bg-white shadow-md rounded-lg">
                 <table class="min-w-full bg-white border border-gray-300">
-                    <thead class="sticky top-0 bg-gray-200">
+                    <thead class="top-0 bg-gray-200">
                         <tr class="text-gray-700">
                             <th class="py-2 px-4 border-b">No</th>
                             <th class="py-2 px-4 border-b">Nomor Bukti Kas Keluar</th>
                             <th class="py-2 px-4 border-b">@sortablelink('tanggal','Tanggal')</th>
-                            <th class="py-2 px-4 border-b">Dibayarkan kepada</th>
+                            <th class="py-2 px-4 border-b sticky left-0 z-10 bg-gray-200">Dibayarkan kepada</th>
                             <th class="py-2 px-4 border-b text-center">Kas</th>
                             <th class="py-2 px-4 border-b text-center">Jumlah</th>
                             <th class="py-2 px-4 border-b text-center">No Cek</th>
@@ -100,7 +100,7 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900 text-center">{{ $loop->index + 1 }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center nomer">{{ $bk->nomer }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center tanggal">{{ $bk->tanggal ?? 'N/A' }}</td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center dibayarkan-kepada">{{ $bk->tanda_terima->supplier->name }}</td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center sticky left-0 z-10 bg-white dibayarkan-kepada">{{ $bk->tanda_terima->supplier->name }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center kas">{{ $bk->kas }}</td>
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center jumlah">
                                 @if($bk->tanda_terima->currency == 'USD')
@@ -119,22 +119,41 @@
                             <td class="py-4 px-6 whitespace-nowrap text-sm text-center status {{ $bk->status === 'Belum dibayar' ? 'text-red-500' : ($bk->status === 'Sudah dibayar' ? 'text-green-500' : 'text-gray-500') }}">
                                 {{ $bk->status }}
                             </td>
-                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500 text-center inline-flex">
-                                <div class="flex justify-center items-center space-x-4">
-                                    <a href="#" class="text-blue-500 hover:text-blue-700 view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas">View Details</a>
-                                    @if ($bk->status == 'Belum dibayar')
-                                    <a href="{{ route('bukti-kas.edit', ['id' => $bk->id, 'from' => 'my']) }}" class="text-blue-500 hover:text-blue-700 edit" data-id="{{ $bk->id }}" data-table="bukti-kas">Edit</a>
-                                    @endif
-                                    <form action="{{ route('delete.bukti-kas', $bk->id) }}" method="POST" class="inline-block m-0 p-0 delete-form-bk">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-blue-500 hover:text-blue-700 delete-link p-0 m-0 border-0 bg-transparent cursor-pointer">Delete</button>
-                                    </form>
-                                    <button id='finish-button' type="button" data-modal-target="finishModal" data-modal-toggle="finishModal" class="flex w-full items-center dark:hover:bg-gray-600 dark:hover:text-white text-blue-500 hover:text-blue-700 dark:text-gray-200" data-nomer="{{ $bk->nomer }}" data-tanggal="{{ $bk->tanggal }}" data-user-id="{{ $bk->id }}">
-                                        Finish
-                                    </button>
-                                    <a href="{{ route('bukti-kas.print', $bk->id) }}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print</a>
-                                    <a href="{{ route('mandiri.print', $bk->id) }}" class="text-blue-500 hover:text-blue-700 print" target="_blank" rel="noopener noreferrer">Print Mandiri</a>
+                            <td class="py-4 px-6 flex items-center justify-end text-sm text-gray-500">
+                                <button id="dropdown-button-{{ $bk->id }}" data-dropdown-toggle="dropdown-{{ $bk->id }}" class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    </svg>
+                                </button>
+                                <div id="dropdown-{{ $bk->id }}" class="hidden z-10 w-30 bg-white rounded divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600">
+                                    <ul class="py-1 text-sm" aria-labelledby="dropdown-button-{{ $bk->id }}">
+                                        <li>
+                                            <a href="#" class="flex w-full items-center text-gray-700 px-4 py-2 text-sm view-details" data-id="{{ $bk->tanda_terima_id }}" data-table="bukti-kas" role="menuitem" tabindex="-1">View Details</a>
+                                        </li>
+                                        @if ($bk->status == 'Belum dibayar')
+                                        <li>
+                                            <a href="{{ route('bukti-kas.edit', ['id' => $bk->id, 'from' => 'my']) }}" class="flex w-full items-center text-gray-700 px-4 py-2 text-sm edit" data-id="{{ $bk->id }}" data-table="bukti-kas" role="menuitem" tabindex="-1">Edit</a>
+                                        </li>
+                                        @endif
+                                        <li>
+                                            <form action="{{ route('delete.bukti-kas', $bk->id) }}" method="POST" class="flex w-full items-center m-0 p-0 delete-form-bk">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="flex w-full text-gray-700 px-4 py-2 text-sm delete-link p-0 m-0 bg-white hover:bg-gray-50" role="menuitem" tabindex="-1">Delete</button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <button id='finish-button' type="button" data-modal-target="finishModal" data-modal-toggle="finishModal" class="flex items-center w-full text-gray-700 px-4 py-2 text-sm dark:hover:bg-gray-600 dark:hover:text-white dark:text-gray-200" data-nomer="{{ $bk->nomer }}" data-tanggal="{{ $bk->tanggal }}" data-user-id="{{ $bk->id }}" role="menuitem" tabindex="-1">
+                                                Finish
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('bukti-kas.print', $bk->id) }}" class="flex w-full items-center text-gray-700 px-4 py-2 text-sm print" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">Print</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('mandiri.print', $bk->id) }}" class="w-full items-center text-gray-700 block px-4 py-2 text-sm print" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">Print Mandiri</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </td>
                         </tr>

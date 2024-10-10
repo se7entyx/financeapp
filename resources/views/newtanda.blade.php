@@ -269,7 +269,7 @@
         const invoiceFieldsContainer = document.getElementById('invoiceFieldsContainer');
         var form = document.getElementById('addtandaterima');
         let currentEditIndex = null;
-        const usedInvoiceNumbers = @json($usedInvoiceNumbers)
+        const usedInvoiceNumbers = @json($usedInvoiceNumbers);
 
         // Add new invoice fields dynamically
         document.getElementById('addButton').addEventListener('click', function() {
@@ -421,8 +421,9 @@
 
 
         form.addEventListener('submit', function(event) {
-            const invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6 items-end');
+            const invoiceRow = document.getElementsByClassName('invoice-row flex flex-col md:flex-row gap-4 mb-6');
             const invoiceCount = invoiceRow.length;
+            console.log(invoiceCount);
 
             let hasInvalidRows = false;
 

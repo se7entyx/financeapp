@@ -88,7 +88,7 @@ class SupplierController extends Controller
 
     public function getSuppliers(Request $request)
     {
-        $suppliers = Supplier::search()->latest()->paginate(20)->withQueryString();
+        $suppliers = Supplier::search()->orderBy('name', 'asc')->paginate(20)->withQueryString();
         return view('supplier', ['title' => 'All Suppliers', 'suppliers' => $suppliers]);
     }
 

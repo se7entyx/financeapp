@@ -7,8 +7,8 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
   <title>Login</title>
-  @vite('resources/css/app.css')
-  <!-- <link rel="stylesheet" href="{{ asset('public/build/assets/app-BRbn0B88.css') }}"> -->
+  <!--@vite('resources/css/app.css') -->
+  <link rel="stylesheet" href="{{ asset('public/build/assets/app-BRbn0B88.css') }}">
 </head>
 
 <body class="h-full">
